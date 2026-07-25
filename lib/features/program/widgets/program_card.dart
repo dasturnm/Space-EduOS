@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import '../models/program_model.dart';
 import '../screens/program_detail_screen.dart';
 import '../screens/program_form_screen.dart'; // Baru
@@ -7,6 +8,7 @@ import '../providers/agenda_provider.dart';
 import '../providers/program_provider.dart'; // Tambahan untuk fungsi hapus
 import '../services/effective_day_service.dart';
 import '../../../core/providers/app_context_provider.dart';
+import '../providers/calendar_summary_provider.dart';
 // Baru
 
 class ProgramCard extends ConsumerWidget {
@@ -17,22 +19,22 @@ class ProgramCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // --- LOGIKA HITUNG HARI EFEKTIF (Dummy Semester 180 Hari) ---
-    final now = DateTime.now();
-    final dummyEnd = now.add(const Duration(days: 180));
+    // --- LOGIKA HITUNG HARI EFEKTIF (Berdasarkan Tahun Ajaran Aktif) ---
     final activeTA = ref.watch(appContextProvider).currentTahunAjaran;
     final agendaAsync = ref.watch(agendaNotifierProvider(tahunAjaranId: activeTA?.id));
     int effectiveDays = 0;
 
-    agendaAsync.whenData((agendas) {
-      effectiveDays = EffectiveDayService.calculateEffectiveDays(
-        startDate: now,
-        endDate: dummyEnd,
-        hariAktifProgram: program.hariAktif,
-        allAgendas: agendas,
-        targetProgramId: program.id,
-      );
-    });
+    if (activeTA != null && activeTA.tanggalMulai != null && activeTA.tanggalSelesai != null) {
+      agendaAsync.whenData((agendas) {
+        effectiveDays = EffectiveDayService.calculateEffectiveDays(
+          startDate: activeTA.tanggalMulai!,
+          endDate: activeTA.tanggalSelesai!,
+          hariAktifProgram: program.hariAktif,
+          allAgendas: agendas,
+          targetProgramId: program.id,
+        );
+      });
+    }
 
     return Container(
       padding: const EdgeInsets.all(24),
@@ -44,24 +46,35 @@ class ProgramCard extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildHeader(context, ref, effectiveDays), // Ditambahkan ref
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildHeader(context, ref, effectiveDays), // Ditambahkan ref
+                  const SizedBox(height: 12),
+                  Text(
+                    program.deskripsi ?? '',
+                    style: TextStyle(color: Colors.grey[600], fontSize: 13),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(child: _buildInvestasiSection()),
+                      const SizedBox(width: 16),
+                      Expanded(child: _buildJadwalSection(effectiveDays)), // Menambahkan parameter
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  _buildRingkasanKaldikSection(ref),
+                ],
+              ),
+            ),
+          ),
           const SizedBox(height: 12),
-          Text(
-            program.deskripsi ?? '',
-            style: TextStyle(color: Colors.grey[600], fontSize: 13),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-          const SizedBox(height: 24),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(child: _buildInvestasiSection()),
-              const SizedBox(width: 16),
-              Expanded(child: _buildJadwalSection(effectiveDays)), // Menambahkan parameter
-            ],
-          ),
-          const Spacer(), // Dorong footer ke paling bawah
           _buildFooterAction(context),
         ],
       ),
@@ -273,6 +286,89 @@ class ProgramCard extends ConsumerWidget {
             ),
           ),
         ),
+      ],
+    );
+  }
+
+  Widget _buildRingkasanKaldikSection(WidgetRef ref) {
+    final appContext = ref.watch(appContextProvider);
+    final tahunAjaran = appContext.currentTahunAjaran;
+    final String labelTahun = tahunAjaran?.labelTahun ?? '-';
+
+    String periodeStr = '-';
+    String bulanBelajarStr = '-';
+
+    if (tahunAjaran != null && tahunAjaran.tanggalMulai != null && tahunAjaran.tanggalSelesai != null) {
+      final tMulai = tahunAjaran.tanggalMulai!;
+      final tSelesai = tahunAjaran.tanggalSelesai!;
+      periodeStr = "${DateFormat('dd MMM yyyy', 'id_ID').format(tMulai)} - ${DateFormat('dd MMM yyyy', 'id_ID').format(tSelesai)}";
+
+      int months = ((tSelesai.year - tMulai.year) * 12) + tSelesai.month - tMulai.month + 1;
+      if (months > 0) {
+        bulanBelajarStr = "$months Bulan";
+      }
+    }
+
+    final summaryAsync = ref.watch(calendarSummaryProvider(program.id));
+
+    String totalHariEfektifStr = "-";
+    String totalHariLiburStr = "-";
+
+    summaryAsync.whenData((summary) {
+      totalHariEfektifStr = summary.netHariEfektif > 0 ? "${summary.netHariEfektif}" : "-";
+      totalHariLiburStr = "${summary.totalHariLiburAgenda}";
+    });
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.blue[50],
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.blue[100]!),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.analytics_outlined, color: Colors.blue, size: 18),
+              const SizedBox(width: 8),
+              const Text(
+                "RINGKASAN KALDIK",
+                style: TextStyle(fontSize: 11, fontWeight: FontWeight.w900, color: Colors.blue, letterSpacing: 0.5),
+              ),
+              const Spacer(),
+              IconButton(
+                onPressed: () {
+                  ref.invalidate(calendarSummaryProvider(program.id));
+                },
+                icon: const Icon(Icons.refresh_rounded, size: 18, color: Colors.blue),
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+              ),
+            ],
+          ),
+          const Divider(color: Colors.white, height: 20, thickness: 1.5),
+          _buildKaldikRow("Tahun Ajaran", labelTahun),
+          const SizedBox(height: 6),
+          _buildKaldikRow("Periode", periodeStr),
+          const SizedBox(height: 6),
+          _buildKaldikRow("Bulan Belajar", bulanBelajarStr),
+          const SizedBox(height: 6),
+          _buildKaldikRow("Total Hari Efektif", totalHariEfektifStr),
+          const SizedBox(height: 6),
+          _buildKaldikRow("Total Hari Libur", totalHariLiburStr),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildKaldikRow(String label, String value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: const TextStyle(fontSize: 12, color: Colors.blueGrey, fontWeight: FontWeight.w600)),
+        Text(value, style: const TextStyle(fontSize: 12, color: Colors.blue, fontWeight: FontWeight.w900)),
       ],
     );
   }

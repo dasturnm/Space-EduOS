@@ -11,6 +11,8 @@ class MutabaahProjectionModel {
   final int estimatedMeetingsLeft;
   final DateTime? estimatedCompletionDate;
   final bool isCompleted;
+  final int totalHolidays;
+  final double effectiveDaysPerMonth;
 
   MutabaahProjectionModel({
     required this.siswaId,
@@ -22,6 +24,8 @@ class MutabaahProjectionModel {
     this.estimatedMeetingsLeft = 0,
     this.estimatedCompletionDate,
     this.isCompleted = false,
+    this.totalHolidays = 0,
+    this.effectiveDaysPerMonth = 0.0,
   });
 
   factory MutabaahProjectionModel.fromJson(Map<String, dynamic> json) {
@@ -37,6 +41,8 @@ class MutabaahProjectionModel {
           ? DateTime.tryParse(json['estimated_completion_date'].toString())
           : null,
       isCompleted: json['is_completed'] == true,
+      totalHolidays: (json['total_holidays'] as num?)?.toInt() ?? 0,
+      effectiveDaysPerMonth: (json['effective_days_per_month'] as num?)?.toDouble() ?? 0.0,
     );
   }
 
@@ -52,6 +58,8 @@ class MutabaahProjectionModel {
       if (estimatedCompletionDate != null)
         'estimated_completion_date': estimatedCompletionDate!.toIso8601String(),
       'is_completed': isCompleted,
+      'total_holidays': totalHolidays,
+      'effective_days_per_month': effectiveDaysPerMonth,
     };
   }
 
@@ -65,6 +73,8 @@ class MutabaahProjectionModel {
     int? estimatedMeetingsLeft,
     DateTime? estimatedCompletionDate,
     bool? isCompleted,
+    int? totalHolidays,
+    double? effectiveDaysPerMonth,
   }) {
     return MutabaahProjectionModel(
       siswaId: siswaId ?? this.siswaId,
@@ -76,6 +86,8 @@ class MutabaahProjectionModel {
       estimatedMeetingsLeft: estimatedMeetingsLeft ?? this.estimatedMeetingsLeft,
       estimatedCompletionDate: estimatedCompletionDate ?? this.estimatedCompletionDate,
       isCompleted: isCompleted ?? this.isCompleted,
+      totalHolidays: totalHolidays ?? this.totalHolidays,
+      effectiveDaysPerMonth: effectiveDaysPerMonth ?? this.effectiveDaysPerMonth,
     );
   }
 }

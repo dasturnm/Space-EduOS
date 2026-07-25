@@ -1,7 +1,4 @@
-// Lokasi: lib/features/akademik/kurikulum/screens/components/modul_exam_section.dart
 import 'package:flutter/material.dart';
-// TAMBAHKAN IMPORT widget evaluasi section Anda di sini jika diperlukan, contoh:
-// import '../../widgets/modul_evaluasi_section.dart';
 import '../../widgets/evaluation_card.dart'; // FIX: Jalur impor diarahkan ke folder widgets tempat asli file berada
 
 class ModulExamSection extends StatelessWidget {
@@ -61,22 +58,22 @@ class ModulExamSection extends StatelessWidget {
             child: Column(
               children: [
                 const Divider(height: 24),
-                // BUAT KETERANGAN SAAT MEMBUAT LEMBARAN EVALUASI BAHWA PENILAIAN DIBUAT DENGAN SKALA 1-4
+                // KETERANGAN DISESUAIKAN: Menjelaskan standar penilaian berdasarkan evaluasi terpilih
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF3B82F6).withValues(alpha: 0.08),
+                    color: const Color(0xFF10B981).withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: const Color(0xFF3B82F6).withValues(alpha: 0.3)),
+                    border: Border.all(color: const Color(0xFF10B981).withValues(alpha: 0.3)),
                   ),
                   child: const Row(
                     children: [
-                      Icon(Icons.info_outline, color: Color(0xFF3B82F6), size: 20),
+                      Icon(Icons.info_outline, color: Color(0xFF10B981), size: 20),
                       SizedBox(width: 12),
                       Expanded(
                         child: Text(
-                          "Seluruh aspek kriteria di bawah ini akan diukur menggunakan standar indikator kompetensi skala 1-4 (Belum Layak hingga Sangat Baik) guna memastikan objektivitas evaluasi kelulusan santri.",
-                          style: TextStyle(fontSize: 11, color: Color(0xFF1E3A8A), fontWeight: FontWeight.w500, height: 1.4),
+                          "Seluruh aspek kriteria di bawah ini akan diukur menggunakan standar indikator kompetensi guna memastikan objektivitas evaluasi kelulusan santri.",
+                          style: TextStyle(fontSize: 11, color: Color(0xFF065F46), fontWeight: FontWeight.w500, height: 1.4),
                         ),
                       ),
                     ],

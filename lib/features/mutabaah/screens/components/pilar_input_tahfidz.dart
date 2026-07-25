@@ -64,11 +64,7 @@ extension PilarInputTahfidz on _ModulInputScreenState {
           ),
         ),
         if (modul.tipe == 'MUROJAAH') ...[
-          const SizedBox(height: 20),
-          if (modul.showSabqiInMutabaah) ...[
-            _pilarInput(label: "SABQI", controller: _sabqiControllers[mId]!, hint: "Halaman disetor..."),
-            const SizedBox(height: 12),
-          ],
+          const SizedBox(height: 12),
           _pilarInput(label: "MANZIL", controller: _manzilControllers[mId]!, hint: "Realisasi hari ini..."),
         ],
         if (modul.useRatingScale) ...[

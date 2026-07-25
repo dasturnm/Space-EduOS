@@ -7,6 +7,7 @@ import '../../../../program/providers/agenda_provider.dart';
 // FIX PATH: Menyesuaikan kedalaman folder dari /screens/components/ ke /providers/
 import '../../providers/kurikulum_provider.dart';
 import '../../../../../core/providers/app_context_provider.dart';
+import '../../../../program/providers/calendar_summary_provider.dart';
 
 class ModulEstimationCard extends ConsumerWidget {
   final String levelId;
@@ -25,7 +26,96 @@ class ModulEstimationCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     String totalMeetings = targetPertemuan.isEmpty ? "0" : targetPertemuan;
-    String estimatedDate = _calculateDate(ref);
+
+    // 1. Ambil Data Context (Tahun Ajaran & Lembaga)
+    final appContext = ref.watch(appContextProvider);
+    final tahunAjaran = appContext.currentTahunAjaran;
+    final String labelTahun = tahunAjaran?.labelTahun ?? '-';
+
+    String periodeStr = '-';
+    String bulanBelajarStr = '-';
+
+    if (tahunAjaran != null && tahunAjaran.tanggalMulai != null && tahunAjaran.tanggalSelesai != null) {
+      final tMulai = tahunAjaran.tanggalMulai!;
+      final tSelesai = tahunAjaran.tanggalSelesai!;
+      periodeStr = "${DateFormat('dd MMM yyyy', 'id_ID').format(tMulai)} - ${DateFormat('dd MMM yyyy', 'id_ID').format(tSelesai)}";
+
+      int months = ((tSelesai.year - tMulai.year) * 12) + tSelesai.month - tMulai.month + 1;
+      if (months > 0) {
+        bulanBelajarStr = "$months Bulan";
+      }
+    }
+
+    // 2. Cari Program ID yang Tepat
+    final lembagaId = appContext.lembaga?.id ?? '';
+    final kurikulumList = ref.watch(kurikulumListProvider(lembagaId)).value ?? [];
+    String? targetProgramId;
+
+    for (var k in kurikulumList) {
+      if (k.jenjang.any((j) => j.level.any((l) => l.id == levelId))) {
+        targetProgramId = k.programId;
+        break;
+      }
+    }
+
+    final String finalProgramId = targetProgramId ?? programIdFromLevel;
+
+    // 3. Panggil calendarSummaryProvider untuk data Efektif & Estimasi
+    String totalHariEfektifStr = "-";
+    String totalHariLiburStr = "-";
+    String estimatedDate = "-";
+    bool showWarningAlert = false;
+    String? warningText;
+
+    if (finalProgramId.isNotEmpty && finalProgramId != 'null') {
+      final summaryAsync = ref.watch(calendarSummaryProvider(finalProgramId));
+
+      summaryAsync.when(
+        data: (summary) {
+          totalHariEfektifStr = summary.netHariEfektif > 0 ? "${summary.netHariEfektif}" : "-";
+          totalHariLiburStr = "${summary.totalHariLiburAgenda}";
+
+          int meetingsNeeded = int.tryParse(targetPertemuan) ?? 0;
+          if (meetingsNeeded <= 0) {
+            estimatedDate = "-";
+          } else if (summary.daftarHariBelajar.isEmpty) {
+            estimatedDate = "Jadwal Belum Diatur";
+          } else if (meetingsNeeded <= summary.daftarHariBelajar.length) {
+            final targetDate = summary.daftarHariBelajar[meetingsNeeded - 1];
+            estimatedDate = DateFormat('dd MMMM yyyy', 'id_ID').format(targetDate);
+          } else {
+            int remaining = meetingsNeeded - summary.daftarHariBelajar.length;
+            DateTime current = summary.daftarHariBelajar.last;
+            final activeWeekdays = summary.daftarHariBelajar.map((d) => d.weekday).toSet();
+            if (activeWeekdays.isEmpty) activeWeekdays.addAll([1, 2, 3, 4, 5]);
+
+            while (remaining > 0) {
+              current = current.add(const Duration(days: 1));
+              if (activeWeekdays.contains(current.weekday)) {
+                remaining--;
+              }
+            }
+
+            estimatedDate = DateFormat('dd MMMM yyyy', 'id_ID').format(current);
+            showWarningAlert = true;
+            final taEndStr = tahunAjaran?.tanggalSelesai != null
+                ? DateFormat('dd MMM yyyy', 'id_ID').format(tahunAjaran!.tanggalSelesai!)
+                : "Tahun Ajaran";
+            warningText = "Modul ini diperkirakan selesai melebihi rentang Tahun Ajaran aktif ($taEndStr). Silakan sesuaikan kembali target pertemuan atau volume materi.";
+          }
+        },
+        loading: () {
+          totalHariEfektifStr = "...";
+          totalHariLiburStr = "...";
+          estimatedDate = "Menghitung...";
+        },
+        error: (_, __) {
+          totalHariEfektifStr = "-";
+          totalHariLiburStr = "-";
+          estimatedDate = "Jadwal Belum Diatur";
+        },
+      );
+    }
 
     return Padding(
       padding: const EdgeInsets.only(top: 20),
@@ -54,9 +144,43 @@ class ModulEstimationCard extends ConsumerWidget {
               ],
             ),
             const Divider(color: Colors.white, height: 24, thickness: 2),
-            _buildRow("Total Pertemuan:", "$totalMeetings Kali"),
+            _buildRow("Tahun Ajaran", labelTahun),
             const SizedBox(height: 8),
-            _buildRow("Estimasi Lulus:", estimatedDate),
+            _buildRow("Periode", periodeStr),
+            const SizedBox(height: 8),
+            _buildRow("Bulan Belajar", bulanBelajarStr),
+            const SizedBox(height: 8),
+            _buildRow("Total Hari Efektif", totalHariEfektifStr),
+            const SizedBox(height: 8),
+            _buildRow("Total Hari Libur", totalHariLiburStr),
+            const Divider(color: Colors.white, height: 24, thickness: 2),
+            _buildRow("Target Pertemuan", "$totalMeetings Kali"),
+            const SizedBox(height: 8),
+            _buildRow("Estimasi Lulus", estimatedDate),
+            if (showWarningAlert && warningText != null) ...[
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.amber[50],
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.amber[300]!),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(Icons.warning_amber_rounded, color: Colors.amber[900], size: 18),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        warningText!,
+                        style: TextStyle(fontSize: 12, color: Colors.amber[900], fontWeight: FontWeight.w600, height: 1.3),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ],
         ),
       ),
@@ -72,57 +196,5 @@ class ModulEstimationCard extends ConsumerWidget {
         Text((value == "0 Kali" || value == "0" || value == "-") ? "-" : value, style: const TextStyle(fontSize: 14, color: Colors.blue, fontWeight: FontWeight.w900)),
       ],
     );
-  }
-
-  String _calculateDate(WidgetRef ref) {
-    int meetingsNeeded = int.tryParse(targetPertemuan) ?? 0;
-    if (meetingsNeeded <= 0) return "-";
-
-    final lembagaId = ref.watch(appContextProvider).lembaga?.id ?? '';
-    final kurikulumAsync = ref.watch(kurikulumListProvider(lembagaId));
-    if (kurikulumAsync.isLoading) return "Menghitung...";
-
-    final kurikulumList = kurikulumAsync.value ?? [];
-    String? targetProgramId;
-
-    for (var k in kurikulumList) {
-      if (k.jenjang.any((j) => j.level.any((l) => l.id == levelId))) {
-        targetProgramId = k.programId;
-        break;
-      }
-    }
-
-    final String finalProgramId = targetProgramId ?? programIdFromLevel;
-    if (finalProgramId.isEmpty || finalProgramId == 'null') return "Jadwal Belum Diatur";
-
-    final List<String> activeDaysStr = ref.watch(programHariEfektifProvider(finalProgramId));
-    final agendas = ref.watch(agendaNotifierProvider(programId: finalProgramId)).value ?? [];
-
-    final Map<String, int> dayMap = {'senin': 1, 'selasa': 2, 'rabu': 3, 'kamis': 4, 'jumat': 5, 'sabtu': 6, 'minggu': 7};
-    final activeDays = activeDaysStr.map((d) => dayMap[d.toLowerCase()] ?? 0).where((d) => d != 0).toList();
-
-    if (activeDays.isEmpty) return "Jadwal Belum Diatur";
-
-    DateTime current = DateTime.now();
-    int added = 0;
-    while (added < meetingsNeeded) {
-      current = current.add(const Duration(days: 1));
-      final dateOnly = DateTime(current.year, current.month, current.day);
-
-      // FIX: Normalisasi pengecekan tanggal libur (menghindari error jam/menit)
-      bool isHoliday = agendas.any((a) {
-        final start = DateTime(a.tanggalMulai.year, a.tanggalMulai.month, a.tanggalMulai.day);
-        final end = DateTime(a.tanggalBerakhir.year, a.tanggalBerakhir.month, a.tanggalBerakhir.day);
-        return a.statusHariBelajar == 'LIBUR' && !dateOnly.isBefore(start) && !dateOnly.isAfter(end);
-      });
-
-      if (activeDays.contains(current.weekday) && !isHoliday) {
-        added++;
-      }
-
-      // Safety break untuk menghindari infinite loop jika jadwal belum diatur dengan benar
-      if (current.isAfter(DateTime.now().add(const Duration(days: 3650)))) break;
-    }
-    return DateFormat('dd MMMM yyyy', 'id_ID').format(current);
   }
 }

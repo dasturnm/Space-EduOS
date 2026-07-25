@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tahfidz_core/core/constants/app_routes.dart';
-import 'package:tahfidz_core/core/constants/app_roles.dart';
 import '../../core/providers/app_context_provider.dart';
 import '../../features/auth/providers/auth_provider.dart'; // TAMBAHAN: Untuk fungsi Logout
 
@@ -33,8 +32,15 @@ class AppDrawer extends ConsumerWidget {
       return const Drawer(child: Center(child: CircularProgressIndicator.adaptive()));
     }
 
-    // Tambahkan 'OWNER' ke dalam kategori Admin
-    final bool isAdmin = role == AppRoles.admin || role == AppRoles.kepalaCabang || role == 'OWNER' || role == 'admin';
+    // Pengecekan PBAC menggunakan helper dari contextState
+    final bool canManageLembaga = contextState.hasPermission('lembaga_manage');
+    final bool canManageAkademik = contextState.hasPermission('akademik_program_manage') || contextState.hasPermission('akademik_kurikulum_manage');
+    final bool canManageStaf = contextState.hasPermission('staf_manage') || contextState.hasPermission('staf_read');
+    final bool canManageSiswaKelas = contextState.hasPermission('kelas_manage') || contextState.hasPermission('siswa_manage');
+    final bool canPresensi = contextState.hasPermission('presensi_read') || contextState.hasPermission('presensi_input');
+    final bool canMutabaah = contextState.hasPermission('mutabaah_input') || contextState.hasPermission('mutabaah_view_all');
+    final bool canTasmiRaporSertifikat = contextState.hasPermission('evaluasi_input') || contextState.hasPermission('laporan_cetak') || contextState.hasPermission('sertifikat_generate');
+    final bool canKeuangan = contextState.hasPermission('keuangan_spp_manage') || contextState.hasPermission('keuangan_payroll_view');
 
     return Drawer(
       child: Column(
@@ -63,7 +69,7 @@ class AppDrawer extends ConsumerWidget {
                 ),
 
                 // KELOMPOK 1: MANAJEMEN LEMBAGA
-                if (isAdmin || contextState.lembaga == null) ...[
+                if (canManageLembaga || contextState.lembaga == null) ...[
                   const Divider(height: 8),
                   _buildSectionHeader("KONFIGURASI LEMBAGA"),
                   _buildDrawerItem(
@@ -74,74 +80,82 @@ class AppDrawer extends ConsumerWidget {
                 ],
 
                 // KELOMPOK 2: BLUEPRINT AKADEMIK
-                if (contextState.lembaga != null && (isAdmin || role == AppRoles.guru)) ...[
+                if (contextState.lembaga != null && canManageAkademik) ...[
                   const Divider(height: 8),
                   _buildSectionHeader("BLUEPRINT AKADEMIK"),
-                  _buildDrawerItem(
-                    icon: Icons.menu_book_outlined,
-                    label: "Program dan Kaldik",
-                    onTap: () => _navigatePath(context, AppRouteNames.program),
-                  ),
-                  _buildDrawerItem(
-                    icon: Icons.assignment_outlined,
-                    label: "Kurikulum & Modul",
-                    onTap: () => _navigatePath(context, AppRouteNames.kurikulum),
-                  ),
-                  _buildDrawerItem(
-                    icon: Icons.my_library_books_outlined,
-                    label: "Katalog Silabus",
-                    onTap: () => _navigatePath(context, AppRouteNames.katalogSilabus),
-                  ),
+                  if (contextState.hasPermission('akademik_program_manage'))
+                    _buildDrawerItem(
+                      icon: Icons.menu_book_outlined,
+                      label: "Program dan Kaldik",
+                      onTap: () => _navigatePath(context, AppRouteNames.program),
+                    ),
+                  if (contextState.hasPermission('akademik_kurikulum_manage'))
+                    _buildDrawerItem(
+                      icon: Icons.assignment_outlined,
+                      label: "Kurikulum & Modul",
+                      onTap: () => _navigatePath(context, AppRouteNames.kurikulum),
+                    ),
+                  if (contextState.hasPermission('akademik_kurikulum_manage'))
+                    _buildDrawerItem(
+                      icon: Icons.my_library_books_outlined,
+                      label: "Katalog Silabus",
+                      onTap: () => _navigatePath(context, AppRouteNames.katalogSilabus),
+                    ),
                 ],
 
                 // KELOMPOK 3: MANAJEMEN SDM & SISWA
-                if (contextState.lembaga != null && (isAdmin || role == AppRoles.guru)) ...[
+                if (contextState.lembaga != null && (canManageStaf || canManageSiswaKelas || canPresensi)) ...[
                   const Divider(height: 8),
                   _buildSectionHeader("MANAJEMEN SDM & SISWA"),
-                  if (isAdmin)
+                  if (canManageStaf)
                     _buildDrawerItem(
                       icon: Icons.people_alt_outlined,
                       label: "Guru & Staff",
                       onTap: () => _navigatePath(context, AppRouteNames.staf),
                     ),
-                  _buildDrawerItem(
-                    icon: Icons.meeting_room_outlined,
-                    label: "Siswa & Kelas",
-                    onTap: () => _navigatePath(context, AppRouteNames.kelas),
-                  ),
-                  _buildDrawerItem(
-                    icon: Icons.co_present_outlined,
-                    label: "Presensi",
-                    onTap: () => _navigatePath(context, AppRouteNames.presensiSiswa),
-                  ),
+                  if (canManageSiswaKelas)
+                    _buildDrawerItem(
+                      icon: Icons.meeting_room_outlined,
+                      label: "Siswa & Kelas",
+                      onTap: () => _navigatePath(context, AppRouteNames.kelas),
+                    ),
+                  if (canPresensi)
+                    _buildDrawerItem(
+                      icon: Icons.co_present_outlined,
+                      label: "Presensi",
+                      onTap: () => _navigatePath(context, AppRouteNames.presensiSiswa),
+                    ),
                 ],
 
                 // KELOMPOK 4: AKTIVITAS & OUTPUT
                 if (contextState.lembaga != null) ...[
                   const Divider(height: 8),
                   _buildSectionHeader("AKTIVITAS & OUTPUT"),
-                  if (isAdmin || role == AppRoles.guru || role == AppRoles.wali)
+                  if (canMutabaah)
                     _buildDrawerItem(
                       icon: Icons.history_edu_rounded,
                       label: "Mutabaah Tahfidz",
                       onTap: () => _navigatePath(context, AppRouteNames.mutabaahHub),
                     ),
-                  if (isAdmin || role == AppRoles.guru) ...[
-                    _buildDrawerItem(
-                      icon: Icons.verified_outlined,
-                      label: "Ujian Tasmi'",
-                      onTap: () => _navigatePath(context, AppRouteNames.tasmi),
-                    ),
-                    _buildDrawerItem(
-                      icon: Icons.analytics_outlined,
-                      label: "E-Rapor",
-                      onTap: () => _navigatePath(context, AppRouteNames.eRapor),
-                    ),
-                    _buildDrawerItem(
-                      icon: Icons.card_membership_outlined,
-                      label: "E-Sertifikat",
-                      onTap: () => _navigatePath(context, AppRouteNames.eSertifikat),
-                    ),
+                  if (canTasmiRaporSertifikat) ...[
+                    if (contextState.hasPermission('evaluasi_input'))
+                      _buildDrawerItem(
+                        icon: Icons.verified_outlined,
+                        label: "Ujian Tasmi'",
+                        onTap: () => _navigatePath(context, AppRouteNames.tasmi),
+                      ),
+                    if (contextState.hasPermission('laporan_cetak'))
+                      _buildDrawerItem(
+                        icon: Icons.analytics_outlined,
+                        label: "E-Rapor",
+                        onTap: () => _navigatePath(context, AppRouteNames.eRapor),
+                      ),
+                    if (contextState.hasPermission('sertifikat_generate'))
+                      _buildDrawerItem(
+                        icon: Icons.card_membership_outlined,
+                        label: "E-Sertifikat",
+                        onTap: () => _navigatePath(context, AppRouteNames.eSertifikat),
+                      ),
                   ],
                   _buildDrawerItem(
                     icon: Icons.menu_book_outlined,
@@ -156,7 +170,7 @@ class AppDrawer extends ConsumerWidget {
                 ],
 
                 // KELOMPOK 5: FINANSIAL & SISTEM
-                if (contextState.lembaga != null && (isAdmin || role == AppRoles.wali)) ...[
+                if (contextState.lembaga != null && canKeuangan) ...[
                   const Divider(height: 8),
                   _buildSectionHeader("FINANSIAL & SISTEM"),
                   _buildDrawerItem(

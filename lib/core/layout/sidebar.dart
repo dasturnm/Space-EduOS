@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tahfidz_core/features/auth/providers/auth_provider.dart';
 import 'package:tahfidz_core/core/constants/app_routes.dart';
-import 'package:tahfidz_core/core/constants/app_roles.dart'; // TAMBAHKAN INI
+import 'package:tahfidz_core/core/providers/app_context_provider.dart';
 
 class Sidebar extends ConsumerWidget {
   const Sidebar({super.key});
@@ -13,9 +13,12 @@ class Sidebar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final auth = ref.watch(authProvider);
-    final userRole = auth.userRole; // FIX: Menghapus ?? '' karena userRole tidak bisa null
-    final bool isAdmin = userRole == AppRoles.admin || userRole == AppRoles.kepalaCabang || userRole == 'OWNER' || userRole == 'admin';
-    final bool isGuru = userRole == AppRoles.guru;
+    final appContext = ref.watch(appContextProvider);
+
+    final bool canManageLembaga = appContext.hasPermission('lembaga_manage');
+    final bool canManageStaf = appContext.hasPermission('staf_manage') || appContext.hasPermission('staf_read');
+    final bool canManageAkademik = appContext.hasPermission('akademik_program_manage') || appContext.hasPermission('akademik_kurikulum_manage') || appContext.hasPermission('siswa_manage') || appContext.hasPermission('kelas_manage') || appContext.hasPermission('mutabaah_input') || appContext.hasPermission('mutabaah_view_all');
+    final bool canManageKeuangan = appContext.hasPermission('keuangan_spp_manage') || appContext.hasPermission('keuangan_payroll_view');
 
     return Drawer(
       child: ListView(
@@ -27,13 +30,13 @@ class Sidebar extends ConsumerWidget {
           ),
           _buildItem(context, 'Dashboard', AppRouteNames.dashboard, Icons.dashboard_outlined),
 
-          if (isAdmin) ...[
+          if (canManageLembaga || canManageStaf) ...[
             const Divider(),
-            _buildItem(context, 'Profil Lembaga', AppRouteNames.profilLembaga, Icons.business_outlined),
-            _buildItem(context, 'Guru & Staff', AppRouteNames.staf, Icons.people_alt_outlined),
+            if (canManageLembaga) _buildItem(context, 'Profil Lembaga', AppRouteNames.profilLembaga, Icons.business_outlined),
+            if (canManageStaf) _buildItem(context, 'Guru & Staff', AppRouteNames.staf, Icons.people_alt_outlined),
           ],
 
-          if (isAdmin || isGuru) ...[
+          if (canManageAkademik) ...[
             const Divider(),
             _buildItem(context, 'Program Belajar', AppRouteNames.program, Icons.menu_book_outlined),
             _buildItem(context, 'Kurikulum & Level', AppRouteNames.kurikulum, Icons.assignment_outlined),
@@ -45,7 +48,7 @@ class Sidebar extends ConsumerWidget {
             _buildItem(context, 'Mushaf Digital', AppRouteNames.mushafIndex, Icons.menu_book_rounded),
           ],
 
-          if (isAdmin) ...[
+          if (canManageKeuangan) ...[
             const Divider(),
             // FIX: Menampilkan menu Keuangan yang sebelumnya belum terdaftar
             _buildItem(context, 'Manajemen Keuangan', AppRouteNames.keuanganHub, Icons.payments_outlined),

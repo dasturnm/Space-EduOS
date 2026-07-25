@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'lembaga_profile_screen.dart';
 import 'cabang_list_screen.dart';
 import 'divisi_list_screen.dart';
+import 'unit_kerja_list_screen.dart'; // Baru: Import Unit Kerja
 import 'jabatan_list_screen.dart';
 import 'tahun_ajaran_screen.dart'; // Baru: Import Tahun Ajaran
 
@@ -22,7 +23,7 @@ class ManagementHubScreen extends StatelessWidget {
         elevation: 0,
       ),
       body: DefaultTabController(
-        length: 5, // FIX: Sinkron dengan jumlah Tab & View
+        length: 6, // FIX: Sinkron dengan jumlah Tab & View (Ditambah Tab Unit Kerja)
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -58,6 +59,7 @@ class ManagementHubScreen extends StatelessWidget {
                   Tab(child: Row(children: [Icon(Icons.location_city_outlined, size: 18), SizedBox(width: 8), Text("Cabang")])),
                   Tab(child: Row(children: [Icon(Icons.calendar_today_outlined, size: 18), SizedBox(width: 8), Text("Tahun Ajaran")])), // Baru
                   Tab(child: Row(children: [Icon(Icons.account_tree_outlined, size: 18), SizedBox(width: 8), Text("Divisi")])),
+                  Tab(child: Row(children: [Icon(Icons.corporate_fare_outlined, size: 18), SizedBox(width: 8), Text("Unit Kerja")])), // Baru: Tab Unit Kerja
                   Tab(child: Row(children: [Icon(Icons.work_outline, size: 18), SizedBox(width: 8), Text("Jabatan")])),
                 ],
               ),
@@ -71,6 +73,7 @@ class ManagementHubScreen extends StatelessWidget {
                   CabangListScreen(),
                   TahunAjaranScreen(), // Baru
                   DivisiListScreen(),
+                  UnitKerjaListScreen(), // Baru: View Unit Kerja
                   JabatanListScreen(),
                 ],
               ),

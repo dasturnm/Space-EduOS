@@ -1,7 +1,11 @@
+// Lokasi: lib/features/management_lembaga/screens/divisi_list_screen.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/providers/app_context_provider.dart';
 import '../providers/lembaga_provider.dart'; // Ditambahkan: Import provider baru
+import '../providers/unit_kerja_provider.dart';
+import '../services/lembaga_seeding_service.dart';
 import '../models/divisi_model.dart';
 
 class DivisiListScreen extends ConsumerStatefulWidget {
@@ -95,6 +99,141 @@ class _DivisiListScreenState extends ConsumerState<DivisiListScreen> {
     );
   }
 
+  void _showAddOptionsDialog(String lembagaId) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) {
+        return Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                "Opsi Penambahan Divisi",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                "Pilih cara menambahkan divisi dan struktur organisasi Anda.",
+                style: TextStyle(color: Colors.grey[600], fontSize: 13),
+              ),
+              const SizedBox(height: 20),
+              ListTile(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  side: BorderSide(color: Colors.grey.shade300),
+                ),
+                leading: const CircleAvatar(
+                  backgroundColor: Color(0xFFF1F5F9),
+                  child: Icon(Icons.edit_note, color: Color(0xFF10B981)),
+                ),
+                title: const Text("Tambah Divisi Manual", style: TextStyle(fontWeight: FontWeight.bold)),
+                subtitle: const Text("Buat 1 divisi baru secara mandiri."),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _showDivisiDialog(lembagaId);
+                },
+              ),
+              const SizedBox(height: 12),
+              ListTile(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  side: BorderSide(color: const Color(0xFF10B981).withValues(alpha: 0.5)),
+                ),
+                tileColor: const Color(0xFFECFDF5),
+                leading: const CircleAvatar(
+                  backgroundColor: Color(0xFF10B981),
+                  child: Icon(Icons.auto_awesome, color: Colors.white),
+                ),
+                title: const Text("Gunakan Template Standar (Golden Seed)", style: TextStyle(fontWeight: FontWeight.bold)),
+                subtitle: const Text("Otomatis generate 8 Divisi, Unit Kerja, & Jabatan SDD v3.1."),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _confirmAndApplyDefaultSeed(lembagaId);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _confirmAndApplyDefaultSeed(String lembagaId) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text("Terapkan Template Standar?"),
+        content: const Text(
+          "Sistem akan menambahkan 8 Divisi standar (Pimpinan, Akademik, Kesiswaan, Keuangan, PPDB, Inventaris, Administrasi, IT) beserta Unit Kerja dan Jabatannya secara otomatis.\n\nDivisi yang sudah ada tidak akan terhapus.",
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text("Batal")),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF10B981)),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text("Ya, Terapkan", style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      if (!mounted) return;
+
+      final messenger = ScaffoldMessenger.of(context);
+      final navigator = Navigator.of(context, rootNavigator: true);
+      final lembaga = ref.read(appContextProvider).lembaga;
+
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => const Center(child: CircularProgressIndicator(color: Color(0xFF10B981))),
+      );
+
+      try {
+        await LembagaSeedingService().seedUniversalOrganization(lembagaId);
+
+        navigator.pop();
+
+        await ref.read(appContextProvider.notifier).initContext(forceRefresh: true);
+        ref.invalidate(divisiListProvider);
+        ref.invalidate(unitKerjaListProvider);
+        ref.invalidate(jabatanListProvider);
+
+        if (!mounted) return;
+
+        // Dialog Sukses dengan Tombol OK
+        await showDialog(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: const Text("Berhasil", style: TextStyle(fontWeight: FontWeight.bold)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            content: Text("Berhasil menerapkan Template Organisasi Standar untuk lembaga: ${lembaga?.namaLembaga ?? 'Lembaga'}"),
+            actions: [
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF10B981)),
+                onPressed: () => Navigator.pop(ctx),
+                child: const Text("OK", style: TextStyle(color: Colors.white)),
+              ),
+            ],
+          ),
+        );
+      } catch (e) {
+        navigator.pop();
+
+        if (!mounted) return;
+        messenger.showSnackBar(
+          SnackBar(content: Text("Gagal mengaplikasikan seed: $e"), backgroundColor: Colors.red),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final lembaga = ref.watch(appContextProvider).lembaga;
@@ -123,7 +262,7 @@ class _DivisiListScreenState extends ConsumerState<DivisiListScreen> {
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 30.0),
         child: FloatingActionButton.extended(
-          onPressed: () => _showDivisiDialog(lembaga.id),
+          onPressed: () => _showAddOptionsDialog(lembaga.id),
           backgroundColor: const Color(0xFF10B981),
           icon: const Icon(Icons.add, color: Colors.white),
           label: const Text("Tambah Divisi", style: TextStyle(color: Colors.white)),
@@ -133,6 +272,8 @@ class _DivisiListScreenState extends ConsumerState<DivisiListScreen> {
   }
 
   Widget _buildDivisiCard(DivisiModel d) {
+    final bool isAktif = d.status == 'aktif';
+
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       elevation: 0,
@@ -145,10 +286,10 @@ class _DivisiListScreenState extends ConsumerState<DivisiListScreen> {
         leading: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: const Color(0xFF10B981).withValues(alpha: 0.1),
+            color: isAktif ? const Color(0xFF10B981).withValues(alpha: 0.1) : Colors.grey.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(12),
           ),
-          child: const Icon(Icons.account_tree_outlined, color: Color(0xFF10B981)),
+          child: Icon(Icons.account_tree_outlined, color: isAktif ? const Color(0xFF10B981) : Colors.grey),
         ),
         title: Row(
           children: [
@@ -172,34 +313,66 @@ class _DivisiListScreenState extends ConsumerState<DivisiListScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
+              icon: Icon(
+                isAktif ? Icons.toggle_on : Icons.toggle_off,
+                color: isAktif ? const Color(0xFF10B981) : Colors.grey,
+                size: 28,
+              ),
+              tooltip: isAktif ? "Nonaktifkan Divisi" : "Aktifkan Divisi",
               onPressed: () async {
-                final confirmed = await showDialog<bool>(
-                  context: context,
-                  builder: (ctx) => AlertDialog(
-                    title: const Text("Hapus Divisi?"),
-                    content: Text("Anda yakin ingin menghapus divisi ${d.namaDivisi}?"),
-                    actions: [
-                      TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text("Batal")),
-                      TextButton(
-                        onPressed: () => Navigator.pop(ctx, true),
-                        child: const Text("Hapus", style: TextStyle(color: Colors.red)),
-                      ),
-                    ],
-                  ),
-                );
-                if (confirmed == true) {
-                  // FIX: Akses notifier tanpa parameter
-                  await ref.read(divisiListProvider.notifier).deleteDivisi(d.id);
+                final updatedStatus = isAktif ? 'nonaktif' : 'aktif';
+                final updated = d.copyWith(status: updatedStatus);
+                await ref.read(divisiListProvider.notifier).saveDivisi(updated);
+              },
+            ),
+            PopupMenuButton<String>(
+              icon: const Icon(Icons.more_vert, color: Colors.grey),
+              onSelected: (value) async {
+                final lembagaId = ref.read(appContextProvider).lembaga!.id;
+                if (value == 'edit') {
+                  _showDivisiDialog(lembagaId, divisi: d);
+                } else if (value == 'delete') {
+                  final confirmed = await showDialog<bool>(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      title: const Text("Hapus Divisi?"),
+                      content: Text("Anda yakin ingin menghapus divisi ${d.namaDivisi}?"),
+                      actions: [
+                        TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text("Batal")),
+                        TextButton(
+                          onPressed: () => Navigator.pop(ctx, true),
+                          child: const Text("Hapus", style: TextStyle(color: Colors.red)),
+                        ),
+                      ],
+                    ),
+                  );
+                  if (confirmed == true) {
+                    await ref.read(divisiListProvider.notifier).deleteDivisi(d.id);
+                  }
                 }
               },
-              icon: const Icon(Icons.delete_outline, color: Colors.red, size: 20),
-            ),
-            IconButton(
-              onPressed: () {
-                final lembagaId = ref.read(appContextProvider).lembaga!.id;
-                _showDivisiDialog(lembagaId, divisi: d);
-              },
-              icon: const Icon(Icons.edit_outlined, color: Colors.grey, size: 20),
+              itemBuilder: (context) => [
+                const PopupMenuItem(
+                  value: 'edit',
+                  child: Row(
+                    children: [
+                      Icon(Icons.edit_outlined, color: Colors.grey, size: 20),
+                      SizedBox(width: 8),
+                      Text("Edit"),
+                    ],
+                  ),
+                ),
+                const PopupMenuItem(
+                  value: 'delete',
+                  child: Row(
+                    children: [
+                      Icon(Icons.delete_outline, color: Colors.red, size: 20),
+                      SizedBox(width: 8),
+                      Text("Hapus", style: TextStyle(color: Colors.red)),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ],
         ),

@@ -1,5 +1,3 @@
-// Lokasi: lib/features/mutabaah/services/mutabaah_service.dart
-
 import '../../../core/services/base_service.dart';
 import '../models/mutabaah_model.dart';
 import '../models/mutabaah_projection_model.dart'; // TAMBAHAN: Import Model Proyeksi
@@ -71,9 +69,9 @@ class MutabaahTahfidzService extends BaseService {
   Future<double> getLatestDebt(String siswaId, String modulId) => _navigasiMateri.getLatestDebt(siswaId, modulId);
 
   /// 6. KALKULASI: Menghitung skor akhir Ujian Sertifikasi berdasarkan setting gradasi dinamis
-  double calculateSertifikasiScore(Map<String, dynamic> tasmiSettings, Map<String, dynamic> penaltyCounts, Map<String, double> directScores) => _kecerdasanAkademik.calculateTasmiScore(tasmiSettings, penaltyCounts, directScores);
+  double calculateSertifikasiScore(Map<String, dynamic> tasmiSettings, Map<String, dynamic> penaltyCounts, Map<String, double> directScores) => _kecerdasanAkademik.calculateSertifikasiScore(tasmiSettings, penaltyCounts, directScores);
 
-  /// 7. READ: Mendapatkan status delegasi aktif untuk guru pengganti di kelas tertentu
+  /// 7. READ: Mengambil status delegasi aktif untuk guru pengganti di kelas tertentu
   Future<DelegasiModel?> getActiveDelegation(String kelasId, String penerimaIzinId) => _baca.getActiveDelegation(kelasId, penerimaIzinId);
 
   /// 8. READ: Mengambil daftar Modul Aktif berdasarkan Kebijakan Kurikulum (Akses Bebas vs Sekuensial)

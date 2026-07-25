@@ -8,7 +8,6 @@ class ModulPolicySection extends StatelessWidget {
   final bool isAllowBelowTarget;
   final bool isAccumulated;
   final bool isSingleBurden;
-  final bool showSabqiInMutabaah;
   final bool showManzilInDashboard;
   final bool hasMurojaahToggles;
 
@@ -16,7 +15,6 @@ class ModulPolicySection extends StatelessWidget {
   final String? toleransiTooltip;
   final String? accumulatedTooltip;
   final String? singleBurdenTooltip;
-  final String? sabqiTooltip;
   final String? manzilTooltip;
 
   final VoidCallback onStrictSelected;
@@ -25,7 +23,6 @@ class ModulPolicySection extends StatelessWidget {
   final VoidCallback onSingleBurdenSelected;
   final VoidCallback onInfoAccumulated;
   final VoidCallback onInfoSingleBurden;
-  final ValueChanged<bool> onSabqiVisibilityChanged;
   final ValueChanged<bool> onManzilVisibilityChanged;
 
   const ModulPolicySection({
@@ -34,14 +31,12 @@ class ModulPolicySection extends StatelessWidget {
     required this.isAllowBelowTarget,
     required this.isAccumulated,
     required this.isSingleBurden,
-    required this.showSabqiInMutabaah,
     required this.showManzilInDashboard,
     required this.hasMurojaahToggles,
     this.strictTooltip,
     this.toleransiTooltip,
     this.accumulatedTooltip,
     this.singleBurdenTooltip,
-    this.sabqiTooltip,
     this.manzilTooltip,
     required this.onStrictSelected,
     required this.onToleransiSelected,
@@ -49,7 +44,6 @@ class ModulPolicySection extends StatelessWidget {
     required this.onSingleBurdenSelected,
     required this.onInfoAccumulated,
     required this.onInfoSingleBurden,
-    required this.onSabqiVisibilityChanged,
     required this.onManzilVisibilityChanged,
   });
 
@@ -76,8 +70,6 @@ class ModulPolicySection extends StatelessWidget {
             ],
           ),
           if (hasMurojaahToggles) ...[
-            const Divider(height: 24),
-            _buildTogglePolicy("Aktifkan Murajaah Sabqi (Guru)", showSabqiInMutabaah, onSabqiVisibilityChanged, sabqiTooltip),
             const SizedBox(height: 8),
             _buildTogglePolicy("Ceklist Murojaah Manzil (Siswa)", showManzilInDashboard, onManzilVisibilityChanged, manzilTooltip),
           ],

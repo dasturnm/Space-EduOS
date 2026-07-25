@@ -14,6 +14,7 @@ class AppRouteNames {
   static const String divisi = '/divisi';
   static const String jabatan = '/jabatan';
   static const String setupLembaga = '/setup-lembaga'; // FIX: Ditambahkan
+  static const String setupWizard = '/setup-wizard'; // TAMBAHAN: Setup Wizard
 
   // Program
   static const String program = '/akademik/program'; // FIX: Ditambahkan

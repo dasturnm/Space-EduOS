@@ -18,7 +18,6 @@ class MutabaahRecord {
   final Map<String, dynamic> dataPayload; // Tempat menyimpan metrik dinamis
   final double targetSnapshot; // Target saat input (Base Kurikulum + Akumulasi Hutang)
   final double achievedAmount; // Jumlah yang berhasil disetor (Ziyadah/Tilawah)
-  final double sabqiAmount;    // Jumlah Murajaah Sabqi yang dilakukan
   final double debtCreated;    // Jumlah hutang baru yang muncul dari record ini
   final bool isPassedTarget;   // Apakah setoran ini memenuhi target minimum kurikulum
   final String? catatan;
@@ -48,7 +47,6 @@ class MutabaahRecord {
     required this.dataPayload,
     this.targetSnapshot = 0.0,
     this.achievedAmount = 0.0,
-    this.sabqiAmount = 0.0,
     this.debtCreated = 0.0,
     this.isPassedTarget = true,
     this.catatan,
@@ -81,7 +79,6 @@ class MutabaahRecord {
       dataPayload: json['data_payload'] as Map<String, dynamic>? ?? {},
       targetSnapshot: (json['target_snapshot'] as num?)?.toDouble() ?? 0.0,
       achievedAmount: (json['achieved_amount'] as num?)?.toDouble() ?? 0.0,
-      sabqiAmount: (json['sabqi_amount'] as num?)?.toDouble() ?? 0.0,
       debtCreated: (json['debt_created'] as num?)?.toDouble() ?? 0.0,
       isPassedTarget: json['is_passed_target'] ?? true,
       catatan: json['catatan']?.toString(),
@@ -120,7 +117,6 @@ class MutabaahRecord {
       'data_payload': dataPayload,
       'target_snapshot': targetSnapshot,
       'achieved_amount': achievedAmount,
-      'sabqi_amount': sabqiAmount,
       'debt_created': debtCreated,
       'is_passed_target': isPassedTarget,
       'catatan': catatan,
@@ -155,7 +151,6 @@ class MutabaahRecord {
     Map<String, dynamic>? dataPayload,
     double? targetSnapshot,
     double? achievedAmount,
-    double? sabqiAmount,
     double? debtCreated,
     bool? isPassedTarget,
     String? catatan,
@@ -185,7 +180,6 @@ class MutabaahRecord {
       dataPayload: dataPayload ?? this.dataPayload,
       targetSnapshot: targetSnapshot ?? this.targetSnapshot,
       achievedAmount: achievedAmount ?? this.achievedAmount,
-      sabqiAmount: sabqiAmount ?? this.sabqiAmount,
       debtCreated: debtCreated ?? this.debtCreated,
       isPassedTarget: isPassedTarget ?? this.isPassedTarget,
       catatan: catatan ?? this.catatan,

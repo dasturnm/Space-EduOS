@@ -21,7 +21,7 @@ class LayananKecerdasanAkademik {
       final isPhysicalDone = await LayananStatusModul().isContentCompleted(siswaId, modul);
 
       if (isPhysicalDone) {
-        if (modul.isExamRequired) {
+        if (modul.isExamRequired == true) {
           // DUAL/TRIPLE UPDATE: Ubah academic_state, is_ready_for_exam, dan ready_modul_id
           await supabase.from('siswa').update({
             'academic_state': 'exam_ready',
@@ -113,7 +113,7 @@ class LayananKecerdasanAkademik {
     }
   }
 
-  double calculateTasmiScore(Map<String, dynamic> sertifikasiSettings, Map<String, dynamic> penaltyCounts, Map<String, double> directScores) {
+  double calculateSertifikasiScore(Map<String, dynamic> sertifikasiSettings, Map<String, dynamic> penaltyCounts, Map<String, double> directScores) {
     double totalScore = 0.0;
 
     sertifikasiSettings.forEach((aspect, config) {

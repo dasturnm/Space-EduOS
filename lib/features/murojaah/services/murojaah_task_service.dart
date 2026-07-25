@@ -1,45 +1,35 @@
-// Lokasi: lib/features/murojaah/services/murojaah_task_service.dart
-
 import '../../../core/services/base_service.dart';
 import '../../akademik/kurikulum/models/kurikulum_model.dart';
 
 class MurojaahTaskService extends BaseService {
 
-  /// 1. MENGHITUNG RANGE SABQI
-  /// Logika: Mengambil X halaman ke belakang dari baris terakhir yang dihafal
-  Future<Map<String, dynamic>> calculateSabqiRange({
-    required int lastAbsoluteLine,
-    required int pagesBack,
-  }) async {
-    // 1 Halaman Mushaf Madinah = 15 Baris
-    int totalLinesBack = pagesBack * 15;
-    int startLine = lastAbsoluteLine - totalLinesBack;
-    if (startLine < 1) startLine = 1;
-
-    // Ambil koordinat Surah/ayah dari tabel referensi data_mushaf
-    final startCoord = await _getCoordFromAbsolute(startLine);
-    final endCoord = await _getCoordFromAbsolute(lastAbsoluteLine);
-
-    return {
-      "type": "SABQI",
-      "start": startCoord,
-      "end": endCoord,
-      "total_pages": pagesBack,
-    };
-  }
-
   /// 2. MENGHITUNG PORSI MANZIL (DINAMIS)
   /// Logika: Menghitung porsi hafalan lama agar khatam dalam siklus tertentu
   Future<Map<String, dynamic>> calculateManzilRange({
-    required int totalLinesMemorized,
+    required String studentId,
     required double amount,
     required String type, // 'fixed' atau 'percentage'
+    int? totalLinesMemorized,
   }) async {
+    int lines = totalLinesMemorized ?? 0;
+
+    if (lines <= 0 && studentId.isNotEmpty) {
+      final siswaData = await supabase
+          .from('siswa')
+          .select('total_juz_hafalan')
+          .eq('id', studentId)
+          .maybeSingle();
+
+      final double totalJuz = (siswaData?['total_juz_hafalan'] as num?)?.toDouble() ?? 0.0;
+      lines = (totalJuz * 300).round(); // 1 Juz = 20 hal = 300 baris
+    }
+
     int targetLines;
 
     if (type == 'percentage') {
-      // Rumus: (Total Hafalan * Persentase) / 100
-      targetLines = ((totalLinesMemorized * amount) / 100).round();
+      // Rumus 4% (atau amount %): (Total Baris Hafalan * Persentase) / 100
+      double pct = amount > 0 ? amount : 4.0;
+      targetLines = ((lines * pct) / 100).round();
     } else {
       // Jika fixed, asumsi input adalah Halaman (1 Hal = 15 Baris)
       targetLines = (amount * 15).toInt();
@@ -83,43 +73,45 @@ class MurojaahTaskService extends BaseService {
   /// 4. GENERATE DAILY CHECKLIST
   /// Fungsi utama yang akan dipanggil oleh Dashboard Santri
   Future<List<Map<String, dynamic>>> getTodayTasks(String studentId, ModulModel modul) async {
-    // 1. Ambil data record mutabaah terakhir santri untuk modul Ziyadah terkait
-    final lastRecord = await supabase
+    // 1. Ambil record mutabaah MANZIL terakhir untuk menentukan titik mulai Baris Absolut (1-9060)
+    final lastManzilRecord = await supabase
         .from('mutabaah_records')
-        .select('data_payload')
+        .select('data_payload, absolute_line_end')
         .eq('siswa_id', studentId)
-        .eq('tipe_modul', 'ZIYADAH HAFALAN')
+        .eq('tipe_modul', 'MANZIL')
         .order('created_at', ascending: false)
         .limit(1)
         .maybeSingle();
 
-    if (lastRecord == null) return [];
+    int startLine = 1;
+    if (lastManzilRecord != null) {
+      startLine = (int.tryParse(lastManzilRecord['absolute_line_end']?.toString() ?? '0') ?? 0) + 1;
+      if (startLine > 9060) startLine = 1;
+    }
 
-    int lastLine = (lastRecord['data_payload']['calculated_lines_total'] ?? 0).toInt();
-
-    // 2. Hitung Sabqi
-    final sabqi = await calculateSabqiRange(
-      lastAbsoluteLine: lastLine,
-      pagesBack: modul.sabqiAmount,
-    );
-
-    // 3. Hitung Manzil
+    // 2. Hitung Manzil berbasis data riil total_juz_hafalan profil siswa
     final manzil = await calculateManzilRange(
-      totalLinesMemorized: lastLine,
+      studentId: studentId,
       amount: modul.manzilAmount,
       type: modul.manzilType,
     );
 
+    int targetLines = manzil['target_lines'] as int;
+    int endLine = startLine + targetLines - 1;
+    if (endLine > 9060) endLine = 9060;
+
+    final startCoord = await _getCoordFromAbsolute(startLine);
+    final endCoord = await _getCoordFromAbsolute(endLine);
+
     return [
       {
-        "title": "Murojaah Sabqi",
-        "desc": "${sabqi['start']['surah_name']} s/d ${sabqi['end']['surah_name']}",
-        "is_done": false,
-      },
-      {
         "title": "Murojaah Manzil",
-        "desc": "Target hari ini: ${manzil['target_pages']} Halaman",
+        "desc": "Target hari ini: ${manzil['target_pages']} Halaman (${startCoord['surah_name']} : ${startCoord['ayah']} s/d ${endCoord['surah_name']} : ${endCoord['ayah']})",
         "is_done": false,
+        "start_coord": startCoord,
+        "end_coord": endCoord,
+        "start_line": startLine,
+        "end_line": endLine,
       }
     ];
   }

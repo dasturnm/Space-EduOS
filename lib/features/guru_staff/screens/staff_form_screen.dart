@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tahfidz_core/features/auth/services/auth_service.dart';
 import 'package:tahfidz_core/core/providers/app_context_provider.dart'; // Tambahkan ini
 import 'package:tahfidz_core/features/management_lembaga/providers/lembaga_provider.dart';
+import 'package:tahfidz_core/features/management_lembaga/providers/unit_kerja_provider.dart';
 import 'package:tahfidz_core/features/guru_staff/providers/penugasan_staf_provider.dart';
 import 'package:tahfidz_core/features/guru_staff/providers/staff_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -30,6 +31,8 @@ class _StaffFormScreenState extends ConsumerState<StaffFormScreen> {
 
   // State untuk Dropdown
   String? _selectedCabangId;
+  String? _selectedDivisiId; // TAMBAHAN: Hierarki Divisi
+  String? _selectedUnitKerjaId; // TAMBAHAN: Hierarki Unit Kerja
   String? _selectedJabatanId;
   String? _selectedGender; // NEW: State Gender
 
@@ -321,6 +324,10 @@ class _StaffFormScreenState extends ConsumerState<StaffFormScreen> {
                 if (!isEditMode) ...[
                   _buildDropdownCabang(),
                   const SizedBox(height: 16),
+                  _buildDropdownDivisi(),
+                  const SizedBox(height: 16),
+                  _buildDropdownUnitKerja(),
+                  const SizedBox(height: 16),
                   _buildDropdownJabatan(),
                   const SizedBox(height: 16),
                 ],
@@ -459,6 +466,47 @@ class _StaffFormScreenState extends ConsumerState<StaffFormScreen> {
     );
   }
 
+  Widget _buildDropdownDivisi() {
+    final divisiList = ref.watch(divisiListProvider).value ?? [];
+    return DropdownButtonFormField<String>(
+      decoration: _inputDecoration("Pilih Divisi", Icons.account_tree_outlined),
+      value: _selectedDivisiId,
+      items: divisiList.map<DropdownMenuItem<String>>((d) {
+        return DropdownMenuItem<String>(value: d.id, child: Text(d.namaDivisi));
+      }).toList(),
+      onChanged: (val) {
+        setState(() {
+          _selectedDivisiId = val;
+          _selectedUnitKerjaId = null;
+          _selectedJabatanId = null;
+        });
+      },
+      validator: (v) => v == null ? "Divisi wajib dipilih" : null,
+    );
+  }
+
+  Widget _buildDropdownUnitKerja() {
+    final unitKerjaList = ref.watch(unitKerjaListProvider).value ?? [];
+    final filteredUnits = _selectedDivisiId == null
+        ? <dynamic>[]
+        : unitKerjaList.where((u) => u.divisiId == _selectedDivisiId).toList();
+
+    return DropdownButtonFormField<String>(
+      decoration: _inputDecoration("Pilih Unit Kerja", Icons.corporate_fare_outlined),
+      value: _selectedUnitKerjaId,
+      items: filteredUnits.map<DropdownMenuItem<String>>((u) {
+        return DropdownMenuItem<String>(value: u.id, child: Text(u.namaUnitKerja));
+      }).toList(),
+      onChanged: (val) {
+        setState(() {
+          _selectedUnitKerjaId = val;
+          _selectedJabatanId = null;
+        });
+      },
+      validator: (v) => v == null ? "Unit Kerja wajib dipilih" : null,
+    );
+  }
+
   Widget _buildDropdownJabatan() {
     final lembagaId = ref.watch(appContextProvider).lembaga?.id;
 
@@ -466,13 +514,16 @@ class _StaffFormScreenState extends ConsumerState<StaffFormScreen> {
       return const SizedBox.shrink();
     }
 
-    // FIX: jabatanListProvider sekarang tidak menerima parameter (Auto AppContext)
     final jabatans = ref.watch(jabatanListProvider).value ?? [];
+    final filteredJabatans = _selectedUnitKerjaId == null
+        ? <dynamic>[]
+        : jabatans.where((j) => j.unitKerjaId == _selectedUnitKerjaId).toList();
+
     return DropdownButtonFormField<String>(
       decoration: _inputDecoration("Pilih Jabatan", Icons.work),
-      initialValue: _selectedJabatanId, // FIX: Menggunakan initialValue
-      items: jabatans.map((j) {
-        return DropdownMenuItem(value: j.id.toString(), child: Text(j.namaJabatan));
+      value: _selectedJabatanId,
+      items: filteredJabatans.map<DropdownMenuItem<String>>((j) {
+        return DropdownMenuItem<String>(value: j.id.toString(), child: Text(j.namaJabatan));
       }).toList(),
       onChanged: (val) => setState(() => _selectedJabatanId = val),
       validator: (v) => v == null ? "Jabatan wajib dipilih" : null,

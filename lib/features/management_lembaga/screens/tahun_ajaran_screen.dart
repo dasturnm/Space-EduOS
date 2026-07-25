@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/providers/app_context_provider.dart';
 import '../models/tahun_ajaran_model.dart';
-import '../providers/tahun_ajaran_provider.dart'; // Baru: Import notifier
+import '../providers/tahun_ajaran_provider.dart';
 
 class TahunAjaranScreen extends ConsumerStatefulWidget {
   const TahunAjaranScreen({super.key});
@@ -12,7 +12,7 @@ class TahunAjaranScreen extends ConsumerStatefulWidget {
 }
 
 class _TahunAjaranScreenState extends ConsumerState<TahunAjaranScreen> {
-  // --- FUNGSI SET AKTIF ---
+  // --- FUNGSI SET AKTIF (MANUAL ADMIN SWITCHING) ---
   Future<void> _setActiveYear(String taId) async {
     final messenger = ScaffoldMessenger.of(context);
     try {
@@ -29,10 +29,10 @@ class _TahunAjaranScreenState extends ConsumerState<TahunAjaranScreen> {
     }
   }
 
-  // --- FUNGSI DIALOG TAMBAH (SEMI-OTOMATIS) ---
+  // --- FUNGSI DIALOG TAMBAH ---
   void _showAddTADialog() {
     final notifier = ref.read(tahunAjaranListProvider.notifier);
-    final controller = TextEditingController(text: notifier.sarankanLabelTahun()); // Saran Otomatis
+    final controller = TextEditingController(text: notifier.sarankanLabelTahun());
     DateTimeRange? selectedRange;
     String selectedSemester = "Ganjil";
 
@@ -239,7 +239,8 @@ class _TahunAjaranScreenState extends ConsumerState<TahunAjaranScreen> {
             itemCount: tahunAjaranList.length,
             itemBuilder: (context, index) {
               final ta = tahunAjaranList[index];
-              final bool isAktif = ta.id == currentActiveId;
+              // Cek status aktif dari model isAktif atau id lembaga aktif
+              final bool isAktif = ta.isAktif || ta.id == currentActiveId;
 
               return Card(
                 margin: const EdgeInsets.only(bottom: 12),
@@ -257,6 +258,27 @@ class _TahunAjaranScreenState extends ConsumerState<TahunAjaranScreen> {
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      IconButton(
+                        icon: Icon(
+                          isAktif ? Icons.toggle_on : Icons.toggle_off,
+                          color: isAktif ? const Color(0xFF10B981) : Colors.grey,
+                          size: 28,
+                        ),
+                        tooltip: isAktif ? "Tahun Ajaran Aktif" : "Set sebagai Aktif",
+                        onPressed: () {
+                          if (isAktif) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Tahun ajaran ini sudah aktif sebagai acuan lembaga."),
+                                backgroundColor: Colors.orange,
+                              ),
+                            );
+                          } else {
+                            _setActiveYear(ta.id);
+                          }
+                        },
+                      ),
+                      const SizedBox(width: 4),
                       isAktif
                           ? const Chip(
                         label: Text("AKTIF", style: TextStyle(color: Colors.white, fontSize: 10)),

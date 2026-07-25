@@ -92,7 +92,7 @@ extension PengontrolInputMutabaah on _ModulInputScreenState {
 
         if (mounted) {
           setState(() {
-            _endSurah[mId] = _endSurah[mId]; // Explicit state sync
+            _endSurah[mId] = _endSurah[mId];
             _pagesMap[mId] = (result['calculated_pages'] as num?)?.toDouble() ?? 0.0;
             _linesMap[mId] = (result['calculated_lines'] as num?)?.toDouble() ?? 0.0;
             _ayahsMap[mId] = (result['calculated_ayahs'] as num?)?.toDouble() ?? 0.0;
@@ -131,7 +131,6 @@ extension PengontrolInputMutabaah on _ModulInputScreenState {
       int aStart = 0;
       int aEnd = 0;
       int tBaris = 0;
-      double sabqiReal = 0.0;
 
       int intStart = 0;
       int intEnd = 0;
@@ -171,7 +170,7 @@ extension PengontrolInputMutabaah on _ModulInputScreenState {
                 isPassedTarget: _switchStates[mId] == 1,
                 catatan: _catatanControllers[mId]!.text, createdAt: DateTime.now(),
                 surahId: sId, ayahStart: aStart, ayahEnd: aEnd, totalBaris: tBaris,
-                targetSnapshot: _totalTargetsMap[mId] ?? 0.0, sabqiAmount: sabqiReal,
+                targetSnapshot: _totalTargetsMap[mId] ?? 0.0,
                 internalStart: intStart, internalEnd: intEnd,
                 materiSilabusAktif: currentMateri,
                 nomorUrutMateri: i,
@@ -196,7 +195,7 @@ extension PengontrolInputMutabaah on _ModulInputScreenState {
               isPassedTarget: _switchStates[mId] == 1,
               catatan: _catatanControllers[mId]!.text, createdAt: DateTime.now(),
               surahId: sId, ayahStart: aStart, ayahEnd: aEnd, totalBaris: tBaris,
-              targetSnapshot: _totalTargetsMap[mId] ?? 0.0, sabqiAmount: sabqiReal,
+              targetSnapshot: _totalTargetsMap[mId] ?? 0.0,
               internalStart: intStart, internalEnd: intEnd,
               materiSilabusAktif: matSilabus, nomorUrutMateri: numUrut,
               statusKeputusan: _switchStates[mId] ?? 0,
@@ -219,7 +218,6 @@ extension PengontrolInputMutabaah on _ModulInputScreenState {
         aStart = _startAyahs[mId] ?? 0;
         aEnd = _endAyahs[mId] ?? 0;
         tBaris = (_linesMap[mId] ?? 0.0).toInt();
-        sabqiReal = double.tryParse(_sabqiControllers[mId]!.text) ?? 0.0;
 
         achieved = modul.targetAmountUnit == 'HALAMAN' ? (_pagesMap[mId] ?? 0.0) :
         modul.targetAmountUnit == 'JUZ' ? (_juzsMap[mId] ?? 0.0) :
@@ -235,7 +233,6 @@ extension PengontrolInputMutabaah on _ModulInputScreenState {
           "calculated_juzs": _juzsMap[mId],
           "calculated_surahs": _surahsMap[mId],
           "target_unit_at_time": modul.targetAmountUnit,
-          "sabqi_realisasi": sabqiReal,
         };
       } else {
         achieved = double.tryParse(_nilaiControllers[modul.id!]!.text) ?? 0.0;
@@ -256,7 +253,6 @@ extension PengontrolInputMutabaah on _ModulInputScreenState {
         endSurahId: isQuranic ? (_endSurah[mId] ?? 0) : 0,
         totalBaris: tBaris,
         targetSnapshot: _totalTargetsMap[mId] ?? 0.0,
-        sabqiAmount: sabqiReal,
         internalStart: intStart,
         internalEnd: intEnd,
         materiSilabusAktif: matSilabus,
@@ -310,22 +306,18 @@ extension PengontrolInputMutabaah on _ModulInputScreenState {
     if (label == "HALAMAN AKHIR") {
       startNumber = int.tryParse(_halamanAwalControllers[mId]!.text) ?? 1;
     } else if (modul.silabusContent.isNotEmpty) {
-      // LOGIKA INDEX-BASED: Mengambil index materi selanjutnya dari silabusContent
       int lastIdx = (_pertemuanSebelumnyaMap[mId] ?? -1);
       final bool isPreviousUlang = _catatanControllers['${mId}_is_ulang_prev']?.text == 'true';
       int nextIdx = isPreviousUlang ? lastIdx : (lastIdx + 1);
 
-      // Proteksi agar tidak melebihi panjang silabus
       startNumber = (nextIdx >= modul.silabusContent.length) ? modul.silabusContent.length : (nextIdx + 1);
       max = modul.silabusContent.length;
     } else {
-      // Tentukan batas maksimal berdasarkan total baris/fisik, bukan targetPertemuan (administratif)
       if (modul.targetInternalAkhir > 0) {
         max = modul.targetInternalAkhir;
       } else if (modul.totalBaris > 0) {
         max = modul.totalBaris;
       }
-      // Jika totalBaris masih 0, gunakan targetPertemuan atau 100 (fallback tetap di atas)
 
       if (_pertemuanSebelumnyaMap[mId] != null) {
         final bool isPreviousUlang = _catatanControllers['${mId}_is_ulang_prev']?.text == 'true';

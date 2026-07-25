@@ -72,7 +72,7 @@ class UklEngineService extends BaseService {
           .limit(1)
           .maybeSingle();
 
-      // Jika ada level berikutnya, lakukan update profil siswa
+      // Jika ada level berikutnya pada kurikulum yang sama, lakukan update profil siswa
       if (nextLevelData != null) {
         final nextLevelId = nextLevelData['id'];
 
@@ -80,6 +80,47 @@ class UklEngineService extends BaseService {
           'level_id': nextLevelId,
           'current_level_id': nextLevelId, // Menyesuaikan dengan schema db
         }).eq('id', siswaId);
+      } else {
+        // PROMOSI LINTAS JENJANG: Jika level di kurikulum saat ini sudah habis,
+        // cari kurikulum/jenjang berikutnya dalam program yang sama berdasarkan urutan.
+        final currentKurikulum = await supabase
+            .from('kurikulum')
+            .select('id, program_id, urutan')
+            .eq('id', kurikulumId)
+            .maybeSingle();
+
+        if (currentKurikulum != null) {
+          final programId = currentKurikulum['program_id'];
+          final kurikulumUrutan = currentKurikulum['urutan'] ?? 0;
+
+          final nextKurikulum = await supabase
+              .from('kurikulum')
+              .select('id')
+              .eq('program_id', programId)
+              .gt('urutan', kurikulumUrutan)
+              .order('urutan', ascending: true)
+              .limit(1)
+              .maybeSingle();
+
+          if (nextKurikulum != null) {
+            final nextKurikulumId = nextKurikulum['id'];
+            final firstLevelInNextKurikulum = await supabase
+                .from('kurikulum_level')
+                .select('id')
+                .eq('kurikulum_id', nextKurikulumId)
+                .order('urutan', ascending: true)
+                .limit(1)
+                .maybeSingle();
+
+            if (firstLevelInNextKurikulum != null) {
+              final nextLevelId = firstLevelInNextKurikulum['id'];
+              await supabase.from('siswa').update({
+                'level_id': nextLevelId,
+                'current_level_id': nextLevelId,
+              }).eq('id', siswaId);
+            }
+          }
+        }
       }
     } catch (e) {
       throw Exception(handleError(e));

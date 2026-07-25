@@ -5,6 +5,7 @@ import '../../../core/services/base_service.dart';
 import '../models/cabang_model.dart';
 import '../models/divisi_model.dart';
 import '../models/jabatan_model.dart';
+import '../models/unit_kerja_model.dart';
 
 class LembagaService extends BaseService {
   // --- CABANG ---
@@ -73,12 +74,45 @@ class LembagaService extends BaseService {
     }
   }
 
+  // --- UNIT KERJA ---
+  Future<List<UnitKerjaModel>> getUnitKerja(Ref ref, String lembagaId) async {
+    try {
+      final response = await supabase
+          .from('unit_kerja')
+          .select()
+          .eq('lembaga_id', lembagaId)
+          .order('nama_unit_kerja');
+      return (response as List).map((e) => UnitKerjaModel.fromJson(e)).toList();
+    } catch (e) {
+      throw handleError(e);
+    }
+  }
+
+  Future<void> saveUnitKerja(Ref ref, UnitKerjaModel unitKerja) async {
+    try {
+      final data = cleanData(unitKerja.toJson());
+      data['lembaga_id'] = getLembagaId(ref);
+      if (unitKerja.id.isEmpty) data.remove('id');
+      await supabase.from('unit_kerja').upsert(data);
+    } catch (e) {
+      throw handleError(e);
+    }
+  }
+
+  Future<void> deleteUnitKerja(String id) async {
+    try {
+      await supabase.from('unit_kerja').delete().eq('id', id);
+    } catch (e) {
+      throw handleError(e);
+    }
+  }
+
   // --- JABATAN ---
   Future<List<JabatanModel>> getJabatan(Ref ref, String lembagaId) async {
     try {
       final response = await supabase
           .from('jabatan')
-          .select()
+          .select('*, unit_kerja(*, divisi(*))')
           .eq('lembaga_id', lembagaId)
           .order('nama_jabatan');
       return (response as List).map((e) => JabatanModel.fromJson(e)).toList();

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:tahfidz_core/core/constants/app_roles.dart'; // TAMBAHKAN INI
+import 'package:tahfidz_core/core/constants/app_roles.dart'; // TAMBAHAN INI
 import '../../../core/constants/app_routes.dart';
 import '../../../core/providers/app_context_provider.dart';
 import '../../auth/providers/auth_provider.dart';
@@ -75,9 +75,13 @@ class _MainLayoutScreenState extends ConsumerState<MainLayoutScreen> {
     final activeTA = contextState.currentTahunAjaran;
     final namaLembaga = contextState.lembaga?.namaLembaga ?? "Tahfidz Core";
 
-    // 🛡️ SYNC ROLE LOGIC: Disamakan dengan AppDrawer
-    final String role = contextState.role ?? '';
-    final bool isAdmin = role == AppRoles.admin || role == AppRoles.kepalaCabang || role == 'OWNER' || role == 'admin';
+    // 🛡️ SYNC PBAC & ROLE LOGIC
+    final bool canManageLembaga = contextState.hasPermission('lembaga.manage') || contextState.hasPermission('lembaga.read');
+    final bool canManageStaf = contextState.hasPermission('staf.manage') || contextState.hasPermission('staf.read');
+    final bool canManageAkademik = contextState.hasPermission('program.read') || contextState.hasPermission('kurikulum.read') || contextState.hasPermission('silabus.read');
+    final bool canManageSiswaKelas = contextState.hasPermission('kelas.read') || contextState.hasPermission('siswa.read');
+    final bool canMutabaah = contextState.hasPermission('mutabaah_input') || contextState.hasPermission('mutabaah.read');
+    final bool canManageFinansial = contextState.hasPermission('keuangan.read') || contextState.hasPermission('keuangan.manage');
 
     return Container(
       width: 280,
@@ -127,14 +131,14 @@ class _MainLayoutScreenState extends ConsumerState<MainLayoutScreen> {
                 _buildMenuItem(0, Icons.dashboard_outlined, "Dashboard"),
 
                 // KELOMPOK 1: MANAJEMEN LEMBAGA
-                if (isAdmin || contextState.lembaga == null) ...[
+                if (canManageLembaga || contextState.lembaga == null) ...[
                   const Divider(height: 8),
                   _buildSectionLabel("KONFIGURASI LEMBAGA"),
                   _buildMenuItem(1, Icons.business_outlined, "Manajemen Lembaga"), // Langsung mengarah ke Hub
                 ],
 
                 // KELOMPOK 2: BLUEPRINT AKADEMIK
-                if (contextState.lembaga != null && (isAdmin || role == AppRoles.guru)) ...[
+                if (contextState.lembaga != null && canManageAkademik) ...[
                   const Divider(height: 8),
                   _buildSectionLabel("BLUEPRINT AKADEMIK"),
                   _buildMenuItem(3, Icons.menu_book_outlined, "Program dan Kaldik"),
@@ -143,21 +147,23 @@ class _MainLayoutScreenState extends ConsumerState<MainLayoutScreen> {
                 ],
 
                 // KELOMPOK 3: MANAJEMEN SUMBER DAYA
-                if (contextState.lembaga != null && (isAdmin || role == AppRoles.guru)) ...[
+                if (contextState.lembaga != null && (canManageStaf || canManageSiswaKelas)) ...[
                   const Divider(height: 8),
                   _buildSectionLabel("MANAJEMEN SDM & SISWA"),
-                  if (isAdmin) _buildMenuItem(2, Icons.people_alt_outlined, "Guru & Staff"),
-                  _buildMenuItem(9, Icons.meeting_room_outlined, "Siswa & Kelas"),
-                  _buildMenuItem(20, Icons.co_present_outlined, "Presensi"),
+                  if (canManageStaf) _buildMenuItem(2, Icons.people_alt_outlined, "Guru & Staff"),
+                  if (canManageSiswaKelas) ...[
+                    _buildMenuItem(9, Icons.meeting_room_outlined, "Siswa & Kelas"),
+                    _buildMenuItem(20, Icons.co_present_outlined, "Presensi"),
+                  ],
                 ],
 
                 // KELOMPOK 4: AKTIVITAS & OUTPUT
                 if (contextState.lembaga != null) ...[
                   const Divider(height: 8),
                   _buildSectionLabel("AKTIVITAS & OUTPUT"),
-                  if (isAdmin || role == AppRoles.guru || role == AppRoles.wali)
+                  if (canMutabaah)
                     _buildMenuItem(6, Icons.history_edu_rounded, "Mutabaah Tahfidz"),
-                  if (isAdmin || role == AppRoles.guru) ...[
+                  if (canManageAkademik) ...[
                     _buildMenuItem(10, Icons.verified_outlined, "Ujian Tasmi'"),
                     _buildMenuItem(18, Icons.analytics_outlined, "E-Rapor"),
                     _buildMenuItem(19, Icons.card_membership_outlined, "E-Sertifikat"),
@@ -166,7 +172,7 @@ class _MainLayoutScreenState extends ConsumerState<MainLayoutScreen> {
                 ],
 
                 // KELOMPOK 5: FINANSIAL & SISTEM
-                if (contextState.lembaga != null && (isAdmin || role == AppRoles.wali)) ...[
+                if (contextState.lembaga != null && canManageFinansial) ...[
                   const Divider(height: 8),
                   _buildSectionLabel("FINANSIAL & SISTEM"),
                   _buildMenuItem(7, Icons.account_balance_wallet_outlined, "Keuangan"),

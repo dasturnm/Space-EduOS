@@ -21,6 +21,8 @@ class AppContextState {
   final bool isInitialized; // FIX: Menandakan inisialisasi sudah pernah dicoba
   final ProfileModel? profile;
   final String? role;
+  final List<String> permissions;
+  final bool isNewLembaga;
 
   AppContextState({
     this.lembaga,
@@ -32,6 +34,8 @@ class AppContextState {
     this.isInitialized = false,
     this.profile,
     this.role,
+    this.permissions = const [],
+    this.isNewLembaga = false,
   });
 
   AppContextState copyWith({
@@ -44,6 +48,8 @@ class AppContextState {
     bool? isInitialized,
     ProfileModel? profile,
     String? role,
+    List<String>? permissions,
+    bool? isNewLembaga,
   }) {
     return AppContextState(
       lembaga: lembaga ?? this.lembaga,
@@ -55,7 +61,15 @@ class AppContextState {
       isInitialized: isInitialized ?? this.isInitialized,
       profile: profile ?? this.profile,
       role: role ?? this.role,
+      permissions: permissions ?? this.permissions,
+      isNewLembaga: isNewLembaga ?? this.isNewLembaga,
     );
+  }
+
+  // --- HELPER PBAC ---
+  bool hasPermission(String permissionKey) {
+    if (role == 'OWNER' || role == 'ADMIN') return true;
+    return permissions.contains(permissionKey);
   }
 }
 
@@ -231,22 +245,42 @@ class AppContext extends _$AppContext {
       final lembaga = LembagaModel.fromJson(profileData['lembaga']);
       debugPrint("✅ AppContext: Lembaga Terdeteksi -> ${lembaga.id}");
 
-      // 2. Ambil Daftar Cabang & Role
-      final accessData = await _supabase
-          .from('profile_access')
-          .select('role, cabang:cabang_id(*)')
-          .eq('profile_id', user.id);
+      // 1b. Cek Jumlah Divisi untuk Deteksi Lembaga Baru (Setup Wizard)
+      final divisiCountData = await _supabase
+          .from('divisi')
+          .select('id')
+          .eq('lembaga_id', lembaga.id);
+      final bool isNewLembagaDetected = (divisiCountData as List).isEmpty;
 
-      // FIX: Ambil role secara aman
+      // 2. Ambil Penugasan Staf, Jabatan & Granular Permissions (PBAC)
+      final penugasanData = await _supabase
+          .from('penugasan_staf')
+          .select('id, status, cabang:cabang_id(*), jabatan:jabatan_id(nama_jabatan, permissions)')
+          .eq('profile_id', user.id)
+          .eq('status', 'AKTIF');
+
       String? currentRole = (profileData['role']?.toString().toUpperCase());
-      if ((accessData as List).isNotEmpty) {
-        currentRole = accessData.first['role']?.toString().toUpperCase();
-      }
+      List<CabangModel> branches = [];
+      Set<String> extractedPermissions = {};
 
-      List<CabangModel> branches = (accessData as List)
-          .where((item) => item['cabang'] != null)
-          .map((item) => CabangModel.fromJson(item['cabang']))
-          .toList();
+      if ((penugasanData as List).isNotEmpty) {
+        for (final item in penugasanData) {
+          if (item['cabang'] != null) {
+            branches.add(CabangModel.fromJson(item['cabang']));
+          }
+          if (item['jabatan'] != null) {
+            final jabatan = item['jabatan'];
+            if (currentRole == null && jabatan['nama_jabatan'] != null) {
+              currentRole = jabatan['nama_jabatan'].toString().toUpperCase();
+            }
+            if (jabatan['permissions'] != null && jabatan['permissions'] is List) {
+              for (final perm in jabatan['permissions']) {
+                extractedPermissions.add(perm.toString());
+              }
+            }
+          }
+        }
+      }
 
       // FIX: Jika cabang kosong (kasus OWNER), ambil semua cabang milik lembaga ini
       if (branches.isEmpty) {
@@ -299,9 +333,11 @@ class AppContext extends _$AppContext {
         lembaga: lembaga,
         profile: ProfileModel.fromJson(profileData),
         role: currentRole,
+        permissions: extractedPermissions.toList(),
         availableCabang: branches,
         currentCabang: branches.isNotEmpty ? branches.first : null,
         currentTahunAjaran: tahunAktif,
+        isNewLembaga: isNewLembagaDetected,
         isLoading: false,
         isInitialized: true,
       );
@@ -319,6 +355,11 @@ class AppContext extends _$AppContext {
 
   void setProgramId(String id) {
     state = state.copyWith(programId: id);
+  }
+
+  // --- HELPER PBAC ---
+  bool hasPermission(String permissionKey) {
+    return state.hasPermission(permissionKey);
   }
 
   // --- FUNGSI LOGOUT / CLEAR CONTEXT ---

@@ -6,6 +6,7 @@ import '../providers/staff_provider.dart';
 import '../providers/penugasan_staf_provider.dart';
 import 'package:tahfidz_core/core/providers/app_context_provider.dart';
 import 'package:tahfidz_core/features/management_lembaga/providers/lembaga_provider.dart';
+import 'package:tahfidz_core/features/management_lembaga/providers/unit_kerja_provider.dart';
 
 class StaffAssignmentScreen extends ConsumerStatefulWidget {
   final Map<String, dynamic> staff;
@@ -17,6 +18,8 @@ class StaffAssignmentScreen extends ConsumerStatefulWidget {
 
 class _StaffAssignmentScreenState extends ConsumerState<StaffAssignmentScreen> {
   String? _selectedCabangId;
+  String? _selectedDivisiId;
+  String? _selectedUnitKerjaId;
   String? _selectedJabatanId;
   bool _isUtama = false;
   bool _isMutation = true; // True = Ganti Jabatan, False = Tambah Jabatan (Hybrid)
@@ -68,6 +71,10 @@ class _StaffAssignmentScreenState extends ConsumerState<StaffAssignmentScreen> {
             const SizedBox(height: 24),
 
             _buildDropdownCabang(lembagaId),
+            const SizedBox(height: 16),
+            _buildDropdownDivisi(lembagaId),
+            const SizedBox(height: 16),
+            _buildDropdownUnitKerja(lembagaId),
             const SizedBox(height: 16),
             _buildDropdownJabatan(lembagaId),
 
@@ -178,12 +185,48 @@ class _StaffAssignmentScreenState extends ConsumerState<StaffAssignmentScreen> {
     );
   }
 
+  Widget _buildDropdownDivisi(String lembagaId) {
+    final divisiList = ref.watch(divisiListProvider).value ?? [];
+    return DropdownButtonFormField<String>(
+      decoration: _inputDecor("Pilih Divisi", Icons.account_tree_outlined),
+      value: _selectedDivisiId,
+      items: divisiList.map<DropdownMenuItem<String>>((d) => DropdownMenuItem<String>(value: d.id, child: Text(d.namaDivisi))).toList(),
+      onChanged: (v) => setState(() {
+        _selectedDivisiId = v;
+        _selectedUnitKerjaId = null;
+        _selectedJabatanId = null;
+      }),
+    );
+  }
+
+  Widget _buildDropdownUnitKerja(String lembagaId) {
+    final unitKerjaList = ref.watch(unitKerjaListProvider).value ?? [];
+    final filteredUnits = _selectedDivisiId == null
+        ? <dynamic>[]
+        : unitKerjaList.where((u) => u.divisiId == _selectedDivisiId).toList();
+
+    return DropdownButtonFormField<String>(
+      decoration: _inputDecor("Pilih Unit Kerja", Icons.corporate_fare_outlined),
+      value: _selectedUnitKerjaId,
+      items: filteredUnits.map<DropdownMenuItem<String>>((u) => DropdownMenuItem<String>(value: u.id, child: Text(u.namaUnitKerja))).toList(),
+      onChanged: (v) => setState(() {
+        _selectedUnitKerjaId = v;
+        _selectedJabatanId = null;
+      }),
+    );
+  }
+
   Widget _buildDropdownJabatan(String lembagaId) {
     // FIX: jabatanListProvider sekarang tidak menerima parameter (Auto AppContext)
     final jabatans = ref.watch(jabatanListProvider).value ?? [];
+    final filteredJabatans = _selectedUnitKerjaId == null
+        ? <dynamic>[]
+        : jabatans.where((j) => j.unitKerjaId == _selectedUnitKerjaId).toList();
+
     return DropdownButtonFormField<String>(
       decoration: _inputDecor("Pilih Jabatan Baru", Icons.work),
-      items: jabatans.map((j) => DropdownMenuItem(value: j.id, child: Text(j.namaJabatan))).toList(),
+      value: _selectedJabatanId,
+      items: filteredJabatans.map<DropdownMenuItem<String>>((j) => DropdownMenuItem<String>(value: j.id, child: Text(j.namaJabatan))).toList(),
       onChanged: (v) => setState(() => _selectedJabatanId = v),
     );
   }

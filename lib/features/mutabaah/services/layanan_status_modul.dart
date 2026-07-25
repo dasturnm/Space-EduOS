@@ -38,6 +38,10 @@ class LayananStatusModul {
         // Jika target masih tidak terdefinisi, anggap selesai agar tidak looping
         if (targetSurah <= 0 || targetAyat <= 0) return true;
 
+        // Syarat Tuntas Mutlak: Status keputusan harus LANJUT (1)
+        final int statusKeputusan = int.tryParse(lastRecord['status_keputusan']?.toString() ?? '0') ?? 0;
+        if (statusKeputusan != 1) return false;
+
         // FIX: Menggunakan end_surah_id sebagai titik acuan akhir setoran
         final int endSurahFromDb = int.tryParse(lastRecord['end_surah_id']?.toString() ?? '0') ?? 0;
         final currentSurah = endSurahFromDb > 0 ? endSurahFromDb : (int.tryParse(lastRecord['surah_id']?.toString() ?? '0') ?? 0);

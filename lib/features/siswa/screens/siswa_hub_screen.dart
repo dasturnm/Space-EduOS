@@ -21,7 +21,7 @@ import '../widgets/siswa_card_print_dialog.dart';
 // Providers
 import '../providers/siswa_provider.dart';
 import '../../kelas/providers/kelas_provider.dart'; // Tambahan
-import '../../management_lembaga/providers/cabang_provider.dart'; // TAMBAHAN
+import 'package:tahfidz_core/features/management_lembaga/providers/lembaga_provider.dart'; // TAMBAHAN
 import '../../program/providers/program_provider.dart'; // TAMBAHAN
 // TAMBAHAN
 import '../../akademik/kurikulum/providers/level_provider.dart'; // TAMBAHAN

@@ -1,4 +1,3 @@
-// Lokasi: lib/features/akademik/kurikulum/providers/modul_form_controller.dart
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../models/kurikulum_model.dart';
@@ -135,9 +134,8 @@ class ModulFormController extends _$ModulFormController {
     bool? isAllowBelowTarget,
     bool? isAccumulated,
     bool? isSingleBurden,
-    bool? showSabqiInMutabaah,
     bool? showManzilInDashboard,
-    // FIX: Tambahkan parameter field ujian
+    // FIX: Sinkronisasi terminologi evaluation_type
     bool? isExamRequired,
     String? evaluationType,
     double? tasmiVolume,
@@ -206,7 +204,6 @@ class ModulFormController extends _$ModulFormController {
         isAllowBelowTarget: newToleransi,
         isAccumulated: newAccumulated,
         isSingleBurden: newSingleBurden,
-        showSabqiInMutabaah: showSabqiInMutabaah ?? state.modul.showSabqiInMutabaah,
         showManzilInDashboard: showManzilInDashboard ?? state.modul.showManzilInDashboard,
         // FIX: Mapping field ujian
         isExamRequired: computedExamRequired,

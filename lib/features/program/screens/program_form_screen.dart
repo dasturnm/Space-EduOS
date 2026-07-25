@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/program_provider.dart';
 import '../models/program_model.dart'; // Baru: Import model
-import '../../management_lembaga/providers/cabang_provider.dart';
+import 'package:tahfidz_core/features/management_lembaga/providers/lembaga_provider.dart';
 
 class ProgramFormScreen extends ConsumerStatefulWidget {
   final ProgramModel? program; // Baru: Untuk mode edit

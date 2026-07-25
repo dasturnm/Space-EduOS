@@ -43,7 +43,6 @@ class _ModulInputScreenState extends ConsumerState<MutabaahInputScreen> with Tic
 
   final Map<String, TextEditingController> _catatanControllers = {};
   final Map<String, TextEditingController> _nilaiControllers = {};
-  final Map<String, TextEditingController> _sabqiControllers = {};
   final Map<String, TextEditingController> _manzilControllers = {};
   final Map<String, TextEditingController> _halamanAwalControllers = {};
   final Map<String, TextEditingController> _halamanAkhirControllers = {};
@@ -93,7 +92,6 @@ class _ModulInputScreenState extends ConsumerState<MutabaahInputScreen> with Tic
       final mId = modul.id!;
       _catatanControllers[mId] = TextEditingController();
       _nilaiControllers[mId] = TextEditingController();
-      _sabqiControllers[mId] = TextEditingController();
       _manzilControllers[mId] = TextEditingController();
       _halamanAwalControllers[mId] = TextEditingController();
       _halamanAkhirControllers[mId] = TextEditingController();
@@ -123,7 +121,6 @@ class _ModulInputScreenState extends ConsumerState<MutabaahInputScreen> with Tic
     _tabController?.dispose();
     for (var c in _catatanControllers.values) { c.dispose(); }
     for (var c in _nilaiControllers.values) { c.dispose(); }
-    for (var c in _sabqiControllers.values) { c.dispose(); }
     for (var c in _manzilControllers.values) { c.dispose(); }
     for (var c in _halamanAwalControllers.values) { c.dispose(); }
     for (var c in _halamanAkhirControllers.values) { c.dispose(); }

@@ -91,7 +91,6 @@ class DashboardWaliScreen extends ConsumerWidget {
       levelId: "current_level",
       namaModul: "Program Murojaah",
       tipe: "MUROJAAH",
-      sabqiAmount: 5,
       manzilType: 'percentage',
       manzilAmount: 10.0,
       showManzilInDashboard: true, // Flag krusial dari Kurikulum

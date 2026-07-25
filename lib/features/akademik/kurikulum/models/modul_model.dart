@@ -1,6 +1,6 @@
 // Lokasi: lib/features/akademik/kurikulum/models/modul_model.dart
-
 // -----------------------------------------------------------------------------
+
 // 1. MODUL MODEL (The Specific Target/Content)
 // -----------------------------------------------------------------------------
 class ModulModel {
@@ -12,7 +12,7 @@ class ModulModel {
   final double targetAmount;
   final String? silabus;
   final List<SilabusItemModel> silabusContent;
-  final List<String> materiSilabus; // TAMBAHAN: Untuk Silabus Internal
+  final List<String> materiSilabus;
   final bool isSystemGenerated;
   final String jenisMetrik;
   final String? mulaiKoordinatJuz;
@@ -25,43 +25,38 @@ class ModulModel {
   final int ayahStart;
   final int ayahEnd;
   final int totalBaris;
-  final int totalSurah; // FIX: Tambahkan field
-  final double totalHalaman; // FIX: Tambahkan field (Poin 2)
-  final double totalJuz; // FIX: Tambahkan field (Poin 2)
+  final int totalSurah;
+  final double totalHalaman;
+  final double totalJuz;
   final double kkm;
   final String silabusSource;
   final bool isStrict;
   final bool isAllowBelowTarget;
   final bool isAccumulated;
   final bool isSingleBurden;
-  final int sabqiAmount;
-  final String sabqiAmountUnit;
   final String manzilType;
   final double manzilAmount;
   final String targetAmountUnit;
   final bool isPlottingActive;
-  final bool showSabqiInMutabaah;
   final bool showManzilInDashboard;
   final bool isMurojaah;
 
-  // FIX: Tambahkan field untuk Pengaturan Kenaikan Level (Poin 6)
   final bool isExamRequired;
-  final String evaluationType;        // Ganti dari examType
-  final double tasmiVolume;      // Ganti dari examVolume
-  final String tasmiUnit;        // Ganti dari examUnit
-  final bool isCumulativeTasmi;  // Ganti dari isCumulativeExam
-  final int tasmiRange;          // Ganti dari cumulativeRange
-  final bool useRatingScale; // TAMBAHAN: Preferensi metode penilaian admin (skala 1-4)
-  final bool isTasmiRequired; // TAMBAHAN: Flag kontrol alur Tasmi Kelancaran atau langsung Exam
-  final bool isTasmiSekaliDuduk; // TAMBAHAN: Flag apakah ujian Tasmi' wajib sekali duduk
-  final bool isReverseOrder; // TAMBAHAN: Flag penanda urutan hafalan mundur (Opsi 2)
+  final String evaluationType;
+  final double tasmiVolume;
+  final String tasmiUnit;
+  final bool isCumulativeTasmi;
+  final int tasmiRange;
+  final bool useRatingScale;
+  final bool isTasmiRequired;
+  final bool isTasmiSekaliDuduk;
+  final bool isReverseOrder;
 
   final Map<String, dynamic>? sertifikasiSettings;
   final List<TargetMetrikModel> targetMetrik;
-  final List<ModulEvaluasiTemplateModel> evaluasiTemplates; // TAMBAHAN: Komponen Lembar Evaluasi Dinamis
+  final List<ModulEvaluasiTemplateModel> evaluasiTemplates;
   final int urutan;
 
-  // Getters - Single Source of Truth untuk bobot sertifikasi
   int get bobotItqon => (sertifikasiSettings?['itqon']?['bobot'] as num?)?.toInt() ?? 0;
   int get bobotMakhraj => (sertifikasiSettings?['makhraj']?['bobot'] as num?)?.toInt() ?? 0;
   int get bobotTajwid => (sertifikasiSettings?['tajwid']?['bobot'] as num?)?.toInt() ?? 0;
@@ -79,7 +74,7 @@ class ModulModel {
     this.targetAmount = 0.0,
     this.silabus,
     this.silabusContent = const [],
-    this.materiSilabus = const [], // TAMBAHAN
+    this.materiSilabus = const [],
     this.isSystemGenerated = false,
     this.jenisMetrik = 'SURAH',
     this.mulaiKoordinatJuz,
@@ -92,43 +87,37 @@ class ModulModel {
     this.ayahStart = 0,
     this.ayahEnd = 0,
     this.totalBaris = 0,
-    this.totalSurah = 0, // FIX: Inisialisasi
-    this.totalHalaman = 0.0, // FIX: Inisialisasi (Poin 2)
-    this.totalJuz = 0.0, // FIX: Inisialisasi (Poin 2)
+    this.totalSurah = 0,
+    this.totalHalaman = 0.0,
+    this.totalJuz = 0.0,
     this.kkm = 80,
     this.silabusSource = 'mushaf',
     this.isStrict = false,
     this.isAllowBelowTarget = true,
     this.isAccumulated = false,
     this.isSingleBurden = true,
-    this.sabqiAmount = 0,
-    this.sabqiAmountUnit = 'HALAMAN',
     this.manzilType = 'fixed',
     this.manzilAmount = 0.0,
     this.targetAmountUnit = 'HALAMAN',
     this.isPlottingActive = false,
-    this.showSabqiInMutabaah = true,
     this.showManzilInDashboard = true,
     this.isMurojaah = false,
-    // FIX: Default value untuk Pengaturan Kenaikan Level
     this.isExamRequired = false,
-    this.evaluationType = 'tasmi',
+    this.evaluationType = 'checklist',
     this.tasmiVolume = 1.0,
     this.tasmiUnit = 'JUZ',
     this.isCumulativeTasmi = false,
     this.tasmiRange = 5,
-    this.useRatingScale = false, // TAMBAHAN
-    this.isTasmiRequired = false, // TAMBAHAN
-    this.isTasmiSekaliDuduk = true, // TAMBAHAN: Default true (wajib sekali duduk)
-    this.isReverseOrder = false, // TAMBAHAN
+    this.useRatingScale = false,
+    this.isTasmiRequired = false,
+    this.isTasmiSekaliDuduk = true,
+    this.isReverseOrder = false,
     this.sertifikasiSettings,
     this.targetMetrik = const [],
-    this.evaluasiTemplates = const [], // TAMBAHAN
+    this.evaluasiTemplates = const [],
     this.urutan = 0,
   });
 
-  // TAMBAHAN: Helper untuk mengekstrak daftar materi secara dinamis dari silabusContent
-  // Prioritas utama mengambil dari CSV (silabusContent), fallback ke materiSilabus lama
   List<String> get extractedMateriList {
     if (silabusContent.isNotEmpty) {
       return silabusContent.map((e) => e.materi).where((m) => m.trim().isNotEmpty).toList();
@@ -159,7 +148,7 @@ class ModulModel {
         : const [],
     materiSilabus: (json['materi_silabus'] is List)
         ? List<String>.from(json['materi_silabus'])
-        : const [], // TAMBAHAN
+        : const [],
     isSystemGenerated: json['is_system_generated'] == true,
     jenisMetrik: json['jenis_metrik']?.toString() ?? 'HALAMAN',
     mulaiKoordinatJuz: json['mulai_koordinat_juz']?.toString() ?? json['mulai_koordinat']?.toString(),
@@ -172,36 +161,32 @@ class ModulModel {
     ayahStart: (json['ayah_start'] as num?)?.toInt() ?? 0,
     ayahEnd: (json['ayah_end'] as num?)?.toInt() ?? 0,
     totalBaris: (json['total_baris'] as num?)?.toInt() ?? 0,
-    totalSurah: (json['total_surah'] as num?)?.toInt() ?? 0, // FIX: Parsing
-    totalHalaman: (json['total_halaman'] as num?)?.toDouble() ?? 0.0, // FIX: Parsing (Poin 2)
-    totalJuz: (json['total_juz'] as num?)?.toDouble() ?? 0.0, // FIX: Parsing (Poin 2)
+    totalSurah: (json['total_surah'] as num?)?.toInt() ?? 0,
+    totalHalaman: (json['total_halaman'] as num?)?.toDouble() ?? 0.0,
+    totalJuz: (json['total_juz'] as num?)?.toDouble() ?? 0.0,
     kkm: (json['kkm'] as num?)?.toDouble() ?? 80.0,
     silabusSource: json['silabus_source']?.toString() ?? 'mushaf',
     isStrict: json['is_strict'] == true,
     isAllowBelowTarget: json['is_allow_below_target'] ?? true,
     isAccumulated: json['is_accumulated'] == true,
     isSingleBurden: json['is_single_burden'] ?? true,
-    sabqiAmount: (json['sabqi_amount'] as num?)?.toInt() ?? 0,
-    sabqiAmountUnit: json['sabqi_amount_unit']?.toString() ?? 'HALAMAN',
     manzilType: json['manzil_type']?.toString() ?? 'fixed',
     manzilAmount: (json['manzil_amount'] as num?)?.toDouble() ?? 0.0,
     targetAmountUnit: json['target_amount_unit']?.toString() ?? 'HALAMAN',
     isPlottingActive: json['is_plotting_active'] == true,
-    showSabqiInMutabaah: json['show_sabqi_in_mutabaah'] ?? true,
     showManzilInDashboard: json['show_manzil_in_dashboard'] ?? true,
     isMurojaah: json['is_murojaah'] == true,
-    // FIX: Parsing field Kenaikan Level dari JSON
     isExamRequired: json['is_exam_required'] == true,
-    evaluationType: json['tasmi_type']?.toString() ?? 'tasmi',
+    evaluationType: json['evaluation_type']?.toString() ?? 'checklist',
     tasmiVolume: (json['tasmi_volume'] as num?)?.toDouble() ?? 1.0,
     tasmiUnit: json['tasmi_unit']?.toString() ?? 'JUZ',
     isCumulativeTasmi: json['is_cumulative_tasmi'] == true,
     tasmiRange: (json['tasmi_range'] as num?)?.toInt() ?? 5,
-    useRatingScale: json['use_rating_scale'] == true, // TAMBAHAN
-    isTasmiRequired: json['is_tasmi_required'] == true || (json['is_tasmi_required'] as bool? ?? false), // TAMBAHAN
-    isTasmiSekaliDuduk: json['is_tasmi_sekali_duduk'] ?? true, // TAMBAHAN
-    isReverseOrder: json['is_reverse_order'] == true, // TAMBAHAN
-    sertifikasiSettings: json['tasmi_settings'] as Map<String, dynamic>?,
+    useRatingScale: json['use_rating_scale'] == true,
+    isTasmiRequired: json['is_tasmi_required'] == true || (json['is_tasmi_required'] as bool? ?? false),
+    isTasmiSekaliDuduk: json['is_tasmi_sekali_duduk'] ?? true,
+    isReverseOrder: json['is_reverse_order'] == true,
+    sertifikasiSettings: json['sertifikasi_settings'] as Map<String, dynamic>?,
     targetMetrik: (json['target_metrik_kurikulum'] is List)
         ? (json['target_metrik_kurikulum'] as List)
         .whereType<Map<String, dynamic>>()
@@ -213,7 +198,7 @@ class ModulModel {
         .whereType<Map<String, dynamic>>()
         .map((x) => ModulEvaluasiTemplateModel.fromJson(x))
         .toList()
-        : const [], // TAMBAHAN
+        : const [],
     urutan: (json['urutan'] as num?)?.toInt() ?? 0,
   );
 
@@ -226,12 +211,11 @@ class ModulModel {
     'target_amount': targetAmount,
     'silabus': silabus,
     'silabus_content': List<dynamic>.from(silabusContent.map((x) => x.toJson())),
-    'materi_silabus': materiSilabus, // TAMBAHAN
+    'materi_silabus': materiSilabus,
     'is_system_generated': isSystemGenerated,
     'jenis_metrik': jenisMetrik,
     'mulai_koordinat_juz': mulaiKoordinatJuz,
     'akhir_koordinat_juz': akhirKoordinatJuz,
-    // FIX: Auto-Normalisasi Database (Start <= End) di tingkat serialization agar data selalu rapi
     'surah_id_start': (() {
       final s = silabusSource == 'mushaf' && surahIdStart == 0 ? 1 : surahIdStart;
       final e = silabusSource == 'mushaf' && surahIdEnd == 0 ? 114 : surahIdEnd;
@@ -242,11 +226,9 @@ class ModulModel {
       final e = silabusSource == 'mushaf' && surahIdEnd == 0 ? 114 : surahIdEnd;
       return s < e ? e : s;
     })(),
-    // FIX: Normalisasi Halaman agar selalu (Start <= End) di DB
     'mulai_halaman': (mulaiHalaman > 0 && akhirHalaman > 0) ? (mulaiHalaman < akhirHalaman ? mulaiHalaman : akhirHalaman) : mulaiHalaman,
     'akhir_halaman': (mulaiHalaman > 0 && akhirHalaman > 0) ? (mulaiHalaman < akhirHalaman ? akhirHalaman : mulaiHalaman) : akhirHalaman,
     'target_internal_akhir': targetInternalAkhir,
-    // FIX: Normalisasi Ayat mengikuti Surah agar selalu (Start <= End) di DB
     'ayah_start': (() {
       final sSurah = silabusSource == 'mushaf' && surahIdStart == 0 ? 1 : surahIdStart;
       final eSurah = silabusSource == 'mushaf' && surahIdEnd == 0 ? 114 : surahIdEnd;
@@ -262,27 +244,23 @@ class ModulModel {
       return ayahStart <= ayahEnd ? ayahEnd : ayahStart;
     })(),
     'total_baris': totalBaris,
-    'total_surah': totalSurah, // FIX: Masukkan ke JSON
-    'total_halaman': totalHalaman, // FIX: Masukkan ke JSON (Poin 2)
-    'total_juz': totalJuz, // FIX: Masukkan ke JSON (Poin 2)
+    'total_surah': totalSurah,
+    'total_halaman': totalHalaman,
+    'total_juz': totalJuz,
     'kkm': kkm,
     'silabus_source': silabusSource,
     'is_strict': isStrict,
     'is_allow_below_target': isAllowBelowTarget,
     'is_accumulated': isAccumulated,
     'is_single_burden': isSingleBurden,
-    'sabqi_amount': sabqiAmount,
-    'sabqi_amount_unit': sabqiAmountUnit,
     'manzil_type': manzilType,
     'manzil_amount': manzilAmount,
     'target_amount_unit': targetAmountUnit,
     'is_plotting_active': isPlottingActive,
-    'show_sabqi_in_mutabaah': showSabqiInMutabaah, // FIX: Variabel diperbaiki
     'show_manzil_in_dashboard': showManzilInDashboard,
     'is_murojaah': isMurojaah,
-    // FIX: Sinkronisasi field Kenaikan Level ke JSON dengan format snake_case sesuai kolom database
     'is_exam_required': isExamRequired,
-    'tasmi_type': evaluationType,
+    'evaluation_type': evaluationType,
     'tasmi_volume': tasmiVolume,
     'tasmi_unit': tasmiUnit,
     'is_cumulative_tasmi': isCumulativeTasmi,
@@ -291,8 +269,8 @@ class ModulModel {
     'is_tasmi_required': isTasmiRequired,
     'is_tasmi_sekali_duduk': isTasmiSekaliDuduk,
     'is_reverse_order': isReverseOrder,
-    'tasmi_settings': sertifikasiSettings,
-    'modul_evaluasi_template': List<dynamic>.from(evaluasiTemplates.map((x) => x.toJson())), // TAMBAHAN
+    'sertifikasi_settings': sertifikasiSettings,
+    'modul_evaluasi_template': List<dynamic>.from(evaluasiTemplates.map((x) => x.toJson())),
     'urutan': urutan,
   };
 
@@ -305,7 +283,7 @@ class ModulModel {
     double? targetAmount,
     String? silabus,
     List<SilabusItemModel>? silabusContent,
-    List<String>? materiSilabus, // TAMBAHAN
+    List<String>? materiSilabus,
     bool? isSystemGenerated,
     String? jenisMetrik,
     String? mulaiKoordinatJuz,
@@ -318,38 +296,34 @@ class ModulModel {
     int? ayahStart,
     int? ayahEnd,
     int? totalBaris,
-    int? totalSurah, // FIX: Parameter baru
-    double? totalHalaman, // FIX: Parameter baru (Poin 2)
-    double? totalJuz, // FIX: Parameter baru (Poin 2)
+    int? totalSurah,
+    double? totalHalaman,
+    double? totalJuz,
     double? kkm,
     String? silabusSource,
     bool? isStrict,
     bool? isAllowBelowTarget,
     bool? isAccumulated,
     bool? isSingleBurden,
-    int? sabqiAmount,
-    String? sabqiAmountUnit,
     String? manzilType,
     double? manzilAmount,
     String? targetAmountUnit,
     bool? isPlottingActive,
-    bool? showSabqiInMutabaah,
     bool? showManzilInDashboard,
     bool? isMurojaah,
-    // FIX: Parameter copyWith untuk field baru
     bool? isExamRequired,
     String? evaluationType,
     double? tasmiVolume,
     String? tasmiUnit,
     bool? isCumulativeTasmi,
     int? tasmiRange,
-    bool? useRatingScale, // TAMBAHAN
-    bool? isTasmiRequired, // TAMBAHAN
-    bool? isTasmiSekaliDuduk, // TAMBAHAN
-    bool? isReverseOrder, // TAMBAHAN
+    bool? useRatingScale,
+    bool? isTasmiRequired,
+    bool? isTasmiSekaliDuduk,
+    bool? isReverseOrder,
     Map<String, dynamic>? sertifikasiSettings,
     List<TargetMetrikModel>? targetMetrik,
-    List<ModulEvaluasiTemplateModel>? evaluasiTemplates, // TAMBAHAN
+    List<ModulEvaluasiTemplateModel>? evaluasiTemplates,
     int? urutan,
   }) {
     return ModulModel(
@@ -361,7 +335,7 @@ class ModulModel {
       targetAmount: targetAmount ?? this.targetAmount,
       silabus: silabus ?? this.silabus,
       silabusContent: silabusContent ?? this.silabusContent,
-      materiSilabus: materiSilabus ?? this.materiSilabus, // TAMBAHAN
+      materiSilabus: materiSilabus ?? this.materiSilabus,
       isSystemGenerated: isSystemGenerated ?? this.isSystemGenerated,
       jenisMetrik: jenisMetrik ?? this.jenisMetrik,
       mulaiKoordinatJuz: mulaiKoordinatJuz ?? this.mulaiKoordinatJuz,
@@ -374,44 +348,39 @@ class ModulModel {
       ayahStart: ayahStart ?? this.ayahStart,
       ayahEnd: ayahEnd ?? this.ayahEnd,
       totalBaris: totalBaris ?? this.totalBaris,
-      totalSurah: totalSurah ?? this.totalSurah, // FIX: Mapping
-      totalHalaman: totalHalaman ?? this.totalHalaman, // FIX: Mapping (Poin 2)
-      totalJuz: totalJuz ?? this.totalJuz, // FIX: Mapping (Poin 2)
+      totalSurah: totalSurah ?? this.totalSurah,
+      totalHalaman: totalHalaman ?? this.totalHalaman,
+      totalJuz: totalJuz ?? this.totalJuz,
       kkm: kkm ?? this.kkm,
       silabusSource: silabusSource ?? this.silabusSource,
       isStrict: isStrict ?? this.isStrict,
       isAllowBelowTarget: isAllowBelowTarget ?? this.isAllowBelowTarget,
       isAccumulated: isAccumulated ?? this.isAccumulated,
       isSingleBurden: isSingleBurden ?? this.isSingleBurden,
-      sabqiAmount: sabqiAmount ?? this.sabqiAmount,
-      sabqiAmountUnit: sabqiAmountUnit ?? this.sabqiAmountUnit,
       manzilType: manzilType ?? this.manzilType,
       manzilAmount: manzilAmount ?? this.manzilAmount,
       targetAmountUnit: targetAmountUnit ?? this.targetAmountUnit,
       isPlottingActive: isPlottingActive ?? this.isPlottingActive,
-      showSabqiInMutabaah: showSabqiInMutabaah ?? this.showSabqiInMutabaah,
       showManzilInDashboard: showManzilInDashboard ?? this.showManzilInDashboard,
       isMurojaah: isMurojaah ?? this.isMurojaah,
-      // FIX: Mapping field baru di copyWith
       isExamRequired: isExamRequired ?? this.isExamRequired,
       evaluationType: evaluationType ?? this.evaluationType,
       tasmiVolume: tasmiVolume ?? this.tasmiVolume,
       tasmiUnit: tasmiUnit ?? this.tasmiUnit,
       isCumulativeTasmi: isCumulativeTasmi ?? this.isCumulativeTasmi,
       tasmiRange: tasmiRange ?? this.tasmiRange,
-      useRatingScale: useRatingScale ?? this.useRatingScale, // TAMBAHAN
-      isTasmiRequired: isTasmiRequired ?? this.isTasmiRequired, // TAMBAHAN
-      isTasmiSekaliDuduk: isTasmiSekaliDuduk ?? this.isTasmiSekaliDuduk, // TAMBAHAN
-      isReverseOrder: isReverseOrder ?? this.isReverseOrder, // TAMBAHAN
+      useRatingScale: useRatingScale ?? this.useRatingScale,
+      isTasmiRequired: isTasmiRequired ?? this.isTasmiRequired,
+      isTasmiSekaliDuduk: isTasmiSekaliDuduk ?? this.isTasmiSekaliDuduk,
+      isReverseOrder: isReverseOrder ?? this.isReverseOrder,
       sertifikasiSettings: sertifikasiSettings ?? this.sertifikasiSettings,
       targetMetrik: targetMetrik ?? this.targetMetrik,
-      evaluasiTemplates: evaluasiTemplates ?? this.evaluasiTemplates, // TAMBAHAN
+      evaluasiTemplates: evaluasiTemplates ?? this.evaluasiTemplates,
       urutan: urutan ?? this.urutan,
     );
   }
 }
 
-// -----------------------------------------------------------------------------
 // 2. SUPPORTING MODELS (Silabus & Target Metrik)
 // -----------------------------------------------------------------------------
 class SilabusItemModel {
@@ -521,7 +490,6 @@ class ModulEvaluasiTemplateModel {
     lembagaId: json['lembaga_id']?.toString() ?? '',
     modulId: json['modul_id']?.toString() ?? '',
     namaMateri: json['nama_materi']?.toString() ?? '',
-    // FIX: Ambil nilai bobot dari database sebagai representasi indikator kelulusan/bobot angka agar sinkron dengan tipe numerik di skema fisik
     indikatorKelulusan: json['bobot']?.toString() ?? json['indikator_kelulusan']?.toString() ?? '',
   );
 
@@ -530,7 +498,6 @@ class ModulEvaluasiTemplateModel {
     'lembaga_id': (lembagaId.trim().isEmpty) ? null : lembagaId,
     'modul_id': (modulId.trim().isEmpty) ? null : modulId,
     'nama_materi': namaMateri,
-    // FIX: Petakan isi indikatorKelulusan ke kolom fisik 'bobot' dengan konversi numerik agar diterima oleh batasan skema Supabase
     'bobot': double.tryParse(indikatorKelulusan) ?? 100.0,
   };
 

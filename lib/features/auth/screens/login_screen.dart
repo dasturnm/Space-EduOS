@@ -9,6 +9,7 @@ import 'package:tahfidz_core/core/widgets/app_button.dart';
 import 'package:tahfidz_core/features/auth/screens/register_lembaga_screen.dart';
 // Import halaman lupa password (pastikan path ini sesuai nanti)
 import 'package:tahfidz_core/features/auth/screens/forgot_password_screen.dart';
+import 'package:tahfidz_core/core/providers/app_context_provider.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -29,11 +30,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     super.initState();
     _loadSavedIdentity();
 
-    _authSubscription = Supabase.instance.client.auth.onAuthStateChange.listen((data) {
+    _authSubscription = Supabase.instance.client.auth.onAuthStateChange.listen((data) async {
       final AuthChangeEvent event = data.event;
       if (event == AuthChangeEvent.signedIn) {
         if (mounted) {
-          context.go('/dashboard');
+          await ref.read(appContextProvider.notifier).initContext(forceRefresh: true);
+          if (!mounted) return;
+          final isNew = ref.read(appContextProvider).isNewLembaga;
+          if (isNew) {
+            context.go('/setup-wizard');
+          } else {
+            context.go('/dashboard');
+          }
         }
       }
     });

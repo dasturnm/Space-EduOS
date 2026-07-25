@@ -1,4 +1,3 @@
-// Lokasi: lib/features/akademik/kurikulum/screens/modul_form_screen.dart
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -174,30 +173,46 @@ class _ModulFormScreenState extends ConsumerState<ModulFormScreen> {
       if (m.jenisMetrik == 'SURAH') {
         final FocusNode? currentFocus = FocusScope.of(context).focusedChild;
         if (m.surahIdStart > 0 && _mulaiController.text != m.surahIdStart.toString() && currentFocus?.context?.widget is! EditableText) {
-          _mulaiController.text = m.surahIdStart.toString();
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) _mulaiController.text = m.surahIdStart.toString();
+          });
         }
         if (m.surahIdEnd > 0 && _akhirController.text != m.surahIdEnd.toString() && currentFocus?.context?.widget is! EditableText) {
-          _akhirController.text = m.surahIdEnd.toString();
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) _akhirController.text = m.surahIdEnd.toString();
+          });
         }
         if (m.ayahStart > 0 && _mulaiAyatController.text != m.ayahStart.toString() && currentFocus?.context?.widget is! EditableText) {
-          _mulaiAyatController.text = m.ayahStart.toString();
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) _mulaiAyatController.text = m.ayahStart.toString();
+          });
         }
         if (m.ayahEnd > 0 && _akhirAyatController.text != m.ayahEnd.toString() && currentFocus?.context?.widget is! EditableText) {
-          _akhirAyatController.text = m.ayahEnd.toString();
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) _akhirAyatController.text = m.ayahEnd.toString();
+          });
         }
       } else if (m.jenisMetrik == 'JUZ') {
         if (m.mulaiKoordinatJuz != null && _mulaiController.text != m.mulaiKoordinatJuz) {
-          _mulaiController.text = m.mulaiKoordinatJuz!;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) _mulaiController.text = m.mulaiKoordinatJuz!;
+          });
         }
         if (m.akhirKoordinatJuz != null && _akhirController.text != m.akhirKoordinatJuz) {
-          _akhirController.text = m.akhirKoordinatJuz!;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) _akhirController.text = m.akhirKoordinatJuz!;
+          });
         }
       } else if (m.jenisMetrik == 'HALAMAN') {
         if (m.mulaiHalaman > 0 && _mulaiController.text != m.mulaiHalaman.toString()) {
-          _mulaiController.text = m.mulaiHalaman.toString();
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) _mulaiController.text = m.mulaiHalaman.toString();
+          });
         }
         if (m.akhirHalaman > 0 && _akhirController.text != m.akhirHalaman.toString()) {
-          _akhirController.text = m.akhirHalaman.toString();
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) _akhirController.text = m.akhirHalaman.toString();
+          });
         }
       }
     }
@@ -448,7 +463,6 @@ class _ModulFormScreenState extends ConsumerState<ModulFormScreen> {
           isAllowBelowTarget: m.isAllowBelowTarget,
           isAccumulated: m.isAccumulated,
           isSingleBurden: m.isSingleBurden,
-          showSabqiInMutabaah: false,
           showManzilInDashboard: m.showManzilInDashboard,
           hasMurojaahToggles: false,
           onStrictSelected: () => notifier.updateField(isStrict: !m.isStrict),
@@ -457,7 +471,6 @@ class _ModulFormScreenState extends ConsumerState<ModulFormScreen> {
           onSingleBurdenSelected: () => notifier.updateField(isSingleBurden: !m.isSingleBurden),
           onInfoAccumulated: () => _showInfoDialog(context, "Akumulasi", "Sisa target akan dibebankan pada pertemuan selanjutnya."),
           onInfoSingleBurden: () => _showInfoDialog(context, "Beban Tunggal", "Sisa target tidak dibebankan pada pertemuan selanjutnya."),
-          onSabqiVisibilityChanged: (_) {},
           onManzilVisibilityChanged: (v) => notifier.updateField(showManzilInDashboard: v),
         ),
         if (m.silabusSource == 'mushaf') ...[
@@ -890,11 +903,7 @@ class EvaluationUnifiedSection extends StatelessWidget {
                 value: m.isExamRequired,
                 activeThumbColor: const Color(0xFF10B981),
                 onChanged: (v) {
-                  if (v && (m.evaluationType.isEmpty || m.evaluationType == 'tasmi')) {
-                    notifier.updateField(isExamRequired: true, evaluationType: 'checklist');
-                  } else {
-                    notifier.updateField(isExamRequired: v, evaluationType: v ? (m.evaluationType == 'tasmi' ? 'checklist' : m.evaluationType) : '');
-                  }
+                  notifier.updateField(isExamRequired: v, evaluationType: v ? (m.evaluationType.isEmpty ? 'checklist' : m.evaluationType) : '');
                 },
               ),
             ],
@@ -904,7 +913,9 @@ class EvaluationUnifiedSection extends StatelessWidget {
             ModulSharedWidgets.buildLabel("TIPE EVALUASI"),
             const SizedBox(height: 8),
             DropdownButtonFormField<String>(
-              initialValue: m.evaluationType.isNotEmpty && m.evaluationType != 'tasmi' ? m.evaluationType : 'checklist',
+              value: (m.evaluationType.isNotEmpty && ['checklist', 'mushaf_rubric'].contains(m.evaluationType))
+                  ? m.evaluationType
+                  : 'checklist',
               isExpanded: true,
               decoration: ModulSharedWidgets.inputStyle(""),
               items: const [
@@ -914,7 +925,7 @@ class EvaluationUnifiedSection extends StatelessWidget {
               onChanged: (v) => notifier.updateField(evaluationType: v),
             ),
             const SizedBox(height: 16),
-            if (m.evaluationType == 'checklist' || m.evaluationType.isEmpty || m.evaluationType == 'tasmi') ...[
+            if (m.evaluationType == 'checklist') ...[
               ModulExamSection(
                 isExamRequired: true,
                 silabusSource: m.silabusSource,
