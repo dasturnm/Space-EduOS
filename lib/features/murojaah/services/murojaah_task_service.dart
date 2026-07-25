@@ -76,18 +76,14 @@ class MurojaahTaskService extends BaseService {
     // 1. Ambil record mutabaah MANZIL terakhir untuk menentukan titik mulai Baris Absolut (1-9060)
     final lastManzilRecord = await supabase
         .from('mutabaah_records')
-        .select('data_payload, absolute_line_end')
+        .select('data_payload, absolute_line_start, absolute_line_end')
         .eq('siswa_id', studentId)
         .eq('tipe_modul', 'MANZIL')
         .order('created_at', ascending: false)
         .limit(1)
         .maybeSingle();
 
-    int startLine = 1;
-    if (lastManzilRecord != null) {
-      startLine = (int.tryParse(lastManzilRecord['absolute_line_end']?.toString() ?? '0') ?? 0) + 1;
-      if (startLine > 9060) startLine = 1;
-    }
+    bool isReverse = modul.isReverseOrder;
 
     // 2. Hitung Manzil berbasis data riil total_juz_hafalan profil siswa
     final manzil = await calculateManzilRange(
@@ -97,8 +93,31 @@ class MurojaahTaskService extends BaseService {
     );
 
     int targetLines = manzil['target_lines'] as int;
-    int endLine = startLine + targetLines - 1;
-    if (endLine > 9060) endLine = 9060;
+
+    int startLine;
+    int endLine;
+
+    if (isReverse) {
+      if (lastManzilRecord != null) {
+        int lastStart = int.tryParse(lastManzilRecord['absolute_line_start']?.toString() ?? '0') ?? 0;
+        int lastEnd = int.tryParse(lastManzilRecord['absolute_line_end']?.toString() ?? '0') ?? 0;
+        int prevPoint = lastStart > 0 ? lastStart : lastEnd;
+        startLine = prevPoint - 1;
+        if (startLine < 1) startLine = 9060;
+      } else {
+        startLine = 9060;
+      }
+      endLine = startLine - targetLines + 1;
+      if (endLine < 1) endLine = 1;
+    } else {
+      startLine = 1;
+      if (lastManzilRecord != null) {
+        startLine = (int.tryParse(lastManzilRecord['absolute_line_end']?.toString() ?? '0') ?? 0) + 1;
+        if (startLine > 9060) startLine = 1;
+      }
+      endLine = startLine + targetLines - 1;
+      if (endLine > 9060) endLine = 9060;
+    }
 
     final startCoord = await _getCoordFromAbsolute(startLine);
     final endCoord = await _getCoordFromAbsolute(endLine);

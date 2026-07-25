@@ -22,17 +22,26 @@ class LayananStatusModul {
       if (lastRecord == null) return false;
 
       if (modul.silabusSource == 'mushaf') {
-        // PARSING COORDINATES
-        int targetSurah = modul.surahIdEnd;
-        int targetAyat = modul.ayahEnd;
+        final bool isReverse = modul.isReverseOrder;
+
+        // PARSING COORDINATES (Disesuaikan dengan Arah Hafalan)
+        int targetSurah = isReverse ? modul.surahIdStart : modul.surahIdEnd;
+        int targetAyat = isReverse ? modul.ayahStart : modul.ayahEnd;
 
         // Fallback untuk data lama yang mungkin belum terisi kolom fisik
-        if (targetSurah <= 0 && modul.akhirKoordinatJuz != null && modul.akhirKoordinatJuz!.contains(':')) {
-          final targetParts = modul.akhirKoordinatJuz!.split(':');
-          if (targetParts.length >= 2) {
-            targetSurah = int.tryParse(targetParts[0]) ?? 0;
-            targetAyat = int.tryParse(targetParts[1]) ?? 0;
+        if (targetSurah <= 0) {
+          final String? rawCoord = isReverse ? modul.mulaiKoordinatJuz : modul.akhirKoordinatJuz;
+          if (rawCoord != null && rawCoord.contains(':')) {
+            final targetParts = rawCoord.split(':');
+            if (targetParts.length >= 2) {
+              targetSurah = int.tryParse(targetParts[0]) ?? 0;
+              targetAyat = int.tryParse(targetParts[1]) ?? 0;
+            }
           }
+        }
+
+        if (targetSurah > 0 && targetAyat <= 0) {
+          targetAyat = 1;
         }
 
         // Jika target masih tidak terdefinisi, anggap selesai agar tidak looping
@@ -42,14 +51,41 @@ class LayananStatusModul {
         final int statusKeputusan = int.tryParse(lastRecord['status_keputusan']?.toString() ?? '0') ?? 0;
         if (statusKeputusan != 1) return false;
 
-        // FIX: Menggunakan end_surah_id sebagai titik acuan akhir setoran
+        // FIX: Mengambil koordinat kursor fisik acuan berdasarkan arah hafalan
+        final int startSurahFromDb = int.tryParse(lastRecord['surah_id']?.toString() ?? '0') ?? 0;
         final int endSurahFromDb = int.tryParse(lastRecord['end_surah_id']?.toString() ?? '0') ?? 0;
-        final currentSurah = endSurahFromDb > 0 ? endSurahFromDb : (int.tryParse(lastRecord['surah_id']?.toString() ?? '0') ?? 0);
-        final currentAyay = int.tryParse(lastRecord['ayah_end']?.toString() ?? '0') ?? 0;
+        final int startAyahFromDb = int.tryParse(lastRecord['ayah_start']?.toString() ?? '0') ?? 0;
+        final int endAyahFromDb = int.tryParse(lastRecord['ayah_end']?.toString() ?? '0') ?? 0;
+
+        int currentSurah;
+        int currentAyat;
+
+        if (isReverse) {
+          currentSurah = (endSurahFromDb > 0 && endSurahFromDb < startSurahFromDb) ? endSurahFromDb : startSurahFromDb;
+          if (currentSurah == 0) currentSurah = endSurahFromDb;
+
+          if (startSurahFromDb == endSurahFromDb && startSurahFromDb > 0) {
+            currentAyat = endAyahFromDb > 0 ? endAyahFromDb : startAyahFromDb;
+          } else if (currentSurah == endSurahFromDb) {
+            currentAyat = endAyahFromDb > 0 ? endAyahFromDb : startAyahFromDb;
+          } else {
+            currentAyat = endAyahFromDb > 0 ? endAyahFromDb : startAyahFromDb;
+          }
+        } else {
+          currentSurah = endSurahFromDb > 0 ? endSurahFromDb : startSurahFromDb;
+          currentAyat = endAyahFromDb > 0 ? endAyahFromDb : startAyahFromDb;
+        }
 
         // VALIDASI KOORDINAT FISIK
-        if (currentSurah > targetSurah) return true;
-        return (currentSurah == targetSurah && currentAyay >= targetAyat);
+        if (isReverse) {
+          // Mode Mundur: Tuntas jika kursor menyentuh/melewati target ke arah surah kecil
+          if (currentSurah < targetSurah) return true;
+          return (currentSurah == targetSurah && currentAyat >= targetAyat);
+        } else {
+          // Mode Maju: Tuntas jika kursor menyentuh/melewati target ke arah surah besar
+          if (currentSurah > targetSurah) return true;
+          return (currentSurah == targetSurah && currentAyat >= targetAyat);
+        }
       } else {
         // VALIDASI INTERNAL
         if (modul.isPlottingActive) {

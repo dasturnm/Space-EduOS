@@ -214,7 +214,7 @@ class LayananNavigasiMateri {
         }
       }
 
-      bool isBackward = false;
+      bool isBackward = modul?.isReverseOrder ?? false;
 
       if (lastRecordData != null) {
         final payload = lastRecordData['data_payload'] as Map<String, dynamic>? ?? {};
@@ -222,11 +222,11 @@ class LayananNavigasiMateri {
 
         int startSurah = int.tryParse(payload['start_surah']?.toString() ?? '1') ?? 1;
         int endSurah = int.tryParse(payload['end_surah']?.toString() ?? '1') ?? 1;
+        int startAyah = int.tryParse(payload['start_ayah']?.toString() ?? '1') ?? 1;
         int endAyah = int.tryParse(payload['end_ayah']?.toString() ?? '1') ?? 1;
 
         if (statusKeputusan == -1) {
-          int lastStartAyah = (lastRecordData['ayah_start'] as num?)?.toInt() ??
-              int.tryParse(payload['start_ayah']?.toString() ?? '1') ?? 1;
+          int lastStartAyah = (lastRecordData['ayah_start'] as num?)?.toInt() ?? startAyah;
           int lastStartSurah = (lastRecordData['surah_id'] as num?)?.toInt() ?? startSurah;
 
           return {
@@ -238,26 +238,30 @@ class LayananNavigasiMateri {
 
         if (startSurah > endSurah) isBackward = true;
 
-        // Tentukan target akhir modul (prioritas: akhirKoordinat, lalu surahId/ayahEnd jika valid)
-        int targetSurah = 0;
-        int targetAyah = 0;
-        if (modul?.akhirKoordinatJuz != null && modul!.akhirKoordinatJuz!.contains(':')) {
-          final targetParts = modul.akhirKoordinatJuz!.split(':');
-          if (targetParts.length >= 2) {
-            targetSurah = int.tryParse(targetParts[0]) ?? 0;
-            targetAyah = int.tryParse(targetParts[1]) ?? 0;
+        final String jsonContent = await rootBundle.loadString('assets/mushaf_peta.json');
+        final List<dynamic> localRows = json.decode(jsonContent) as List<dynamic>;
+
+        int getMaxAyah(int surahNum) {
+          final surahRows = localRows.where((r) => (int.tryParse(r['surah_number']?.toString() ?? '') ?? 0) == surahNum).toList();
+          if (surahRows.isNotEmpty) {
+            surahRows.sort((a, b) => (int.tryParse(b['ayah_end']?.toString() ?? '') ?? 0).compareTo(int.tryParse(a['ayah_end']?.toString() ?? '') ?? 0));
+            return int.tryParse(surahRows.first['ayah_end']?.toString() ?? '') ?? 286;
           }
+          return 286;
         }
-        // Jika tidak ada di akhirKoordinat, coba ambil dari surahId/ayahEnd (hanya jika > 0)
-        if (targetSurah == 0) {
-          int tempSurah = modul?.surahIdStart ?? 0;
-          int tempAyah = modul?.ayahEnd ?? 0;
-          if (tempSurah > 0 && tempAyah > 0) {
-            targetSurah = tempSurah;
-            targetAyah = tempAyah;
-          } else {
-            // Target tidak terdefinisi secara valid.
-            // HENTIKAN LOOP: tandai modul sebagai selesai.
+
+        int curSurah = endSurah > 0 ? endSurah : startSurah;
+        int curAyah = endAyah > 0 ? endAyah : startAyah;
+
+        if (isBackward) {
+          int targetSurah = modul?.surahIdStart ?? 1;
+          int targetAyat = (modul?.surahIdStart == modul?.surahIdEnd && (modul?.ayahEnd ?? 0) > 0)
+              ? modul!.ayahEnd
+              : getMaxAyah(targetSurah);
+
+          bool isAtTarget = curSurah < targetSurah || (curSurah == targetSurah && curAyah >= targetAyat);
+
+          if (isAtTarget) {
             return {
               'surah': null,
               'ayah': null,
@@ -265,55 +269,58 @@ class LayananNavigasiMateri {
               'is_completed': true,
             };
           }
-        }
 
-        // Cek apakah sudah mencapai target akhir
-        bool isAtTarget = false;
-        if (isBackward) {
-          if (startSurah < targetSurah || (startSurah == targetSurah && endAyah <= targetAyah)) {
-            isAtTarget = true;
+          int curMaxAyah = (curSurah == modul?.surahIdEnd && (modul?.ayahEnd ?? 0) > 0)
+              ? modul!.ayahEnd
+              : getMaxAyah(curSurah);
+
+          if (curAyah < curMaxAyah) {
+            return {'surah': curSurah, 'ayah': curAyah + 1};
+          } else {
+            int nextSurah = curSurah > 1 ? curSurah - 1 : 114;
+            int nextAyah = 1;
+            if (nextSurah == modul?.surahIdStart && (modul?.ayahStart ?? 0) > 0 && modul?.surahIdStart == modul?.surahIdEnd) {
+              nextAyah = modul!.ayahStart;
+            }
+            return {'surah': nextSurah, 'ayah': nextAyah};
           }
         } else {
-          if (endSurah > targetSurah || (endSurah == targetSurah && endAyah >= targetAyah)) {
-            isAtTarget = true;
+          int targetSurah = modul?.surahIdEnd ?? 114;
+          int targetAyat = (modul?.ayahEnd ?? 0) > 0 ? modul!.ayahEnd : getMaxAyah(targetSurah);
+
+          bool isAtTarget = curSurah > targetSurah || (curSurah == targetSurah && curAyah >= targetAyat);
+
+          if (isAtTarget) {
+            return {
+              'surah': null,
+              'ayah': null,
+              'status_sebelumnya_ulang': false,
+              'is_completed': true,
+            };
           }
-        }
 
-        if (isAtTarget) {
-          return {
-            'surah': null,
-            'ayah': null,
-            'status_sebelumnya_ulang': false,
-            'is_completed': true,
-          };
-        }
+          int curMaxAyah = getMaxAyah(curSurah);
 
-        final String jsonContent = await rootBundle.loadString('assets/mushaf_peta.json');
-        final List<dynamic> localRows = json.decode(jsonContent) as List<dynamic>;
-        final surahRows = localRows.where((r) => (int.tryParse(r['surah_number']?.toString() ?? '') ?? 0) == endSurah).toList();
-
-        int maxayah = 286;
-        if (surahRows.isNotEmpty) {
-          surahRows.sort((a, b) => (int.tryParse(b['ayah_end']?.toString() ?? '') ?? 0).compareTo(int.tryParse(a['ayah_end']?.toString() ?? '') ?? 0));
-          maxayah = int.tryParse(surahRows.first['ayah_end']?.toString() ?? '') ?? 286;
-        }
-
-        if (isBackward) {
-          if (endAyah < maxayah) {
-            return {'surah': endSurah, 'ayah': endAyah + 1};
+          if (curAyah < curMaxAyah) {
+            return {'surah': curSurah, 'ayah': curAyah + 1};
           } else {
-            int nextSurah = endSurah > 1 ? endSurah - 1 : 114;
-            return {'surah': nextSurah, 'ayah': 1};
-          }
-        } else {
-          if (endAyah < maxayah) {
-            return {'surah': endSurah, 'ayah': endAyah + 1};
-          } else {
-            int nextSurah = endSurah < 114 ? endSurah + 1 : 1;
+            int nextSurah = curSurah < 114 ? curSurah + 1 : 1;
             return {'surah': nextSurah, 'ayah': 1};
           }
         }
       } else {
+        if (modul != null && modul.isReverseOrder) {
+          int startSurah = modul.surahIdEnd > 0 ? modul.surahIdEnd : 114;
+          int startAyah = 1;
+          if (startSurah == modul.surahIdStart && modul.ayahStart > 0) {
+            startAyah = modul.ayahStart;
+          }
+          return {'surah': startSurah, 'ayah': startAyah};
+        } else if (modul != null) {
+          int startSurah = modul.surahIdStart > 0 ? modul.surahIdStart : 1;
+          int startAyah = modul.ayahStart > 0 ? modul.ayahStart : 1;
+          return {'surah': startSurah, 'ayah': startAyah};
+        }
         return {'surah': 1, 'ayah': 1};
       }
     } catch (e) {

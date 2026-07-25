@@ -82,8 +82,8 @@ class LayananKecerdasanAkademik {
             break;
           }
         } else {
-          final projection = await getModuleProjection(siswaId, modul);
-          if (!projection.isCompleted) {
+          final isCompleted = await LayananStatusModul().isContentCompleted(siswaId, modul);
+          if (!isCompleted) {
             allPassed = false;
             break;
           }
@@ -185,8 +185,10 @@ class LayananKecerdasanAkademik {
 
       if (totalTarget <= 0) totalTarget = 100.0;
 
+      final bool isDone = await LayananStatusModul().isContentCompleted(siswaId, modul);
+
       double remainingVolume = totalTarget - currentAchieved;
-      if (remainingVolume < 0) remainingVolume = 0;
+      if (remainingVolume < 0 || isDone) remainingVolume = 0.0;
 
       double averageVelocity = modul.targetAmount;
       if (acceptedRecordCount > 0 && currentAchieved > 0) {
@@ -206,7 +208,7 @@ class LayananKecerdasanAkademik {
         averageVelocity: averageVelocity,
         estimatedMeetingsLeft: estimatedMeetingsLeft,
         estimatedCompletionDate: estimatedCompletionDate,
-        isCompleted: remainingVolume <= 0,
+        isCompleted: isDone || remainingVolume <= 0,
       );
     } catch (e) {
       throw Exception(_mainService.handleError(e));

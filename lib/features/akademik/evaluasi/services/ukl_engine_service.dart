@@ -79,6 +79,9 @@ class UklEngineService extends BaseService {
         await supabase.from('siswa').update({
           'level_id': nextLevelId,
           'current_level_id': nextLevelId, // Menyesuaikan dengan schema db
+          'academic_state': 'daily',
+          'is_ready_for_exam': false,
+          'ready_modul_id': null,
         }).eq('id', siswaId);
       } else {
         // PROMOSI LINTAS JENJANG: Jika level di kurikulum saat ini sudah habis,
@@ -117,6 +120,9 @@ class UklEngineService extends BaseService {
               await supabase.from('siswa').update({
                 'level_id': nextLevelId,
                 'current_level_id': nextLevelId,
+                'academic_state': 'daily',
+                'is_ready_for_exam': false,
+                'ready_modul_id': null,
               }).eq('id', siswaId);
             }
           }

@@ -21,13 +21,15 @@ class MutabaahSurahAyahPicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Tentukan Batas Rentang Cakupan dari Modul Berdasarkan JENIS METRIK
+    // Tentukan Batas Rentang Cakupan dari Modul Berdasarkan KOORDINAT SURAH FISIK
     int startS = 1;
     int endS = 114;
-    int originalStartCoord = 1;
-    int originalEndCoord = 114;
 
-    if (modul.jenisMetrik == 'JUZ') {
+    if (modul.surahIdStart > 0 && modul.surahIdEnd > 0) {
+      // Prioritaskan koordinat fisik surah_id_start dan surah_id_end
+      startS = modul.surahIdStart < modul.surahIdEnd ? modul.surahIdStart : modul.surahIdEnd;
+      endS = modul.surahIdStart > modul.surahIdEnd ? modul.surahIdStart : modul.surahIdEnd;
+    } else if (modul.jenisMetrik == 'JUZ') {
       int startJuz = int.tryParse(modul.mulaiKoordinatJuz ?? '1') ?? 1;
       int endJuz = int.tryParse(modul.akhirKoordinatJuz ?? '30') ?? 30;
 
@@ -41,22 +43,10 @@ class MutabaahSurahAyahPicker extends StatelessWidget {
 
       startS = juzStartSurah[minJuz.clamp(1, 30)];
       endS = juzEndSurah[maxJuz.clamp(1, 30)];
-
-      originalStartCoord = juzStartSurah[startJuz.clamp(1, 30)];
-      originalEndCoord = juzEndSurah[endJuz.clamp(1, 30)];
-    } else if (modul.jenisMetrik == 'SURAH') {
-      originalStartCoord = int.tryParse(modul.mulaiKoordinatJuz ?? '1') ?? 1;
-      originalEndCoord = int.tryParse(modul.akhirKoordinatJuz ?? '114') ?? 114;
-
-      // FIX: Handle reverse order Surah (e.g., Surah 114 to 78)
-      startS = originalStartCoord < originalEndCoord ? originalStartCoord : originalEndCoord;
-      endS = originalStartCoord > originalEndCoord ? originalStartCoord : originalEndCoord;
     } else {
-      // Jika berbasis HALAMAN atau lainnya, buka seluruh akses Surah agar guru bebas memilih
+      // Default fallback jika tidak ada batasan khusus
       startS = 1;
       endS = 114;
-      originalStartCoord = 1;
-      originalEndCoord = 114;
     }
 
     // Filter daftar surah sesuai cakupan modul
@@ -65,9 +55,17 @@ class MutabaahSurahAyahPicker extends StatelessWidget {
       return sId >= startS && sId <= endS;
     }).toList();
 
+    if (modul.isReverseOrder) {
+      availableSurahs.sort((a, b) => (b['id'] as int).compareTo(a['id'] as int));
+    }
+
     // FIX: Proteksi agar value Dropdown selalu ada di dalam list availableSurahs (dihitung DULUAN)
     final bool isSurahValid = surahValue != null && availableSurahs.any((s) => s['id'] == surahValue);
-    final int? effectiveSurah = isSurahValid ? surahValue : (availableSurahs.isNotEmpty ? availableSurahs.first['id'] as int : null);
+    final int? effectiveSurah = isSurahValid
+        ? surahValue
+        : (availableSurahs.isNotEmpty
+        ? availableSurahs.first['id'] as int
+        : null);
 
     int minAyah = 1;
     int maxAyah = 286;
@@ -81,9 +79,12 @@ class MutabaahSurahAyahPicker extends StatelessWidget {
       int actualTotalAyah = surahData['total_ayah'] ?? 286;
       maxAyah = actualTotalAyah;
 
-      // Filter Ayat jika berada di Surah Awal atau Akhir Cakupan
-      if (effectiveSurah == originalStartCoord && modul.ayahStart > 0) minAyah = modul.ayahStart;
-      if (effectiveSurah == originalEndCoord && modul.ayahEnd > 0) maxAyah = modul.ayahEnd;
+      // Filter Ayat jika berada di Surah Awal (ID kecil) atau Surah Akhir (ID besar) Cakupan
+      int lowerBoundSurah = modul.surahIdStart > 0 ? modul.surahIdStart : startS;
+      int upperBoundSurah = modul.surahIdEnd > 0 ? modul.surahIdEnd : endS;
+
+      if (effectiveSurah == lowerBoundSurah && modul.ayahStart > 0) minAyah = modul.ayahStart;
+      if (effectiveSurah == upperBoundSurah && modul.ayahEnd > 0) maxAyah = modul.ayahEnd;
 
       // Safety Fallback (Agar tidak ada Dropdown Crash)
       if (maxAyah > actualTotalAyah) maxAyah = actualTotalAyah;
@@ -96,7 +97,7 @@ class MutabaahSurahAyahPicker extends StatelessWidget {
       if (safeAyahValue < minAyah) safeAyahValue = minAyah;
       if (safeAyahValue > maxAyah) safeAyahValue = maxAyah;
     } else {
-      safeAyahValue = minAyah; // Default if null
+      safeAyahValue = minAyah; // Default if null (bacaan ayat selalu mulai dari awal surah)
     }
 
     // SINKRONISASI: Paksa state parent mengikuti visual fallback HANYA jika data surah sudah siap dimuat
@@ -122,11 +123,12 @@ class MutabaahSurahAyahPicker extends StatelessWidget {
                 isExpanded: true, underline: const SizedBox(),
                 value: effectiveSurah,
                 items: availableSurahs.map((s) => DropdownMenuItem(value: s['id'] as int, child: Text("${s['id']}. ${s['name_id']}", style: const TextStyle(fontSize: 12), overflow: TextOverflow.ellipsis))).toList(),
-                // Otomatis kalkulasi ulang minAyah jika guru mengganti pilihan surah
+                // Otomatis kalkulasi ulang min/max ayah jika guru mengganti pilihan surah
                 onChanged: (v) {
-                  int newMinAyah = 1;
-                  if (v == originalStartCoord && modul.ayahStart > 0) newMinAyah = modul.ayahStart;
-                  onUpdate(v, newMinAyah);
+                  int lowerBoundSurah = modul.surahIdStart > 0 ? modul.surahIdStart : startS;
+                  int newAyah = 1;
+                  if (v == lowerBoundSurah && modul.ayahStart > 0) newAyah = modul.ayahStart;
+                  onUpdate(v, newAyah);
                 }
             )
         ),
