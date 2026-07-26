@@ -25,10 +25,26 @@ class _SertifikasiRubricWidgetState extends State<SertifikasiRubricWidget> {
     double total = 0;
     widget.settings.forEach((key, value) {
       if (value is Map && value['active'] == true) {
-        total += (value['bobot'] as num?)?.toDouble() ?? 0.0;
+        total += (value['bobot'] as num?)?.toDouble() ?? _getDefaultValue(key, 'bobot');
       }
     });
     return total;
+  }
+
+  double _getDefaultValue(String catKey, String fieldKey) {
+    if (fieldKey == 'pinalti_stt') return 0.5;
+    if (fieldKey == 'pinalti_t') return 1.0;
+    if (fieldKey == 'pinalti_p') return 3.0;
+    if (fieldKey == 'pinalti_kurang') return 1.0;
+    if (fieldKey == 'pinalti_salah') return 2.0;
+    if (fieldKey == 'bobot') {
+      if (catKey == 'itqon') return 50.0;
+      if (catKey == 'tajwid') return 25.0;
+      if (catKey == 'makhraj') return 15.0;
+      if (catKey == 'nada') return 5.0;
+      if (catKey == 'adab') return 5.0;
+    }
+    return 0.0;
   }
 
   void _updateSetting(String aspect, String field, dynamic value) {
@@ -242,15 +258,15 @@ class _SertifikasiRubricWidgetState extends State<SertifikasiRubricWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Divider(color: Colors.black12),
-                  Text("• S (Saktah/Tanbih): Salah Ringan/Tanpa Teguran (Santri sadar sendiri atau diingatkan pelan).", style: TextStyle(fontSize: 11, color: Colors.blueGrey)),
+                  Text("• S (Saktah/Tanbih): Potongan 0.5 - Salah Ringan/Tanpa Teguran (Santri sadar sendiri atau diingatkan pelan).", style: TextStyle(fontSize: 11, color: Colors.blueGrey)),
                   SizedBox(height: 4),
-                  Text("• T (Tawaquf): Salah Sedang/Dengan Teguran (Santri terhenti dan butuh pancingan kata).", style: TextStyle(fontSize: 11, color: Colors.blueGrey)),
+                  Text("• T (Tawaquf): Potongan 1.0 - Salah Sedang/Dengan Teguran (Santri terhenti dan butuh pancingan kata).", style: TextStyle(fontSize: 11, color: Colors.blueGrey)),
                   SizedBox(height: 4),
-                  Text("• P (Fath/Talqin): Salah Berat/Dipandu (Santri tidak bisa lanjut dan harus dibacakan ayahnya/pindah).", style: TextStyle(fontSize: 11, color: Colors.blueGrey)),
+                  Text("• P (Fath/Talqin): Potongan 3.0 - Salah Berat/Dipandu (Santri tidak bisa lanjut dan harus dibacakan ayahnya/pindah).", style: TextStyle(fontSize: 11, color: Colors.blueGrey)),
                   SizedBox(height: 8),
-                  Text("• K (Kurang Tepat): Kesalahan minor pada panjang pendek atau makhraj ringan.", style: TextStyle(fontSize: 11, color: Colors.blueGrey)),
+                  Text("• K (Kurang): Potongan 1.0 - Kesalahan minor pada panjang pendek atau makhraj ringan.", style: TextStyle(fontSize: 11, color: Colors.blueGrey)),
                   SizedBox(height: 4),
-                  Text("• S (Salah): Kesalahan fatal yang mengubah arti (Lahn Jali).", style: TextStyle(fontSize: 11, color: Colors.blueGrey)),
+                  Text("• S (Salah): Potongan 2.0 - Kesalahan fatal yang mengubah arti (Lahn Jali).", style: TextStyle(fontSize: 11, color: Colors.blueGrey)),
                 ],
               ),
             ),
@@ -305,7 +321,7 @@ class _SertifikasiRubricWidgetState extends State<SertifikasiRubricWidget> {
   Widget _buildInput(String catKey, String fieldKey, String label) {
     final rawData = widget.settings[catKey];
     final data = rawData is Map ? rawData : {};
-    final value = data[fieldKey] ?? 0.0;
+    final value = data[fieldKey] ?? _getDefaultValue(catKey, fieldKey);
 
     return Expanded(
       child: Padding(

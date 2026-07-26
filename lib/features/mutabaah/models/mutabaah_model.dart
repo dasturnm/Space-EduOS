@@ -24,6 +24,7 @@ class MutabaahRecord {
   final int internalStart;     // TAMBAHAN: Batas mulai metrik internal polimorfik
   final int internalEnd;       // TAMBAHAN: Batas akhir metrik internal polimorfik
   final String? materiSilabusAktif; // TAMBAHAN: Judul materi aktif dari CSV
+  final String? indikatorKelulusanAktif; // TAMBAHAN: Snapshot indikator kelulusan/keterangan materi
   final int nomorUrutMateri;   // TAMBAHAN: Indeks urutan baris materi koordinat auto-next
   final int statusKeputusan;   // TAMBAHAN: Nilai StatusSwitchButton (-1 = Ulang, 0 = Off, 1 = Lanjut)
   final String academicStateSnapshot; // TAMBAHAN: Merekam kondisi status akademik siswa saat entri dibuat
@@ -53,6 +54,7 @@ class MutabaahRecord {
     this.internalStart = 0,
     this.internalEnd = 0,
     this.materiSilabusAktif,
+    this.indikatorKelulusanAktif,
     this.nomorUrutMateri = 0,
     this.statusKeputusan = 0,
     this.academicStateSnapshot = 'daily', // TAMBAHAN
@@ -88,6 +90,8 @@ class MutabaahRecord {
           (json['data_payload'] is Map ? (json['data_payload']['halaman_akhir'] as num?)?.toInt() : null) ?? 0,
       materiSilabusAktif: json['materi_silabus_aktif']?.toString() ??
           (json['data_payload'] is Map ? json['data_payload']['materi_silabus']?.toString() : null),
+      indikatorKelulusanAktif: json['indikator_kelulusan_aktif']?.toString() ??
+          (json['data_payload'] is Map ? json['data_payload']['indikator_kelulusan']?.toString() : null),
       nomorUrutMateri: (json['nomor_urut_materi'] as num?)?.toInt() ?? 0,
       statusKeputusan: (json['status_keputusan'] as num?)?.toInt() ?? 0,
       academicStateSnapshot: json['academic_state_snapshot']?.toString() ?? 'daily', // TAMBAHAN
@@ -123,6 +127,7 @@ class MutabaahRecord {
       'internal_start': internalStart,
       'internal_end': internalEnd,
       'materi_silabus_aktif': materiSilabusAktif,
+      'indikator_kelulusan_aktif': indikatorKelulusanAktif,
       'nomor_urut_materi': nomorUrutMateri,
       'status_keputusan': statusKeputusan,
       'academic_state_snapshot': academicStateSnapshot, // TAMBAHAN
@@ -157,6 +162,7 @@ class MutabaahRecord {
     int? internalStart,
     int? internalEnd,
     String? materiSilabusAktif,
+    String? indikatorKelulusanAktif,
     int? nomorUrutMateri,
     int? statusKeputusan,
     String? academicStateSnapshot, // TAMBAHAN
@@ -186,6 +192,7 @@ class MutabaahRecord {
       internalStart: internalStart ?? this.internalStart,
       internalEnd: internalEnd ?? this.internalEnd,
       materiSilabusAktif: materiSilabusAktif ?? this.materiSilabusAktif,
+      indikatorKelulusanAktif: indikatorKelulusanAktif ?? this.indikatorKelulusanAktif,
       nomorUrutMateri: nomorUrutMateri ?? this.nomorUrutMateri,
       statusKeputusan: statusKeputusan ?? this.statusKeputusan,
       academicStateSnapshot: academicStateSnapshot ?? this.academicStateSnapshot, // TAMBAHAN

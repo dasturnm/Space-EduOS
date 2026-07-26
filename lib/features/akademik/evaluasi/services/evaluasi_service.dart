@@ -1,5 +1,3 @@
-// Lokasi: lib/features/akademik/evaluasi/services/evaluasi_service.dart
-
 import '../../../../core/services/base_service.dart';
 import '../models/evaluasi_record_model.dart';
 import '../models/evaluasi_config_model.dart';
@@ -108,6 +106,23 @@ class EvaluasiService extends BaseService {
     if (totalWeight <= 0) return 0.0;
 
     // Mengembalikan nilai akhir
+    return totalScore / totalWeight;
+  }
+
+  /// Menghitung Rata-rata Tertimbang berbasis Template Bobot Dinamis (sertifikasiSettings / 50-25-25)
+  double calculateWeightedAverageFromSettings(Map<String, double> scores, Map<String, dynamic> settings) {
+    double totalScore = 0.0;
+    double totalWeight = 0.0;
+
+    settings.forEach((key, config) {
+      if (config is Map && config['active'] == true && scores.containsKey(key)) {
+        double bobot = (config['bobot'] as num?)?.toDouble() ?? 0.0;
+        totalScore += (scores[key]! * bobot);
+        totalWeight += bobot;
+      }
+    });
+
+    if (totalWeight <= 0) return 0.0;
     return totalScore / totalWeight;
   }
 }

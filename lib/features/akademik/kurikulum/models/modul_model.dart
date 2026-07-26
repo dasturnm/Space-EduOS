@@ -227,7 +227,7 @@ class ModulModel {
       return s < e ? e : s;
     })(),
     'mulai_halaman': (mulaiHalaman > 0 && akhirHalaman > 0) ? (mulaiHalaman < akhirHalaman ? mulaiHalaman : akhirHalaman) : mulaiHalaman,
-    'akhir_halaman': (mulaiHalaman > 0 && akhirHalaman > 0) ? (mulaiHalaman < akhirHalaman ? akhirHalaman : mulaiHalaman) : akhirHalaman,
+    'akhir_halaman': (mulaiHalaman > 0 && akhirHalaman > 0) ? (mulaiHalaman < akhirHalaman ? akhirHalaman : mulaiHalaman) : mulaiHalaman,
     'target_internal_akhir': targetInternalAkhir,
     'ayah_start': (() {
       final sSurah = silabusSource == 'mushaf' && surahIdStart == 0 ? 1 : surahIdStart;
@@ -490,7 +490,7 @@ class ModulEvaluasiTemplateModel {
     lembagaId: json['lembaga_id']?.toString() ?? '',
     modulId: json['modul_id']?.toString() ?? '',
     namaMateri: json['nama_materi']?.toString() ?? '',
-    indikatorKelulusan: json['bobot']?.toString() ?? json['indikator_kelulusan']?.toString() ?? '',
+    indikatorKelulusan: json['indikator_kelulusan']?.toString() ?? json['bobot']?.toString() ?? '',
   );
 
   Map<String, dynamic> toJson() => {
@@ -498,6 +498,7 @@ class ModulEvaluasiTemplateModel {
     'lembaga_id': (lembagaId.trim().isEmpty) ? null : lembagaId,
     'modul_id': (modulId.trim().isEmpty) ? null : modulId,
     'nama_materi': namaMateri,
+    'indikator_kelulusan': indikatorKelulusan,
     'bobot': double.tryParse(indikatorKelulusan) ?? 100.0,
   };
 

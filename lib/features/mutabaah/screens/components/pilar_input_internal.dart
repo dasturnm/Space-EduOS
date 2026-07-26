@@ -38,7 +38,17 @@ extension PilarInputInternal on _ModulInputScreenState {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text("MATERI AWAL", style: TextStyle(fontWeight: FontWeight.w900, fontSize: 10, color: Colors.grey)),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text("MATERI AWAL", style: TextStyle(fontWeight: FontWeight.w900, fontSize: 10, color: Colors.grey)),
+                                      if (selectedAwal != null && selectedAwal.isNotEmpty)
+                                        GestureDetector(
+                                          onTap: () => _showIndikatorMateriDialog(context, selectedAwal, modul),
+                                          child: const Icon(Icons.info_outline, size: 14, color: Colors.blue),
+                                        ),
+                                    ],
+                                  ),
                                   const SizedBox(height: 8),
                                   Container(
                                     padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -68,7 +78,17 @@ extension PilarInputInternal on _ModulInputScreenState {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text("MATERI AKHIR", style: TextStyle(fontWeight: FontWeight.w900, fontSize: 10, color: Colors.grey)),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text("MATERI AKHIR", style: TextStyle(fontWeight: FontWeight.w900, fontSize: 10, color: Colors.grey)),
+                                      if (selectedAkhir != null && selectedAkhir.isNotEmpty)
+                                        GestureDetector(
+                                          onTap: () => _showIndikatorMateriDialog(context, selectedAkhir, modul),
+                                          child: const Icon(Icons.info_outline, size: 14, color: Colors.blue),
+                                        ),
+                                    ],
+                                  ),
                                   const SizedBox(height: 8),
                                   Container(
                                     padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -125,6 +145,47 @@ extension PilarInputInternal on _ModulInputScreenState {
         else
           _pilarInput(label: "NILAI CAPAIAN (0-100)", controller: _nilaiControllers[mId]!, hint: "Evaluasi angka..."),
       ],
+    );
+  }
+
+  void _showIndikatorMateriDialog(BuildContext context, String rawMateri, ModulModel modul) {
+    String searchMateri = rawMateri;
+    if (rawMateri.contains('. ')) {
+      searchMateri = rawMateri.split('. ').sublist(1).join('. ');
+    }
+
+    String targetIndikator = '';
+    final template = modul.evaluasiTemplates.firstWhere(
+          (t) => t.namaMateri.trim() == rawMateri.trim() || t.namaMateri.trim() == searchMateri.trim(),
+      orElse: () => ModulEvaluasiTemplateModel(lembagaId: '', modulId: '', namaMateri: ''),
+    );
+
+    if (template.indikatorKelulusan.isNotEmpty) {
+      targetIndikator = template.indikatorKelulusan;
+    } else {
+      final silabusItem = modul.silabusContent.firstWhere(
+            (s) => s.materi.trim() == rawMateri.trim() || s.materi.trim() == searchMateri.trim(),
+        orElse: () => SilabusItemModel(pertemuan: 0, materi: ''),
+      );
+      targetIndikator = silabusItem.keterangan ?? '';
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(rawMateri, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+        content: Text(
+          targetIndikator.isNotEmpty ? targetIndikator : 'Tidak ada indikator khusus untuk materi ini.',
+          style: const TextStyle(fontSize: 12),
+        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("TUTUP", style: TextStyle(color: Color(0xFF10B981))),
+          ),
+        ],
+      ),
     );
   }
 }

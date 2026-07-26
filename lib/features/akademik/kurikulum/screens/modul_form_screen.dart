@@ -101,7 +101,10 @@ class _ModulFormScreenState extends ConsumerState<ModulFormScreen> {
   }
 
   Future<void> _downloadTemplate() async {
-    List<List<String>> csvData = [["pertemuan", "materi", "keterangan"], ["1", "Materi", "Deskripsi"]];
+    List<List<String>> csvData = [
+      ["materi", "keterangan"],
+      ["Materi 1", "Deskripsi / Indikator Kelulusan"]
+    ];
     String csvContent = csv_pkg.CsvCodec().encoder.convert(csvData);
     final directory = await getTemporaryDirectory();
     final file = File('${directory.path}/template_silabus.csv');
@@ -116,8 +119,22 @@ class _ModulFormScreenState extends ConsumerState<ModulFormScreen> {
       List<List<dynamic>> rows = csv_pkg.CsvCodec().decoder.convert(input);
       List<SilabusItemModel> newItems = [];
       for (var i = 1; i < rows.length; i++) {
-        if (rows[i].isNotEmpty && rows[i].length >= 2) {
-          newItems.add(SilabusItemModel(pertemuan: int.tryParse(rows[i][0].toString()) ?? i, materi: rows[i][1].toString(), keterangan: rows[i].length > 2 ? rows[i][2].toString() : null));
+        if (rows[i].isNotEmpty) {
+          if (rows[i].length == 2) {
+            // Format 2 Kolom: [Materi, Keterangan/Indikator] -> Auto-numbering Pertemuan
+            newItems.add(SilabusItemModel(
+              pertemuan: i,
+              materi: rows[i][0].toString(),
+              keterangan: rows[i][1].toString(),
+            ));
+          } else if (rows[i].length >= 3) {
+            // Format 3+ Kolom: [Pertemuan, Materi, Keterangan]
+            newItems.add(SilabusItemModel(
+              pertemuan: int.tryParse(rows[i][0].toString()) ?? i,
+              materi: rows[i][1].toString(),
+              keterangan: rows[i][2].toString(),
+            ));
+          }
         }
       }
       ref.read(modulFormControllerProvider(widget.level, widget.modul).notifier).processCsvImport(newItems);
@@ -926,6 +943,41 @@ class EvaluationUnifiedSection extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             if (m.evaluationType == 'checklist') ...[
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: onUploadCSV,
+                      icon: const Icon(Icons.upload_file, size: 16),
+                      label: const Text("UPLOAD CSV", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: onDownloadTemplate,
+                      icon: const Icon(Icons.download, size: 16),
+                      label: const Text("TEMPLATE", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                ],
+              ),
+              if (m.silabusSource == 'internal' && m.silabusContent.isNotEmpty) ...[
+                const SizedBox(height: 8),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: () => notifier.generateCriteriaFromSyllabus(''),
+                    icon: const Icon(Icons.sync, size: 16),
+                    label: const Text("SINKRONKAN MATERI KE UJIAN", style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: const Color(0xFF10B981),
+                      side: const BorderSide(color: Color(0xFF10B981)),
+                    ),
+                  ),
+                ),
+              ],
+              const SizedBox(height: 12),
               ModulExamSection(
                 isExamRequired: true,
                 silabusSource: m.silabusSource,

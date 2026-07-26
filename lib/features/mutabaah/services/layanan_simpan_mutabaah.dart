@@ -14,6 +14,7 @@ class LayananSimpanMutabaah {
       // FIX: Pastikan kolom kritikal tidak hilang meski cleanData agresif
       data['end_surah_id'] = record.endSurahId;
       data['total_baris'] = record.totalBaris;
+      data['indikator_kelulusan_aktif'] = record.indikatorKelulusanAktif;
 
       if (record.id == null) {
         data.remove('id');

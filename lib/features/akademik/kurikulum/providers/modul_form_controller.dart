@@ -19,11 +19,24 @@ class ModulFormController extends _$ModulFormController {
 
   @override
   ModulFormState build(LevelModel level, ModulModel? initialModul) {
-    final baseModul = initialModul ?? ModulModel(
+    var baseModul = initialModul ?? ModulModel(
       levelId: level.id ?? '',
       namaModul: '',
       tipe: 'ZIYADAH HAFALAN',
     );
+
+    // Auto-inject template default bobot (50/25/15/5/5) jika silabusSource mushaf & sertifikasiSettings masih kosong
+    if (baseModul.silabusSource == 'mushaf' && (baseModul.sertifikasiSettings == null || baseModul.sertifikasiSettings!.isEmpty)) {
+      baseModul = baseModul.copyWith(
+        sertifikasiSettings: {
+          "itqon": {"active": true, "bobot": 50, "label": "Kelancaran"},
+          "tajwid": {"active": true, "bobot": 25, "label": "Hukum Tajwid"},
+          "makhraj": {"active": true, "bobot": 15, "label": "Makharijul Huruf"},
+          "nada": {"active": true, "bobot": 5, "label": "Irama & Nada"},
+          "adab": {"active": true, "bobot": 5, "label": "Adab & Tilawah"}
+        },
+      );
+    }
 
     // Inisialisasi metadata mushaf secara asinkron [Source 158]
     Future.microtask(() => _fetchSurahList());
@@ -85,6 +98,7 @@ class ModulFormController extends _$ModulFormController {
         halamanList: halSet.toList()..sort(),
         isLoading: false,
       );
+      await recalculate();
     } catch (e) {
       state = state.copyWith(isLoading: false);
       debugPrint("Error Fetch Mushaf Metadata: $e");
@@ -93,9 +107,21 @@ class ModulFormController extends _$ModulFormController {
 
   void updateSource(String source) {
     List<String> units;
+    Map<String, dynamic>? newSertifikasiSettings = state.modul.sertifikasiSettings;
+
     if (source == 'mushaf') {
       // KEMBALIKAN: Opsi target pencapaian harian tetap mendukung pilihan lengkap
       units = ['JUZ', 'HALAMAN', 'SURAH'];
+      // Inject Template Default Lengkap (50/25/15/5/5) saat source = mushaf jika kosong
+      if (newSertifikasiSettings == null || newSertifikasiSettings.isEmpty) {
+        newSertifikasiSettings = {
+          "itqon": {"active": true, "bobot": 50, "label": "Kelancaran"},
+          "tajwid": {"active": true, "bobot": 25, "label": "Hukum Tajwid"},
+          "makhraj": {"active": true, "bobot": 15, "label": "Makharijul Huruf"},
+          "nada": {"active": true, "bobot": 5, "label": "Irama & Nada"},
+          "adab": {"active": true, "bobot": 5, "label": "Adab & Tilawah"}
+        };
+      }
     } else {
       // FIX: Internal selalu menampilkan pilihan lengkap berbasis PERTEMUAN (Point Penyempurnaan)
       units = ['PERTEMUAN', 'HALAMAN', 'NOMOR'];
@@ -108,6 +134,7 @@ class ModulFormController extends _$ModulFormController {
         jenisMetrik: source == 'mushaf' ? 'SURAH' : units.first, // Cakupan materi dikunci ke SURAH, target pencapaian menggunakan allowedUnits
         // Reset target unit agar konsisten saat ganti source
         targetAmountUnit: units.first,
+        sertifikasiSettings: newSertifikasiSettings,
       ),
     );
     recalculate();
@@ -181,6 +208,21 @@ class ModulFormController extends _$ModulFormController {
       computedPlottingActive = false;
     }
 
+    // Auto-suntik template default lengkap jika evaluationType memilih 'mushaf_rubric' atau silabusSource = 'mushaf' saat sertifikasiSettings masih kosong
+    Map<String, dynamic>? effectiveSertifikasiSettings = sertifikasiSettings;
+    final String targetEvaluationType = evaluationType ?? state.modul.evaluationType;
+    if ((targetEvaluationType == 'mushaf_rubric' || state.modul.silabusSource == 'mushaf') &&
+        sertifikasiSettings == null &&
+        (state.modul.sertifikasiSettings == null || state.modul.sertifikasiSettings!.isEmpty)) {
+      effectiveSertifikasiSettings = {
+        "itqon": {"active": true, "bobot": 50, "label": "Kelancaran"},
+        "tajwid": {"active": true, "bobot": 25, "label": "Hukum Tajwid"},
+        "makhraj": {"active": true, "bobot": 15, "label": "Makharijul Huruf"},
+        "nada": {"active": true, "bobot": 5, "label": "Irama & Nada"},
+        "adab": {"active": true, "bobot": 5, "label": "Adab & Tilawah"}
+      };
+    }
+
     state = state.copyWith(
       modul: state.modul.copyWith(
         namaModul: nama ?? state.modul.namaModul,
@@ -207,7 +249,7 @@ class ModulFormController extends _$ModulFormController {
         showManzilInDashboard: showManzilInDashboard ?? state.modul.showManzilInDashboard,
         // FIX: Mapping field ujian
         isExamRequired: computedExamRequired,
-        evaluationType: evaluationType ?? state.modul.evaluationType,
+        evaluationType: targetEvaluationType,
         tasmiVolume: tasmiVolume ?? state.modul.tasmiVolume,
         tasmiUnit: tasmiUnit ?? state.modul.tasmiUnit,
         isCumulativeTasmi: isCumulativeTasmi ?? state.modul.isCumulativeTasmi,
@@ -218,11 +260,11 @@ class ModulFormController extends _$ModulFormController {
         kkm: kkm ?? state.modul.kkm,
         evaluasiTemplates: evaluasiTemplates ?? state.modul.evaluasiTemplates,
         isMurojaah: newIsMurojaah,
-        sertifikasiSettings: sertifikasiSettings != null
+        sertifikasiSettings: effectiveSertifikasiSettings != null
             ? (() {
           final merged = {
             ...Map<String, dynamic>.from(state.modul.sertifikasiSettings ?? const {}),
-            ...sertifikasiSettings,
+            ...?effectiveSertifikasiSettings,
           };
           // FIX: Bersihkan key secara permanen jika menerima sinyal null (Tombstone) dari UI
           merged.removeWhere((key, value) => value == null);
@@ -308,12 +350,12 @@ class ModulFormController extends _$ModulFormController {
           final s = m.surahIdStart > 0 ? m.surahIdStart : 1;
           final e = m.surahIdEnd > 0 ? m.surahIdEnd : 114;
 
-          sSurah = s < e ? s : e;
-          eSurah = s < e ? e : s;
+          sSurah = s <= e ? s : e;
+          eSurah = s <= e ? e : s;
 
           // Ayah mengikuti surah yang terpilih
-          sAyah = (s < e) ? (m.ayahStart > 0 ? m.ayahStart : 1) : (m.ayahEnd > 0 ? m.ayahEnd : getAyahCount(eSurah));
-          eAyah = (s < e) ? (m.ayahEnd > 0 ? m.ayahEnd : getAyahCount(eSurah)) : (m.ayahStart > 0 ? m.ayahStart : 1);
+          sAyah = (s <= e) ? (m.ayahStart > 0 ? m.ayahStart : 1) : (m.ayahEnd > 0 ? m.ayahEnd : getAyahCount(eSurah));
+          eAyah = (s <= e) ? (m.ayahEnd > 0 ? m.ayahEnd : getAyahCount(eSurah)) : (m.ayahStart > 0 ? m.ayahStart : 1);
         }
 
         // 2. PANGGIL ENGINE UTAMA (MushafCalculator)
@@ -418,10 +460,10 @@ class ModulFormController extends _$ModulFormController {
             targetPertemuan: calculatedMeetings,
             totalBaris: finalTotalBaris,
             // Auto-Normalisasi: Pastikan Database selalu menyimpan (Start <= End)
-            surahIdStart: sSurah < eSurah ? sSurah : eSurah,
-            surahIdEnd: sSurah < eSurah ? eSurah : sSurah,
-            ayahStart: sSurah < eSurah ? sAyah : eAyah,
-            ayahEnd: sSurah < eSurah ? eAyah : sAyah,
+            surahIdStart: sSurah <= eSurah ? sSurah : eSurah,
+            surahIdEnd: sSurah <= eSurah ? eSurah : sSurah,
+            ayahStart: sSurah <= eSurah ? sAyah : eAyah,
+            ayahEnd: sSurah <= eSurah ? eAyah : sAyah,
             mulaiHalaman: startPageFromRows < endPageFromRows ? startPageFromRows : endPageFromRows,
             akhirHalaman: startPageFromRows < endPageFromRows ? endPageFromRows : startPageFromRows,
             mulaiKoordinatJuz: (int.tryParse(startJuzFromRows) ?? 0) < (int.tryParse(endJuzFromRows) ?? 0) ? startJuzFromRows : endJuzFromRows,
@@ -488,6 +530,24 @@ class ModulFormController extends _$ModulFormController {
     ));
     state = state.copyWith(
       modul: state.modul.copyWith(evaluasiTemplates: currentTemplates),
+    );
+  }
+
+  void generateCriteriaFromSyllabus(String lembagaId) {
+    final silabus = state.modul.silabusContent;
+    if (silabus.isEmpty) return;
+
+    final templates = silabus.map((item) {
+      return ModulEvaluasiTemplateModel(
+        lembagaId: lembagaId,
+        modulId: state.modul.id ?? '',
+        namaMateri: item.materi,
+        indikatorKelulusan: 'Memahami dan menguasai materi ${item.materi}',
+      );
+    }).toList();
+
+    state = state.copyWith(
+      modul: state.modul.copyWith(evaluasiTemplates: templates),
     );
   }
 
