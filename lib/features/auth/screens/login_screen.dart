@@ -110,11 +110,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 const Icon(Icons.admin_panel_settings_rounded, size: 100, color: Color(0xFF10B981)),
                 const SizedBox(height: 24),
                 const Text(
-                  "TAHFIDZ CORE",
+                  "Space EduOS",
                   style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Color(0xFF1E293B)),
                 ),
                 const Text(
-                  "Manajemen Ekosistem Al-Qur'an",
+                  "One Space. One Education Ecosystem.",
                   style: TextStyle(color: Colors.grey),
                 ),
                 const SizedBox(height: 40),
