@@ -124,7 +124,23 @@ class UklEngineService extends BaseService {
                 'is_ready_for_exam': false,
                 'ready_modul_id': null,
               }).eq('id', siswaId);
+            } else {
+              // Poin 4 BR-TAH-006: Jika tidak ada level di jenjang berikutnya -> status graduated
+              await supabase.from('siswa').update({
+                'academic_state': 'graduated',
+                'status': 'LULUS',
+                'is_ready_for_exam': false,
+                'ready_modul_id': null,
+              }).eq('id', siswaId);
             }
+          } else {
+            // Poin 4 BR-TAH-006: Jika tidak ada jenjang berikutnya -> status graduated
+            await supabase.from('siswa').update({
+              'academic_state': 'graduated',
+              'status': 'LULUS',
+              'is_ready_for_exam': false,
+              'ready_modul_id': null,
+            }).eq('id', siswaId);
           }
         }
       }

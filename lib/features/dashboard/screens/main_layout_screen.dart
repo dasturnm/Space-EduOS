@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:tahfidz_core/core/constants/app_roles.dart'; // TAMBAHAN INI
 import '../../../core/constants/app_routes.dart';
 import '../../../core/providers/app_context_provider.dart';
 import '../../auth/providers/auth_provider.dart';
@@ -76,12 +75,12 @@ class _MainLayoutScreenState extends ConsumerState<MainLayoutScreen> {
     final namaLembaga = contextState.lembaga?.namaLembaga ?? "Tahfidz Core";
 
     // 🛡️ SYNC PBAC & ROLE LOGIC
-    final bool canManageLembaga = contextState.hasPermission('lembaga.manage') || contextState.hasPermission('lembaga.read');
-    final bool canManageStaf = contextState.hasPermission('staf.manage') || contextState.hasPermission('staf.read');
-    final bool canManageAkademik = contextState.hasPermission('program.read') || contextState.hasPermission('kurikulum.read') || contextState.hasPermission('silabus.read');
-    final bool canManageSiswaKelas = contextState.hasPermission('kelas.read') || contextState.hasPermission('siswa.read');
-    final bool canMutabaah = contextState.hasPermission('mutabaah_input') || contextState.hasPermission('mutabaah.read');
-    final bool canManageFinansial = contextState.hasPermission('keuangan.read') || contextState.hasPermission('keuangan.manage');
+    final bool canManageLembaga = contextState.hasPermission('organization.manage') || contextState.hasPermission('organization.read') || contextState.hasPermission('lembaga_manage');
+    final bool canManageStaf = contextState.hasPermission('staf_manage') || contextState.hasPermission('staf_read');
+    final bool canManageAkademik = contextState.hasPermission('academic.program.manage') || contextState.hasPermission('academic.curriculum.manage') || contextState.hasPermission('akademik_program_manage') || contextState.hasPermission('akademik_kurikulum_manage');
+    final bool canManageSiswaKelas = contextState.hasPermission('class.manage') || contextState.hasPermission('student.manage') || contextState.hasPermission('kelas_manage') || contextState.hasPermission('siswa_manage');
+    final bool canMutabaah = contextState.hasPermission('tahfidz.write') || contextState.hasPermission('tahfidz.read') || contextState.hasPermission('mutabaah_input') || contextState.hasPermission('mutabaah_view_all');
+    final bool canManageFinansial = contextState.hasPermission('finance.spp.manage') || contextState.hasPermission('finance.spp.view') || contextState.hasPermission('keuangan_spp_manage') || contextState.hasPermission('finance.payroll.view') || contextState.hasPermission('keuangan_payroll_view');
 
     return Container(
       width: 280,

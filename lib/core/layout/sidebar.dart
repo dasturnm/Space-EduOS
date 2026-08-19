@@ -15,10 +15,10 @@ class Sidebar extends ConsumerWidget {
     final auth = ref.watch(authProvider);
     final appContext = ref.watch(appContextProvider);
 
-    final bool canManageLembaga = appContext.hasPermission('lembaga_manage');
+    final bool canManageLembaga = appContext.hasPermission('organization.manage') || appContext.hasPermission('organization.read') || appContext.hasPermission('lembaga_manage');
     final bool canManageStaf = appContext.hasPermission('staf_manage') || appContext.hasPermission('staf_read');
-    final bool canManageAkademik = appContext.hasPermission('akademik_program_manage') || appContext.hasPermission('akademik_kurikulum_manage') || appContext.hasPermission('siswa_manage') || appContext.hasPermission('kelas_manage') || appContext.hasPermission('mutabaah_input') || appContext.hasPermission('mutabaah_view_all');
-    final bool canManageKeuangan = appContext.hasPermission('keuangan_spp_manage') || appContext.hasPermission('keuangan_payroll_view');
+    final bool canManageAkademik = appContext.hasPermission('academic.program.manage') || appContext.hasPermission('academic.curriculum.manage') || appContext.hasPermission('student.manage') || appContext.hasPermission('class.manage') || appContext.hasPermission('tahfidz.write') || appContext.hasPermission('tahfidz.read') || appContext.hasPermission('akademik_program_manage') || appContext.hasPermission('akademik_kurikulum_manage') || appContext.hasPermission('siswa_manage') || appContext.hasPermission('kelas_manage') || appContext.hasPermission('mutabaah_input') || appContext.hasPermission('mutabaah_view_all');
+    final bool canManageKeuangan = appContext.hasPermission('finance.spp.manage') || appContext.hasPermission('finance.spp.view') || appContext.hasPermission('keuangan_spp_manage') || appContext.hasPermission('finance.payroll.view') || appContext.hasPermission('keuangan_payroll_view');
 
     return Drawer(
       child: ListView(
@@ -38,13 +38,18 @@ class Sidebar extends ConsumerWidget {
 
           if (canManageAkademik) ...[
             const Divider(),
-            _buildItem(context, 'Program Belajar', AppRouteNames.program, Icons.menu_book_outlined),
-            _buildItem(context, 'Kurikulum & Level', AppRouteNames.kurikulum, Icons.assignment_outlined),
+            if (appContext.hasPermission('academic.program.manage') || appContext.hasPermission('akademik_program_manage'))
+              _buildItem(context, 'Program Belajar', AppRouteNames.program, Icons.menu_book_outlined),
+            if (appContext.hasPermission('academic.curriculum.manage') || appContext.hasPermission('academic.curriculum.read') || appContext.hasPermission('akademik_kurikulum_manage'))
+              _buildItem(context, 'Kurikulum & Level', AppRouteNames.kurikulum, Icons.assignment_outlined),
             const Divider(),
-            _buildItem(context, 'Data Siswa', AppRouteNames.siswa, Icons.people_outline),
-            _buildItem(context, 'Manajemen Kelas', AppRouteNames.kelas, Icons.meeting_room_outlined),
+            if (appContext.hasPermission('student.manage') || appContext.hasPermission('student.read') || appContext.hasPermission('siswa_manage'))
+              _buildItem(context, 'Data Siswa', AppRouteNames.siswa, Icons.people_outline),
+            if (appContext.hasPermission('class.manage') || appContext.hasPermission('class.read') || appContext.hasPermission('kelas_manage'))
+              _buildItem(context, 'Manajemen Kelas', AppRouteNames.kelas, Icons.meeting_room_outlined),
             // FIX: Mengarahkan ke Hub agar user bisa mengakses Monitoring & Ranking, bukan hanya Input
-            _buildItem(context, 'Mutabaah Tahfidz', AppRouteNames.mutabaahHub, Icons.history_edu_rounded),
+            if (appContext.hasPermission('tahfidz.write') || appContext.hasPermission('tahfidz.read') || appContext.hasPermission('mutabaah_input') || appContext.hasPermission('mutabaah_view_all'))
+              _buildItem(context, 'Mutabaah Tahfidz', AppRouteNames.mutabaahHub, Icons.history_edu_rounded),
             _buildItem(context, 'Mushaf Digital', AppRouteNames.mushafIndex, Icons.menu_book_rounded),
           ],
 

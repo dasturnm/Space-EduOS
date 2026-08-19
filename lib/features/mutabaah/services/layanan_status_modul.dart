@@ -8,18 +8,21 @@ class LayananStatusModul {
   /// Mengecek apakah konten materi di dalam modul sudah habis dipelajari secara fisik
   Future<bool> isContentCompleted(String siswaId, ModulModel modul) async {
     try {
-      // 1. Ambil setoran terakhir yang BUKAN status "ULANG" (-1)
+      // 1. Ambil setoran terakhir
       final lastRecord = await _supabase
           .from('mutabaah_records')
           .select()
           .eq('siswa_id', siswaId)
           .eq('modul_id', modul.id ?? '')
-          .neq('status_keputusan', -1) // EXCLUDE REPEAT RECORDS
           .order('created_at', ascending: false)
           .limit(1)
           .maybeSingle();
 
       if (lastRecord == null) return false;
+
+      // Syarat Tuntas Mutlak (BR-TAH-005): Status keputusan terakhir harus LANJUT (1)
+      final int statusKeputusan = int.tryParse(lastRecord['status_keputusan']?.toString() ?? '0') ?? 0;
+      if (statusKeputusan != 1) return false;
 
       if (modul.silabusSource == 'mushaf') {
         final bool isReverse = modul.isReverseOrder;
@@ -46,10 +49,6 @@ class LayananStatusModul {
 
         // Jika target masih tidak terdefinisi, anggap selesai agar tidak looping
         if (targetSurah <= 0 || targetAyat <= 0) return true;
-
-        // Syarat Tuntas Mutlak: Status keputusan harus LANJUT (1)
-        final int statusKeputusan = int.tryParse(lastRecord['status_keputusan']?.toString() ?? '0') ?? 0;
-        if (statusKeputusan != 1) return false;
 
         // FIX: Mengambil koordinat kursor fisik acuan berdasarkan arah hafalan
         final int startSurahFromDb = int.tryParse(lastRecord['surah_id']?.toString() ?? '0') ?? 0;
@@ -94,10 +93,7 @@ class LayananStatusModul {
           if (totalMateri == 0) return false;
           final int currentIndex = int.tryParse(lastRecord['nomor_urut_materi']?.toString() ?? '0') ?? 0;
           // Indeks berbasis 0, jadi max index = totalMateri - 1
-          // Tambahkan pengecekan apakah record terakhir memiliki status LANJUT (status_keputusan == 1)
-          final int statusKeputusan = int.tryParse(lastRecord['status_keputusan']?.toString() ?? '0') ?? 0;
-          // Hanya dianggap selesai jika statusnya LANJUT dan indeks sudah di akhir
-          return statusKeputusan == 1 && currentIndex >= totalMateri - 1;
+          return currentIndex >= totalMateri - 1;
         } else {
           // Non-floating: bandingkan internal_end dengan total cakupan (target_internal_akhir atau target pertemuan atau total baris)
           final int totalCakupan = modul.targetInternalAkhir > 0
@@ -107,9 +103,7 @@ class LayananStatusModul {
               : (modul.totalBaris > 0 ? modul.totalBaris : 100));
 
           final int currentInternalEnd = int.tryParse(lastRecord['internal_end']?.toString() ?? '0') ?? 0;
-          // Tambahkan pengecekan status LANJUT
-          final int statusKeputusan = int.tryParse(lastRecord['status_keputusan']?.toString() ?? '0') ?? 0;
-          return statusKeputusan == 1 && currentInternalEnd >= totalCakupan;
+          return currentInternalEnd >= totalCakupan;
         }
       }
     } catch (_) {

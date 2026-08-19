@@ -20,6 +20,27 @@ class PermissionsConstant {
   static const List<PermissionItem> allPermissions = [
     // --- KELEMBAGAAN & AKSES ---
     PermissionItem(
+      code: 'tenant.manage',
+      title: 'Kelola Tenant',
+      feature: 'Setup Tenant, Subscription',
+      description: 'Mengelola konfigurasi multi-tenant dan langganan.',
+      category: 'Kelembagaan & Akses',
+    ),
+    PermissionItem(
+      code: 'organization.manage',
+      title: 'Kelola Organisasi',
+      feature: 'Profil Lembaga, Cabang, TA',
+      description: 'Mengelola profil lembaga, cabang, dan tahun ajaran.',
+      category: 'Kelembagaan & Akses',
+    ),
+    PermissionItem(
+      code: 'organization.read',
+      title: 'Lihat Organisasi',
+      feature: 'View profil',
+      description: 'Melihat detail profil dan struktur organisasi lembaga.',
+      category: 'Kelembagaan & Akses',
+    ),
+    PermissionItem(
       code: 'lembaga_manage',
       title: 'Profil & Legalitas',
       feature: 'Setup Lembaga, Cabang, TA',
@@ -27,10 +48,38 @@ class PermissionsConstant {
       category: 'Kelembagaan & Akses',
     ),
     PermissionItem(
+      code: 'staf_manage',
+      title: 'Manajemen Staf',
+      feature: 'CRUD Staf & Penugasan',
+      description: 'Mengelola data staf, SDM, dan penugasan jabatan.',
+      category: 'Kelembagaan & Akses',
+    ),
+    PermissionItem(
+      code: 'staf_read',
+      title: 'Lihat Data Staf',
+      feature: 'Daftar Staf',
+      description: 'Melihat daftar data staf dan SDM lembaga.',
+      category: 'Kelembagaan & Akses',
+    ),
+    PermissionItem(
+      code: 'audit.view',
+      title: 'Lihat Audit Log',
+      feature: 'Audit Log Screen',
+      description: 'Melihat jejak perubahan data oleh pengguna.',
+      category: 'Kelembagaan & Akses',
+    ),
+    PermissionItem(
       code: 'audit_log_view',
       title: 'Log Aktivitas',
       feature: 'Audit Log Screen',
       description: 'Melihat riwayat setiap perubahan data yang dilakukan oleh staf untuk keamanan internal.',
+      category: 'Kelembagaan & Akses',
+    ),
+    PermissionItem(
+      code: 'backup.manage',
+      title: 'Kelola Backup',
+      feature: 'Backup/Restore Screen',
+      description: 'Melakukan pencadangan dan pemulihan data sistem.',
       category: 'Kelembagaan & Akses',
     ),
     PermissionItem(
@@ -43,6 +92,13 @@ class PermissionsConstant {
 
     // --- AKADEMIK & KURIKULUM ---
     PermissionItem(
+      code: 'academic.program.manage',
+      title: 'Kelola Program & Kaldik',
+      feature: 'CRUD Program, Agenda',
+      description: 'Mengatur jenis program pendidikan dan kalender akademik.',
+      category: 'Akademik & Kurikulum',
+    ),
+    PermissionItem(
       code: 'akademik_program_manage',
       title: 'Manajemen Program',
       feature: 'CRUD Program, Agenda',
@@ -50,10 +106,38 @@ class PermissionsConstant {
       category: 'Akademik & Kurikulum',
     ),
     PermissionItem(
+      code: 'academic.curriculum.manage',
+      title: 'Kelola Blueprint Akademik',
+      feature: 'CRUD Kurikulum, Jenjang, Level, Modul',
+      description: 'Menyusun struktur kurikulum detail dari tingkat dasar hingga unit modul.',
+      category: 'Akademik & Kurikulum',
+    ),
+    PermissionItem(
+      code: 'academic.curriculum.read',
+      title: 'Lihat Blueprint Akademik',
+      feature: 'View kurikulum',
+      description: 'Melihat struktur kurikulum, jenjang, level, dan modul.',
+      category: 'Akademik & Kurikulum',
+    ),
+    PermissionItem(
       code: 'akademik_kurikulum_manage',
       title: 'Cetak Biru Akademik',
       feature: 'CRUD Kurikulum, Jenjang, Level, Modul',
       description: 'Menyusun struktur kurikulum detail dari tingkat dasar hingga unit modul terkecil.',
+      category: 'Akademik & Kurikulum',
+    ),
+    PermissionItem(
+      code: 'class.manage',
+      title: 'Kelola Unit Kelas',
+      feature: 'CRUD Kelas, Plotting massal',
+      description: 'Mengelola kelas, kapasitas, dan plotting santri.',
+      category: 'Akademik & Kurikulum',
+    ),
+    PermissionItem(
+      code: 'class.read',
+      title: 'Lihat Kelas',
+      feature: 'View kelas',
+      description: 'Melihat informasi daftar kelas dan pembagian santri.',
       category: 'Akademik & Kurikulum',
     ),
     PermissionItem(
@@ -65,6 +149,27 @@ class PermissionsConstant {
     ),
 
     // --- KESISWAAN & PENDAFTARAN ---
+    PermissionItem(
+      code: 'student.manage',
+      title: 'Kelola Data Siswa',
+      feature: 'CRUD Siswa, Import/Export',
+      description: 'Manajemen profil lengkap santri, impor dan ekspor data.',
+      category: 'Kesiswaan & Pendaftaran',
+    ),
+    PermissionItem(
+      code: 'student.enroll',
+      title: 'Daftarkan ke Kurikulum',
+      feature: 'Enroll Kurikulum, Plotting Kelas',
+      description: 'Mendaftarkan santri ke kurikulum dan menempatkan ke kelas.',
+      category: 'Kesiswaan & Pendaftaran',
+    ),
+    PermissionItem(
+      code: 'student.read',
+      title: 'Lihat Data Siswa',
+      feature: 'View siswa',
+      description: 'Melihat daftar dan profil detail santri.',
+      category: 'Kesiswaan & Pendaftaran',
+    ),
     PermissionItem(
       code: 'siswa_manage',
       title: 'Database Siswa',
@@ -80,10 +185,31 @@ class PermissionsConstant {
       category: 'Kesiswaan & Pendaftaran',
     ),
     PermissionItem(
+      code: 'parent.manage',
+      title: 'Kelola Data Wali',
+      feature: 'CRUD Wali Santri',
+      description: 'Mengelola data orang tua/wali santri.',
+      category: 'Kesiswaan & Pendaftaran',
+    ),
+    PermissionItem(
       code: 'wali_manage',
       title: 'Data Orang Tua',
       feature: 'CRUD Wali Santri',
       description: 'Mengelola database orang tua santri dan menghubungkannya dengan data anak mereka.',
+      category: 'Kesiswaan & Pendaftaran',
+    ),
+    PermissionItem(
+      code: 'admission.view',
+      title: 'Lihat Pendaftar',
+      feature: 'Dashboard Admission (Read)',
+      description: 'Melihat daftar pendaftar santri baru.',
+      category: 'Kesiswaan & Pendaftaran',
+    ),
+    PermissionItem(
+      code: 'admission.manage',
+      title: 'Kelola Pendaftaran',
+      feature: 'Verifikasi, Approve, Enroll',
+      description: 'Memproses dan memverifikasi berkas pendaftaran santri baru.',
       category: 'Kesiswaan & Pendaftaran',
     ),
     PermissionItem(
@@ -103,6 +229,48 @@ class PermissionsConstant {
 
     // --- KETAHFIDZAN & EVALUASI ---
     PermissionItem(
+      code: 'attendance.manage',
+      title: 'Kelola Presensi',
+      feature: 'QR, GPS, Rekap',
+      description: 'Mengelola pencatatan dan rekapitulasi kehadiran.',
+      category: 'Ketahfidzan & Evaluasi',
+    ),
+    PermissionItem(
+      code: 'attendance.read',
+      title: 'Lihat Presensi',
+      feature: 'View presensi',
+      description: 'Melihat data dan rekap presensi.',
+      category: 'Ketahfidzan & Evaluasi',
+    ),
+    PermissionItem(
+      code: 'presensi_input',
+      title: 'Input Presensi',
+      feature: 'Form Presensi Harian',
+      description: 'Mencatat kehadiran harian santri dan staf.',
+      category: 'Ketahfidzan & Evaluasi',
+    ),
+    PermissionItem(
+      code: 'presensi_read',
+      title: 'Lihat Presensi',
+      feature: 'Rekap Presensi',
+      description: 'Melihat riwayat dan rekapitulasi presensi.',
+      category: 'Ketahfidzan & Evaluasi',
+    ),
+    PermissionItem(
+      code: 'tahfidz.write',
+      title: 'Input Setoran Harian',
+      feature: "Form Mutaba'ah, Monitoring",
+      description: 'Mencatat setoran hafalan harian dan perkembangan mutabaah.',
+      category: 'Ketahfidzan & Evaluasi',
+    ),
+    PermissionItem(
+      code: 'tahfidz.read',
+      title: 'Lihat Riwayat Tahfidz',
+      feature: 'Mutabaah Hub, Log Pusat',
+      description: 'Melihat seluruh catatan dan log mutabaah hafalan.',
+      category: 'Ketahfidzan & Evaluasi',
+    ),
+    PermissionItem(
       code: 'mutabaah_input',
       title: 'Input Mutabaah',
       feature: "Form Mutaba'ah, Monitoring",
@@ -117,6 +285,13 @@ class PermissionsConstant {
       category: 'Ketahfidzan & Evaluasi',
     ),
     PermissionItem(
+      code: 'tahfidz.assess',
+      title: 'Input Nilai Ujian Tahfidz',
+      feature: "Form Tasmi'/UKL",
+      description: 'Memasukkan nilai dan evaluasi ujian hafalan.',
+      category: 'Ketahfidzan & Evaluasi',
+    ),
+    PermissionItem(
       code: 'evaluasi_input',
       title: 'Input Nilai Ujian',
       feature: "Form Tasmi'/UKL",
@@ -124,10 +299,24 @@ class PermissionsConstant {
       category: 'Ketahfidzan & Evaluasi',
     ),
     PermissionItem(
+      code: 'tahfidz.promote',
+      title: 'Auto Promosi Level Tahfidz',
+      feature: 'UklEngineService',
+      description: 'Otorisasi promosi kenaikan level hafalan santri.',
+      category: 'Ketahfidzan & Evaluasi',
+    ),
+    PermissionItem(
       code: 'evaluasi_promote',
       title: 'Otorisasi Kenaikan',
       feature: 'UklEngineService',
       description: 'Memberikan persetujuan resmi untuk santri naik ke jenjang atau level berikutnya setelah lulus ujian.',
+      category: 'Ketahfidzan & Evaluasi',
+    ),
+    PermissionItem(
+      code: 'certificate.generate',
+      title: 'Cetak Sertifikat/Ijazah',
+      feature: 'Generate PDF & QR',
+      description: 'Menerbitkan sertifikat digital dengan verifikasi QR code.',
       category: 'Ketahfidzan & Evaluasi',
     ),
     PermissionItem(
@@ -140,10 +329,24 @@ class PermissionsConstant {
 
     // --- KEUANGAN & OPERASIONAL ---
     PermissionItem(
+      code: 'finance.payroll.view',
+      title: 'Lihat Slip Gaji',
+      feature: 'Teacher Payroll Dashboard',
+      description: 'Melihat rincian dan riwayat slip gaji staf.',
+      category: 'Keuangan & Operasional',
+    ),
+    PermissionItem(
       code: 'keuangan_payroll_view',
       title: 'Slip Gaji Staf',
       feature: 'Teacher Payroll Dashboard',
       description: 'Melihat rincian gaji, bonus mengajar, dan potongan bagi guru maupun staf terkait.',
+      category: 'Keuangan & Operasional',
+    ),
+    PermissionItem(
+      code: 'finance.spp.manage',
+      title: 'Kelola SPP & Pengeluaran',
+      feature: 'CRUD Tagihan, Laporan',
+      description: 'Mengatur seluruh operasional tagihan SPP dan laporan keuangan.',
       category: 'Keuangan & Operasional',
     ),
     PermissionItem(
@@ -154,10 +357,31 @@ class PermissionsConstant {
       category: 'Keuangan & Operasional',
     ),
     PermissionItem(
+      code: 'finance.spp.view',
+      title: 'Lihat Tagihan SPP',
+      feature: 'View SPP',
+      description: 'Melihat daftar tagihan dan status pembayaran SPP.',
+      category: 'Keuangan & Operasional',
+    ),
+    PermissionItem(
+      code: 'spp.generate',
+      title: 'Generate Tagihan SPP',
+      feature: 'Generate Tagihan Massal',
+      description: 'Proses pembuataan tagihan bulanan secara otomatis.',
+      category: 'Keuangan & Operasional',
+    ),
+    PermissionItem(
       code: 'spp_generate',
       title: 'Tagihan SPP',
       feature: 'Generate Tagihan Massal',
       description: 'Membuat tagihan iuran bulanan untuk seluruh siswa aktif secara otomatis setiap awal bulan.',
+      category: 'Keuangan & Operasional',
+    ),
+    PermissionItem(
+      code: 'spp.process',
+      title: 'Proses Pembayaran SPP',
+      feature: 'Input Bayar, Upload Bukti',
+      description: 'Memproses transaksi dan verifikasi pembayaran SPP.',
       category: 'Keuangan & Operasional',
     ),
     PermissionItem(
@@ -168,6 +392,13 @@ class PermissionsConstant {
       category: 'Keuangan & Operasional',
     ),
     PermissionItem(
+      code: 'expense.manage',
+      title: 'Kelola Pengeluaran',
+      feature: 'CRUD Pengeluaran',
+      description: 'Mencatat dan mengelola pengeluaran operasional.',
+      category: 'Keuangan & Operasional',
+    ),
+    PermissionItem(
       code: 'pengeluaran_manage',
       title: 'Input Pengeluaran',
       feature: 'CRUD Pengeluaran',
@@ -175,7 +406,21 @@ class PermissionsConstant {
       category: 'Keuangan & Operasional',
     ),
 
-    // --- LENGKAP & INFORMASI ---
+    // --- LAPORAN & KOMUNIKASI ---
+    PermissionItem(
+      code: 'communication.send',
+      title: 'Kirim Pengumuman Massal',
+      feature: 'WA/Email/In-App Blast',
+      description: 'Mengirimkan pengumuman blast ke siswa dan wali.',
+      category: 'Laporan & Komunikasi',
+    ),
+    PermissionItem(
+      code: 'communication.read',
+      title: 'Lihat Pengumuman',
+      feature: 'View notifikasi',
+      description: 'Melihat riwayat pengumuman dan notifikasi terkirim.',
+      category: 'Laporan & Komunikasi',
+    ),
     PermissionItem(
       code: 'notifikasi_send',
       title: 'Kirim Pengumuman',
@@ -184,11 +429,64 @@ class PermissionsConstant {
       category: 'Laporan & Komunikasi',
     ),
     PermissionItem(
+      code: 'report.print',
+      title: 'Cetak Semua Laporan',
+      feature: 'PDF, Excel',
+      description: 'Menghasilkan ekspor laporan dalam bentuk PDF/Excel.',
+      category: 'Laporan & Komunikasi',
+    ),
+    PermissionItem(
       code: 'laporan_cetak',
       title: 'Cetak Laporan PDF',
       feature: 'PDF, Excel',
       description: 'Menghasilkan dokumen laporan perkembangan belajar santri dalam format siap cetak.',
       category: 'Laporan & Komunikasi',
+    ),
+
+    // --- LMS & PEMBELAJARAN DIGITAL ---
+    PermissionItem(
+      code: 'lms.course.manage',
+      title: 'Kelola Course LMS',
+      feature: 'CRUD Course, Module, Lesson',
+      description: 'Menyusun dan mengelola materi serta modul kursus digital.',
+      category: 'LMS & Pembelajaran Digital',
+    ),
+    PermissionItem(
+      code: 'lms.assignment.manage',
+      title: 'Kelola Tugas',
+      feature: 'CRUD Assignment, Submission',
+      description: 'Membuat tugas, menerima kiriman tugas, dan memberi penilaian.',
+      category: 'LMS & Pembelajaran Digital',
+    ),
+    PermissionItem(
+      code: 'lms.quiz.manage',
+      title: 'Kelola Ujian CBT',
+      feature: 'CRUD Quiz, Bank Soal',
+      description: 'Mengelola kuis online, ujian CBT, dan bank soal.',
+      category: 'LMS & Pembelajaran Digital',
+    ),
+    PermissionItem(
+      code: 'lms.grade.manage',
+      title: 'Kelola Nilai LMS',
+      feature: 'Gradebook, Rapor',
+      description: 'Mengolah rekap nilai pembelajaran online dan gradebook.',
+      category: 'LMS & Pembelajaran Digital',
+    ),
+
+    // --- KECERDASAN BUATAN (AI) ---
+    PermissionItem(
+      code: 'ai.use',
+      title: 'Gunakan AI',
+      feature: 'Generator Soal & Analisis',
+      description: 'Menggunakan fitur-fitur pembantu AI dalam aplikasi.',
+      category: 'Kecerdasan Buatan (AI)',
+    ),
+    PermissionItem(
+      code: 'ai.manage',
+      title: 'Kelola Konfigurasi AI',
+      feature: 'Setup Provider AI & Prompt',
+      description: 'Mengatur provider, prompt, dan batasan penggunaan AI.',
+      category: 'Kecerdasan Buatan (AI)',
     ),
   ];
 

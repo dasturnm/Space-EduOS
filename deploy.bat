@@ -1,5 +1,5 @@
 @echo off
-set REPO_NAME=Tahfidz-Core
+set REPO_NAME=Space EduOS
 
 echo [1/4] Membersihkan build lama...
 call flutter clean

@@ -68,7 +68,10 @@ class AppContextState {
 
   // --- HELPER PBAC ---
   bool hasPermission(String permissionKey) {
-    if (role == 'OWNER' || role == 'ADMIN') return true;
+    final upperRole = role?.toUpperCase();
+    if (upperRole == 'OWNER' || upperRole == 'ADMIN' || upperRole == 'SUPERADMIN' || upperRole == 'SUPER_ADMIN') {
+      return true;
+    }
     return permissions.contains(permissionKey);
   }
 }

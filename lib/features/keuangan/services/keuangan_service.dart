@@ -71,7 +71,10 @@ class KeuanganService extends BaseService {
         final workKey = "${dateKey}_${r.siswaId}";
         uniqueDaysActive.add(dateKey);
 
-        if (r.isDelegasi) {
+        // BR-HR-002: Bonus delegasi hanya diberikan jika penginput (guruId) != guru tetap (originalGuruId)
+        final bool isSubstitute = r.isDelegasi && (r.originalGuruId != null && r.originalGuruId != guruId);
+
+        if (isSubstitute) {
           uniqueDelegationWork.add(workKey);
         } else {
           uniqueStudentWork.add(workKey);
@@ -97,6 +100,7 @@ class KeuanganService extends BaseService {
             .from('mutabaah_records')
             .select('id')
             .eq('original_guru_id', guruId)
+            .neq('guru_id', guruId)
             .eq('is_delegasi', true)
             .gte('created_at', firstDay)
             .lte('created_at', lastDay);

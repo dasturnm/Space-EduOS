@@ -6,7 +6,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/providers/app_context_provider.dart';
 import '../../../core/constants/permissions_constant.dart';
 import '../providers/lembaga_provider.dart';
-import '../providers/unit_kerja_provider.dart';
 import '../models/jabatan_model.dart';
 import '../models/divisi_model.dart';
 import '../models/unit_kerja_model.dart';

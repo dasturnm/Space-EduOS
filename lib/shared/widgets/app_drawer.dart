@@ -14,7 +14,6 @@ class AppDrawer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Ambil state utuh untuk akses flag isInitialized
     final contextState = ref.watch(appContextProvider);
-    final String role = contextState.role ?? '';
     final String namaLembaga = contextState.lembaga?.namaLembaga ?? "Tahfidz Core";
     final bool isInitialized = contextState.isInitialized;
 
@@ -33,14 +32,14 @@ class AppDrawer extends ConsumerWidget {
     }
 
     // Pengecekan PBAC menggunakan helper dari contextState
-    final bool canManageLembaga = contextState.hasPermission('lembaga_manage');
-    final bool canManageAkademik = contextState.hasPermission('akademik_program_manage') || contextState.hasPermission('akademik_kurikulum_manage');
+    final bool canManageLembaga = contextState.hasPermission('organization.manage') || contextState.hasPermission('organization.read') || contextState.hasPermission('lembaga_manage');
+    final bool canManageAkademik = contextState.hasPermission('academic.program.manage') || contextState.hasPermission('academic.curriculum.manage') || contextState.hasPermission('akademik_program_manage') || contextState.hasPermission('akademik_kurikulum_manage');
     final bool canManageStaf = contextState.hasPermission('staf_manage') || contextState.hasPermission('staf_read');
-    final bool canManageSiswaKelas = contextState.hasPermission('kelas_manage') || contextState.hasPermission('siswa_manage');
-    final bool canPresensi = contextState.hasPermission('presensi_read') || contextState.hasPermission('presensi_input');
-    final bool canMutabaah = contextState.hasPermission('mutabaah_input') || contextState.hasPermission('mutabaah_view_all');
-    final bool canTasmiRaporSertifikat = contextState.hasPermission('evaluasi_input') || contextState.hasPermission('laporan_cetak') || contextState.hasPermission('sertifikat_generate');
-    final bool canKeuangan = contextState.hasPermission('keuangan_spp_manage') || contextState.hasPermission('keuangan_payroll_view');
+    final bool canManageSiswaKelas = contextState.hasPermission('class.manage') || contextState.hasPermission('student.manage') || contextState.hasPermission('kelas_manage') || contextState.hasPermission('siswa_manage');
+    final bool canPresensi = contextState.hasPermission('attendance.read') || contextState.hasPermission('attendance.manage') || contextState.hasPermission('presensi_read') || contextState.hasPermission('presensi_input');
+    final bool canMutabaah = contextState.hasPermission('tahfidz.write') || contextState.hasPermission('tahfidz.read') || contextState.hasPermission('mutabaah_input') || contextState.hasPermission('mutabaah_view_all');
+    final bool canTasmiRaporSertifikat = contextState.hasPermission('tahfidz.assess') || contextState.hasPermission('evaluasi_input') || contextState.hasPermission('report.print') || contextState.hasPermission('laporan_cetak') || contextState.hasPermission('certificate.generate') || contextState.hasPermission('sertifikat_generate');
+    final bool canKeuangan = contextState.hasPermission('finance.spp.manage') || contextState.hasPermission('keuangan_spp_manage') || contextState.hasPermission('finance.payroll.view') || contextState.hasPermission('keuangan_payroll_view');
 
     return Drawer(
       child: Column(
@@ -55,7 +54,7 @@ class AppDrawer extends ConsumerWidget {
               displayName,
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
-            accountEmail: Text(role.isEmpty ? "Belum Terkonfigurasi" : "Akses: ${role.toUpperCase()} • $namaLembaga"),
+            accountEmail: Text(namaLembaga),
           ),
 
           Expanded(
@@ -83,19 +82,19 @@ class AppDrawer extends ConsumerWidget {
                 if (contextState.lembaga != null && canManageAkademik) ...[
                   const Divider(height: 8),
                   _buildSectionHeader("BLUEPRINT AKADEMIK"),
-                  if (contextState.hasPermission('akademik_program_manage'))
+                  if (contextState.hasPermission('academic.program.manage') || contextState.hasPermission('akademik_program_manage'))
                     _buildDrawerItem(
                       icon: Icons.menu_book_outlined,
                       label: "Program dan Kaldik",
                       onTap: () => _navigatePath(context, AppRouteNames.program),
                     ),
-                  if (contextState.hasPermission('akademik_kurikulum_manage'))
+                  if (contextState.hasPermission('academic.curriculum.manage') || contextState.hasPermission('akademik_kurikulum_manage'))
                     _buildDrawerItem(
                       icon: Icons.assignment_outlined,
                       label: "Kurikulum & Modul",
                       onTap: () => _navigatePath(context, AppRouteNames.kurikulum),
                     ),
-                  if (contextState.hasPermission('akademik_kurikulum_manage'))
+                  if (contextState.hasPermission('academic.curriculum.manage') || contextState.hasPermission('akademik_kurikulum_manage'))
                     _buildDrawerItem(
                       icon: Icons.my_library_books_outlined,
                       label: "Katalog Silabus",
@@ -138,19 +137,19 @@ class AppDrawer extends ConsumerWidget {
                       onTap: () => _navigatePath(context, AppRouteNames.mutabaahHub),
                     ),
                   if (canTasmiRaporSertifikat) ...[
-                    if (contextState.hasPermission('evaluasi_input'))
+                    if (contextState.hasPermission('tahfidz.assess') || contextState.hasPermission('evaluasi_input'))
                       _buildDrawerItem(
                         icon: Icons.verified_outlined,
                         label: "Ujian Tasmi'",
                         onTap: () => _navigatePath(context, AppRouteNames.tasmi),
                       ),
-                    if (contextState.hasPermission('laporan_cetak'))
+                    if (contextState.hasPermission('report.print') || contextState.hasPermission('laporan_cetak'))
                       _buildDrawerItem(
                         icon: Icons.analytics_outlined,
                         label: "E-Rapor",
                         onTap: () => _navigatePath(context, AppRouteNames.eRapor),
                       ),
-                    if (contextState.hasPermission('sertifikat_generate'))
+                    if (contextState.hasPermission('certificate.generate') || contextState.hasPermission('sertifikat_generate'))
                       _buildDrawerItem(
                         icon: Icons.card_membership_outlined,
                         label: "E-Sertifikat",

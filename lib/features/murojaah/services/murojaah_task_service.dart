@@ -11,9 +11,10 @@ class MurojaahTaskService extends BaseService {
     required String type, // 'fixed' atau 'percentage'
     int? totalLinesMemorized,
   }) async {
-    int lines = totalLinesMemorized ?? 0;
+    int lines = 0;
 
-    if (lines <= 0 && studentId.isNotEmpty) {
+    // Fetch real-time total_juz_hafalan langsung dari DB untuk menjamin BR-TAH-009
+    if (studentId.isNotEmpty) {
       final siswaData = await supabase
           .from('siswa')
           .select('total_juz_hafalan')
@@ -22,6 +23,16 @@ class MurojaahTaskService extends BaseService {
 
       final double totalJuz = (siswaData?['total_juz_hafalan'] as num?)?.toDouble() ?? 0.0;
       lines = (totalJuz * 300).round(); // 1 Juz = 20 hal = 300 baris
+    } else if (totalLinesMemorized != null) {
+      lines = totalLinesMemorized;
+    }
+
+    if (lines <= 0) {
+      return {
+        "type": "MANZIL",
+        "target_lines": 0,
+        "target_pages": "0.0",
+      };
     }
 
     int targetLines;
@@ -93,6 +104,11 @@ class MurojaahTaskService extends BaseService {
     );
 
     int targetLines = manzil['target_lines'] as int;
+
+    // BR-TAH-009: Jika total_juz_hafalan / targetLines <= 0, tidak menampilkan task manzil
+    if (targetLines <= 0) {
+      return [];
+    }
 
     int startLine;
     int endLine;

@@ -1,3 +1,5 @@
+// Lokasi: lib/main.dart
+
 import 'dart:async'; // TAMBAHAN: Untuk StreamSubscription
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,7 +16,13 @@ void main() async {
 
   await Supabase.initialize(
     url: const String.fromEnvironment('SUPABASE_URL', defaultValue: 'https://mrxtnwmyqfmfdncdvssh.supabase.co'),
-    anonKey: const String.fromEnvironment('SUPABASE_ANON_KEY', defaultValue: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1yeHRud215cWZtZmRuY2R2c3NoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAyMTY3NjUsImV4cCI6MjA4NTc5Mjc2NX0.r_sJKRw0aGasBVgn9BlbGVQ_VAJ4I3EBUrxg_Poju-w'),
+    anonKey: const String.fromEnvironment(
+      'SUPABASE_ANON_KEY',
+      defaultValue: const String.fromEnvironment(
+        'SUPABASE_PUBLISHABLE_KEY',
+        defaultValue: 'sb_publishable_OAPUWnbXxiDjKDFMkgvIng_xUKs67lg',
+      ),
+    ),
     authOptions: const FlutterAuthClientOptions(
       authFlowType: AuthFlowType.pkce,
     ),
@@ -77,7 +85,7 @@ class _MyAppState extends ConsumerState<MyApp> {
 
     return MaterialApp.router(
       routerConfig: router, // Navigator key sekarang dikelola oleh GoRouter
-      title: 'Tahfidz Core',
+      title: 'Space EduOS',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF10B981)),
