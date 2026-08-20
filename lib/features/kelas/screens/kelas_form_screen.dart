@@ -187,7 +187,7 @@ class _KelasFormScreenState extends ConsumerState<KelasFormScreen> {
     final isEditing = widget.existingKelas != null;
 
     // FIX (Aturan 7): Menggunakan programNotifierProvider (AsyncValue)
-    final programsAsync = ref.watch(programNotifierProvider);
+    final programsAsync = ref.watch(programProvider);
 
     const academicColor = Color(0xFF3B82F6); // Biru Akademik (Aturan 8)
 

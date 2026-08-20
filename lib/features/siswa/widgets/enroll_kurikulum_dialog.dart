@@ -27,7 +27,7 @@ class _EnrollKurikulumDialogState extends ConsumerState<EnrollKurikulumDialog> {
   @override
   Widget build(BuildContext context) {
     // 1. Ambil semua program yang tersedia (FIX: Menggunakan programNotifierProvider)
-    final programsAsync = ref.watch(programNotifierProvider);
+    final programsAsync = ref.watch(programProvider);
 
     return AlertDialog(
       title: const Text("Pendaftaran Kurikulum", style: TextStyle(fontWeight: FontWeight.bold)),

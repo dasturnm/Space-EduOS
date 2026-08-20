@@ -6,193 +6,115 @@ part of 'calendar_summary_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$calendarSummaryHash() => r'a591c166bbaf997c48bc09cee19a0f78dd53ead6';
-
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 /// Provider reaktif untuk mengambil ringkasan kalkulasi hari efektif akademik.
 /// UI dapat melakukan watch pada provider ini agar mendapatkan update data secara otomatis.
-///
-/// Copied from [calendarSummary].
+
 @ProviderFor(calendarSummary)
-const calendarSummaryProvider = CalendarSummaryFamily();
+final calendarSummaryProvider = CalendarSummaryFamily._();
 
 /// Provider reaktif untuk mengambil ringkasan kalkulasi hari efektif akademik.
 /// UI dapat melakukan watch pada provider ini agar mendapatkan update data secara otomatis.
-///
-/// Copied from [calendarSummary].
-class CalendarSummaryFamily extends Family<AsyncValue<AcademicSummaryModel>> {
+
+final class CalendarSummaryProvider extends $FunctionalProvider<
+        AsyncValue<AcademicSummaryModel>,
+        AcademicSummaryModel,
+        FutureOr<AcademicSummaryModel>>
+    with
+        $FutureModifier<AcademicSummaryModel>,
+        $FutureProvider<AcademicSummaryModel> {
   /// Provider reaktif untuk mengambil ringkasan kalkulasi hari efektif akademik.
   /// UI dapat melakukan watch pada provider ini agar mendapatkan update data secara otomatis.
-  ///
-  /// Copied from [calendarSummary].
-  const CalendarSummaryFamily();
-
-  /// Provider reaktif untuk mengambil ringkasan kalkulasi hari efektif akademik.
-  /// UI dapat melakukan watch pada provider ini agar mendapatkan update data secara otomatis.
-  ///
-  /// Copied from [calendarSummary].
-  CalendarSummaryProvider call(
-    String programId, {
-    String? tahunAjaranId,
-  }) {
-    return CalendarSummaryProvider(
-      programId,
-      tahunAjaranId: tahunAjaranId,
-    );
-  }
-
-  @override
-  CalendarSummaryProvider getProviderOverride(
-    covariant CalendarSummaryProvider provider,
-  ) {
-    return call(
-      provider.programId,
-      tahunAjaranId: provider.tahunAjaranId,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'calendarSummaryProvider';
-}
-
-/// Provider reaktif untuk mengambil ringkasan kalkulasi hari efektif akademik.
-/// UI dapat melakukan watch pada provider ini agar mendapatkan update data secara otomatis.
-///
-/// Copied from [calendarSummary].
-class CalendarSummaryProvider
-    extends AutoDisposeFutureProvider<AcademicSummaryModel> {
-  /// Provider reaktif untuk mengambil ringkasan kalkulasi hari efektif akademik.
-  /// UI dapat melakukan watch pada provider ini agar mendapatkan update data secara otomatis.
-  ///
-  /// Copied from [calendarSummary].
-  CalendarSummaryProvider(
-    String programId, {
-    String? tahunAjaranId,
-  }) : this._internal(
-          (ref) => calendarSummary(
-            ref as CalendarSummaryRef,
-            programId,
-            tahunAjaranId: tahunAjaranId,
-          ),
-          from: calendarSummaryProvider,
+  CalendarSummaryProvider._(
+      {required CalendarSummaryFamily super.from,
+      required (
+        String, {
+        String? tahunAjaranId,
+      })
+          super.argument})
+      : super(
+          retry: null,
           name: r'calendarSummaryProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$calendarSummaryHash,
-          dependencies: CalendarSummaryFamily._dependencies,
-          allTransitiveDependencies:
-              CalendarSummaryFamily._allTransitiveDependencies,
-          programId: programId,
-          tahunAjaranId: tahunAjaranId,
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
         );
 
-  CalendarSummaryProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.programId,
-    required this.tahunAjaranId,
-  }) : super.internal();
-
-  final String programId;
-  final String? tahunAjaranId;
+  @override
+  String debugGetCreateSourceHash() => _$calendarSummaryHash();
 
   @override
-  Override overrideWith(
-    FutureOr<AcademicSummaryModel> Function(CalendarSummaryRef provider) create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: CalendarSummaryProvider._internal(
-        (ref) => create(ref as CalendarSummaryRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        programId: programId,
-        tahunAjaranId: tahunAjaranId,
-      ),
-    );
+  String toString() {
+    return r'calendarSummaryProvider'
+        ''
+        '$argument';
   }
 
+  @$internal
   @override
-  AutoDisposeFutureProviderElement<AcademicSummaryModel> createElement() {
-    return _CalendarSummaryProviderElement(this);
+  $FutureProviderElement<AcademicSummaryModel> $createElement(
+          $ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<AcademicSummaryModel> create(Ref ref) {
+    final argument = this.argument as (
+      String, {
+      String? tahunAjaranId,
+    });
+    return calendarSummary(
+      ref,
+      argument.$1,
+      tahunAjaranId: argument.tahunAjaranId,
+    );
   }
 
   @override
   bool operator ==(Object other) {
-    return other is CalendarSummaryProvider &&
-        other.programId == programId &&
-        other.tahunAjaranId == tahunAjaranId;
+    return other is CalendarSummaryProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, programId.hashCode);
-    hash = _SystemHash.combine(hash, tahunAjaranId.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin CalendarSummaryRef on AutoDisposeFutureProviderRef<AcademicSummaryModel> {
-  /// The parameter `programId` of this provider.
-  String get programId;
+String _$calendarSummaryHash() => r'8316714e019ae5f533234e105e27babbfdd801c5';
 
-  /// The parameter `tahunAjaranId` of this provider.
-  String? get tahunAjaranId;
-}
+/// Provider reaktif untuk mengambil ringkasan kalkulasi hari efektif akademik.
+/// UI dapat melakukan watch pada provider ini agar mendapatkan update data secara otomatis.
 
-class _CalendarSummaryProviderElement
-    extends AutoDisposeFutureProviderElement<AcademicSummaryModel>
-    with CalendarSummaryRef {
-  _CalendarSummaryProviderElement(super.provider);
+final class CalendarSummaryFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+            FutureOr<AcademicSummaryModel>,
+            (
+              String, {
+              String? tahunAjaranId,
+            })> {
+  CalendarSummaryFamily._()
+      : super(
+          retry: null,
+          name: r'calendarSummaryProvider',
+          dependencies: null,
+          $allTransitiveDependencies: null,
+          isAutoDispose: true,
+        );
+
+  /// Provider reaktif untuk mengambil ringkasan kalkulasi hari efektif akademik.
+  /// UI dapat melakukan watch pada provider ini agar mendapatkan update data secara otomatis.
+
+  CalendarSummaryProvider call(
+    String programId, {
+    String? tahunAjaranId,
+  }) =>
+      CalendarSummaryProvider._(argument: (
+        programId,
+        tahunAjaranId: tahunAjaranId,
+      ), from: this);
 
   @override
-  String get programId => (origin as CalendarSummaryProvider).programId;
-  @override
-  String? get tahunAjaranId =>
-      (origin as CalendarSummaryProvider).tahunAjaranId;
+  String toString() => r'calendarSummaryProvider';
 }
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

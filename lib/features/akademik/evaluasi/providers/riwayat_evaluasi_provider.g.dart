@@ -6,178 +6,98 @@ part of 'riwayat_evaluasi_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$riwayatEvaluasiHash() => r'8e02028554fcd5c5a152fc4e01448b6bb63de1f8';
-
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 /// Provider ini bertugas mengambil daftar riwayat evaluasi/ujian berdasarkan ID Siswa.
 /// Karena menggunakan @riverpod, data akan di-cache dan otomatis diperbarui jika ada perubahan.
-///
-/// Copied from [riwayatEvaluasi].
+
 @ProviderFor(riwayatEvaluasi)
-const riwayatEvaluasiProvider = RiwayatEvaluasiFamily();
+final riwayatEvaluasiProvider = RiwayatEvaluasiFamily._();
 
 /// Provider ini bertugas mengambil daftar riwayat evaluasi/ujian berdasarkan ID Siswa.
 /// Karena menggunakan @riverpod, data akan di-cache dan otomatis diperbarui jika ada perubahan.
-///
-/// Copied from [riwayatEvaluasi].
-class RiwayatEvaluasiFamily
-    extends Family<AsyncValue<List<EvaluasiRecordModel>>> {
+
+final class RiwayatEvaluasiProvider extends $FunctionalProvider<
+        AsyncValue<List<EvaluasiRecordModel>>,
+        List<EvaluasiRecordModel>,
+        FutureOr<List<EvaluasiRecordModel>>>
+    with
+        $FutureModifier<List<EvaluasiRecordModel>>,
+        $FutureProvider<List<EvaluasiRecordModel>> {
   /// Provider ini bertugas mengambil daftar riwayat evaluasi/ujian berdasarkan ID Siswa.
   /// Karena menggunakan @riverpod, data akan di-cache dan otomatis diperbarui jika ada perubahan.
-  ///
-  /// Copied from [riwayatEvaluasi].
-  const RiwayatEvaluasiFamily();
-
-  /// Provider ini bertugas mengambil daftar riwayat evaluasi/ujian berdasarkan ID Siswa.
-  /// Karena menggunakan @riverpod, data akan di-cache dan otomatis diperbarui jika ada perubahan.
-  ///
-  /// Copied from [riwayatEvaluasi].
-  RiwayatEvaluasiProvider call(
-    String siswaId,
-  ) {
-    return RiwayatEvaluasiProvider(
-      siswaId,
-    );
-  }
-
-  @override
-  RiwayatEvaluasiProvider getProviderOverride(
-    covariant RiwayatEvaluasiProvider provider,
-  ) {
-    return call(
-      provider.siswaId,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'riwayatEvaluasiProvider';
-}
-
-/// Provider ini bertugas mengambil daftar riwayat evaluasi/ujian berdasarkan ID Siswa.
-/// Karena menggunakan @riverpod, data akan di-cache dan otomatis diperbarui jika ada perubahan.
-///
-/// Copied from [riwayatEvaluasi].
-class RiwayatEvaluasiProvider
-    extends AutoDisposeFutureProvider<List<EvaluasiRecordModel>> {
-  /// Provider ini bertugas mengambil daftar riwayat evaluasi/ujian berdasarkan ID Siswa.
-  /// Karena menggunakan @riverpod, data akan di-cache dan otomatis diperbarui jika ada perubahan.
-  ///
-  /// Copied from [riwayatEvaluasi].
-  RiwayatEvaluasiProvider(
-    String siswaId,
-  ) : this._internal(
-          (ref) => riwayatEvaluasi(
-            ref as RiwayatEvaluasiRef,
-            siswaId,
-          ),
-          from: riwayatEvaluasiProvider,
+  RiwayatEvaluasiProvider._(
+      {required RiwayatEvaluasiFamily super.from,
+      required String super.argument})
+      : super(
+          retry: null,
           name: r'riwayatEvaluasiProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$riwayatEvaluasiHash,
-          dependencies: RiwayatEvaluasiFamily._dependencies,
-          allTransitiveDependencies:
-              RiwayatEvaluasiFamily._allTransitiveDependencies,
-          siswaId: siswaId,
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
         );
 
-  RiwayatEvaluasiProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.siswaId,
-  }) : super.internal();
-
-  final String siswaId;
+  @override
+  String debugGetCreateSourceHash() => _$riwayatEvaluasiHash();
 
   @override
-  Override overrideWith(
-    FutureOr<List<EvaluasiRecordModel>> Function(RiwayatEvaluasiRef provider)
-        create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: RiwayatEvaluasiProvider._internal(
-        (ref) => create(ref as RiwayatEvaluasiRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        siswaId: siswaId,
-      ),
-    );
+  String toString() {
+    return r'riwayatEvaluasiProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  AutoDisposeFutureProviderElement<List<EvaluasiRecordModel>> createElement() {
-    return _RiwayatEvaluasiProviderElement(this);
+  $FutureProviderElement<List<EvaluasiRecordModel>> $createElement(
+          $ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<EvaluasiRecordModel>> create(Ref ref) {
+    final argument = this.argument as String;
+    return riwayatEvaluasi(
+      ref,
+      argument,
+    );
   }
 
   @override
   bool operator ==(Object other) {
-    return other is RiwayatEvaluasiProvider && other.siswaId == siswaId;
+    return other is RiwayatEvaluasiProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, siswaId.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin RiwayatEvaluasiRef
-    on AutoDisposeFutureProviderRef<List<EvaluasiRecordModel>> {
-  /// The parameter `siswaId` of this provider.
-  String get siswaId;
-}
+String _$riwayatEvaluasiHash() => r'2a76d6a81d2efd95d321950390f0f447128bcce7';
 
-class _RiwayatEvaluasiProviderElement
-    extends AutoDisposeFutureProviderElement<List<EvaluasiRecordModel>>
-    with RiwayatEvaluasiRef {
-  _RiwayatEvaluasiProviderElement(super.provider);
+/// Provider ini bertugas mengambil daftar riwayat evaluasi/ujian berdasarkan ID Siswa.
+/// Karena menggunakan @riverpod, data akan di-cache dan otomatis diperbarui jika ada perubahan.
+
+final class RiwayatEvaluasiFamily extends $Family
+    with
+        $FunctionalFamilyOverride<FutureOr<List<EvaluasiRecordModel>>, String> {
+  RiwayatEvaluasiFamily._()
+      : super(
+          retry: null,
+          name: r'riwayatEvaluasiProvider',
+          dependencies: null,
+          $allTransitiveDependencies: null,
+          isAutoDispose: true,
+        );
+
+  /// Provider ini bertugas mengambil daftar riwayat evaluasi/ujian berdasarkan ID Siswa.
+  /// Karena menggunakan @riverpod, data akan di-cache dan otomatis diperbarui jika ada perubahan.
+
+  RiwayatEvaluasiProvider call(
+    String siswaId,
+  ) =>
+      RiwayatEvaluasiProvider._(argument: siswaId, from: this);
 
   @override
-  String get siswaId => (origin as RiwayatEvaluasiProvider).siswaId;
+  String toString() => r'riwayatEvaluasiProvider';
 }
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -74,6 +74,10 @@ class AppContextState {
     }
     return permissions.contains(permissionKey);
   }
+
+  bool hasModule(String moduleKey) {
+    return true;
+  }
 }
 
 @Riverpod(keepAlive: true)
@@ -363,6 +367,10 @@ class AppContext extends _$AppContext {
   // --- HELPER PBAC ---
   bool hasPermission(String permissionKey) {
     return state.hasPermission(permissionKey);
+  }
+
+  bool hasModule(String moduleKey) {
+    return state.hasModule(moduleKey);
   }
 
   // --- FUNGSI LOGOUT / CLEAR CONTEXT ---

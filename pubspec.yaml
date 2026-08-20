@@ -18,8 +18,8 @@ dependencies:
 
   # State Management - Menggunakan versi terbaru yang stabil
   # Saya tambahkan riverpod_annotation untuk efisiensi kode
-  flutter_riverpod: ^2.6.1
-  riverpod_annotation: ^2.3.5
+  flutter_riverpod: ^3.4.2
+  riverpod_annotation: ^4.0.6
 
   # Navigation
   go_router: ^14.0.1
@@ -50,7 +50,7 @@ dev_dependencies:
 
   # Wajib ada untuk Riverpod Code Generation (Anti-Typo & Auto-Provider)
   build_runner: ^2.4.8
-  riverpod_generator: ^2.4.0
+  riverpod_generator: 4.0.8
 
 flutter:
   uses-material-design: true

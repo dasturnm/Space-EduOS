@@ -6,35 +6,92 @@ part of 'staff_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
+@ProviderFor(StaffSearch)
+final staffSearchProvider = StaffSearchProvider._();
+
+final class StaffSearchProvider extends $NotifierProvider<StaffSearch, String> {
+  StaffSearchProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'staffSearchProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$staffSearchHash();
+
+  @$internal
+  @override
+  StaffSearch create() => StaffSearch();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(String value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<String>(value),
+    );
+  }
+}
+
 String _$staffSearchHash() => r'e93a7d5305fbe4e921535d71501c456d3368c2a5';
 
-/// See also [StaffSearch].
-@ProviderFor(StaffSearch)
-final staffSearchProvider =
-    AutoDisposeNotifierProvider<StaffSearch, String>.internal(
-  StaffSearch.new,
-  name: r'staffSearchProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$staffSearchHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+abstract class _$StaffSearch extends $Notifier<String> {
+  String build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<String, String>;
+    final element = ref.element as $ClassProviderElement<
+        AnyNotifier<String, String>, String, Object?, Object?>;
+    return element.handleCreate(ref, build);
+  }
+}
 
-typedef _$StaffSearch = AutoDisposeNotifier<String>;
+@ProviderFor(StaffList)
+final staffListProvider = StaffListProvider._();
+
+final class StaffListProvider
+    extends $AsyncNotifierProvider<StaffList, List<ProfileModel>> {
+  StaffListProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'staffListProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$staffListHash();
+
+  @$internal
+  @override
+  StaffList create() => StaffList();
+}
+
 String _$staffListHash() => r'4063c7b0bf12619250f39d34766e06f85eaea429';
 
-/// See also [StaffList].
-@ProviderFor(StaffList)
-final staffListProvider =
-    AutoDisposeAsyncNotifierProvider<StaffList, List<ProfileModel>>.internal(
-  StaffList.new,
-  name: r'staffListProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$staffListHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$StaffList = AutoDisposeAsyncNotifier<List<ProfileModel>>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$StaffList extends $AsyncNotifier<List<ProfileModel>> {
+  FutureOr<List<ProfileModel>> build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref =
+        this.ref as $Ref<AsyncValue<List<ProfileModel>>, List<ProfileModel>>;
+    final element = ref.element as $ClassProviderElement<
+        AnyNotifier<AsyncValue<List<ProfileModel>>, List<ProfileModel>>,
+        AsyncValue<List<ProfileModel>>,
+        Object?,
+        Object?>;
+    return element.handleCreate(ref, build);
+  }
+}

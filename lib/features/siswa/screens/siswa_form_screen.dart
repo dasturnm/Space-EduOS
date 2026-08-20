@@ -164,7 +164,7 @@ class _SiswaFormScreenState extends ConsumerState<SiswaFormScreen> {
   @override
   Widget build(BuildContext context) {
     final isEditing = widget.existingSiswa != null;
-    final programsAsync = ref.watch(programNotifierProvider);
+    final programsAsync = ref.watch(programProvider);
     final kelasAsync = ref.watch(kelasListProvider);
 
     // 🔥 DATA DYNAMIC

@@ -52,7 +52,7 @@ class SiswaFilterLevel extends _$SiswaFilterLevel {
 
 // --- NEW: PROVIDER FILTERED SISWA (The Solution) ---
 @riverpod
-List<SiswaModel> filteredSiswa(FilteredSiswaRef ref) {
+List<SiswaModel> filteredSiswa(Ref ref) {
   // 1. Ambil data mentah dari database
   final allSiswa = ref.watch(siswaListProvider).value ?? [];
 
@@ -88,7 +88,7 @@ List<SiswaModel> filteredSiswa(FilteredSiswaRef ref) {
 // --- PROVIDER FILTER KELAS (Reactive Filter) ---
 // Provider ini digunakan untuk menyaring daftar kelas berdasarkan Program ID yang dipilih.
 @riverpod
-List<KelasModel> filteredKelas(FilteredKelasRef ref, String? programId) {
+List<KelasModel> filteredKelas(Ref ref, String? programId) {
   if (programId == null) return [];
 
   // Logic reaktif: Mengambil semua kelas dan memfilternya berdasarkan programId

@@ -10,7 +10,7 @@ part 'calendar_summary_provider.g.dart';
 /// UI dapat melakukan watch pada provider ini agar mendapatkan update data secara otomatis.
 @riverpod
 Future<AcademicSummaryModel> calendarSummary(
-    CalendarSummaryRef ref,
+    Ref ref,
     String programId, {
       String? tahunAjaranId,
     }) async {

@@ -6,7 +6,7 @@ import 'mutabaah_provider.dart'; // TAMBAHAN: Import ini wajib agar mutabaahServ
 part 'santri_belum_setoran_provider.g.dart';
 
 @riverpod
-Future<List<SiswaModel>> santriBelumSetoran(SantriBelumSetoranRef ref, String guruId) async {
+Future<List<SiswaModel>> santriBelumSetoran(Ref ref, String guruId) async {
   // 1. Ambil daftar seluruh siswa yang dibimbing oleh guru ini
   final semuaSiswa = await ref.read(siswaServiceProvider).fetchSiswaByGuru(ref, guruId);
 

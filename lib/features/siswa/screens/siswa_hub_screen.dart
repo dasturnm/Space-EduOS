@@ -110,7 +110,7 @@ class _SiswaHubScreenState extends ConsumerState<SiswaHubScreen> {
 
           // FIX: Sinkronisasi nama Provider dengan Logic (Poin: UI mengikuti Logic)
           final cabangs = ref.watch(cabangListProvider).value ?? [];
-          final programs = ref.watch(programNotifierProvider).value ?? [];
+          final programs = ref.watch(programProvider).value ?? [];
           // FIX: Memberikan parameter lembagaId karena levelListProvider adalah Family Provider
           final levels = ref.watch(levelListProvider(lembagaId)).value ?? [];
 

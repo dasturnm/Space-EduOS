@@ -6,21 +6,46 @@ part of 'siswa_service.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$siswaServiceHash() => r'41621d7c895ba7dc9595861b0cf20da61f3b162c';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [siswaService].
 @ProviderFor(siswaService)
-final siswaServiceProvider = AutoDisposeProvider<SiswaService>.internal(
-  siswaService,
-  name: r'siswaServiceProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$siswaServiceHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final siswaServiceProvider = SiswaServiceProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef SiswaServiceRef = AutoDisposeProviderRef<SiswaService>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class SiswaServiceProvider
+    extends $FunctionalProvider<SiswaService, SiswaService, SiswaService>
+    with $Provider<SiswaService> {
+  SiswaServiceProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'siswaServiceProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$siswaServiceHash();
+
+  @$internal
+  @override
+  $ProviderElement<SiswaService> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  SiswaService create(Ref ref) {
+    return siswaService(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SiswaService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SiswaService>(value),
+    );
+  }
+}
+
+String _$siswaServiceHash() => r'41621d7c895ba7dc9595861b0cf20da61f3b162c';

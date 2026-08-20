@@ -1,6 +1,7 @@
 // Lokasi: lib/features/mushaf/providers/mushaf_provider.dart
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import '../models/mushaf_model.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';

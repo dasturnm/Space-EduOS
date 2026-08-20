@@ -6,25 +6,45 @@ part of 'kesiapan_ujian_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$kesiapanUjianListHash() => r'1e6d11d685569bbbbc255f48b7fe067e3a0453c0';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// Provider reaktif untuk mengambil daftar santri yang statusnya siap mengikuti ujian formal.
+
+@ProviderFor(kesiapanUjianList)
+final kesiapanUjianListProvider = KesiapanUjianListProvider._();
 
 /// Provider reaktif untuk mengambil daftar santri yang statusnya siap mengikuti ujian formal.
-///
-/// Copied from [kesiapanUjianList].
-@ProviderFor(kesiapanUjianList)
-final kesiapanUjianListProvider =
-    AutoDisposeFutureProvider<List<SiswaModel>>.internal(
-  kesiapanUjianList,
-  name: r'kesiapanUjianListProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$kesiapanUjianListHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef KesiapanUjianListRef = AutoDisposeFutureProviderRef<List<SiswaModel>>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class KesiapanUjianListProvider extends $FunctionalProvider<
+        AsyncValue<List<SiswaModel>>,
+        List<SiswaModel>,
+        FutureOr<List<SiswaModel>>>
+    with $FutureModifier<List<SiswaModel>>, $FutureProvider<List<SiswaModel>> {
+  /// Provider reaktif untuk mengambil daftar santri yang statusnya siap mengikuti ujian formal.
+  KesiapanUjianListProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'kesiapanUjianListProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$kesiapanUjianListHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<SiswaModel>> $createElement(
+          $ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<SiswaModel>> create(Ref ref) {
+    return kesiapanUjianList(ref);
+  }
+}
+
+String _$kesiapanUjianListHash() => r'88f345058790b3a5c9cf93197aaeacd57844f661';

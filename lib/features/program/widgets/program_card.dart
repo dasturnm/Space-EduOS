@@ -21,7 +21,7 @@ class ProgramCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // --- LOGIKA HITUNG HARI EFEKTIF (Berdasarkan Tahun Ajaran Aktif) ---
     final activeTA = ref.watch(appContextProvider).currentTahunAjaran;
-    final agendaAsync = ref.watch(agendaNotifierProvider(tahunAjaranId: activeTA?.id));
+    final agendaAsync = ref.watch(agendaProvider(activeTA?.id, null));
     int effectiveDays = 0;
 
     if (activeTA != null && activeTA.tanggalMulai != null && activeTA.tanggalSelesai != null) {
@@ -183,7 +183,7 @@ class ProgramCard extends ConsumerWidget {
               Navigator.pop(ctx);
 
               final success = await ref
-                  .read(programNotifierProvider.notifier)
+                  .read(programProvider.notifier)
                   .deleteProgram(program.id);
 
               if (context.mounted) {

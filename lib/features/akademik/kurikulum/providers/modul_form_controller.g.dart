@@ -6,196 +6,124 @@ part of 'modul_form_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$modulFormControllerHash() =>
-    r'188193cceab64ba342526ebb190f5baa31439978';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
+@ProviderFor(ModulFormController)
+final modulFormControllerProvider = ModulFormControllerFamily._();
 
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
+final class ModulFormControllerProvider
+    extends $NotifierProvider<ModulFormController, ModulFormState> {
+  ModulFormControllerProvider._(
+      {required ModulFormControllerFamily super.from,
+      required (
+        LevelModel,
+        ModulModel?,
+      )
+          super.argument})
+      : super(
+          retry: null,
+          name: r'modulFormControllerProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$modulFormControllerHash();
+
+  @override
+  String toString() {
+    return r'modulFormControllerProvider'
+        ''
+        '$argument';
   }
 
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
+  @$internal
+  @override
+  ModulFormController create() => ModulFormController();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ModulFormState value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ModulFormState>(value),
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ModulFormControllerProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
   }
 }
 
-abstract class _$ModulFormController
-    extends BuildlessAutoDisposeNotifier<ModulFormState> {
-  late final LevelModel level;
-  late final ModulModel? initialModul;
+String _$modulFormControllerHash() =>
+    r'188193cceab64ba342526ebb190f5baa31439978';
+
+final class ModulFormControllerFamily extends $Family
+    with
+        $ClassFamilyOverride<
+            ModulFormController,
+            ModulFormState,
+            ModulFormState,
+            ModulFormState,
+            (
+              LevelModel,
+              ModulModel?,
+            )> {
+  ModulFormControllerFamily._()
+      : super(
+          retry: null,
+          name: r'modulFormControllerProvider',
+          dependencies: null,
+          $allTransitiveDependencies: null,
+          isAutoDispose: true,
+        );
+
+  ModulFormControllerProvider call(
+    LevelModel level,
+    ModulModel? initialModul,
+  ) =>
+      ModulFormControllerProvider._(argument: (
+        level,
+        initialModul,
+      ), from: this);
+
+  @override
+  String toString() => r'modulFormControllerProvider';
+}
+
+abstract class _$ModulFormController extends $Notifier<ModulFormState> {
+  late final _$args = ref.$arg as (
+    LevelModel,
+    ModulModel?,
+  );
+  LevelModel get level => _$args.$1;
+  ModulModel? get initialModul => _$args.$2;
 
   ModulFormState build(
     LevelModel level,
     ModulModel? initialModul,
   );
-}
-
-/// See also [ModulFormController].
-@ProviderFor(ModulFormController)
-const modulFormControllerProvider = ModulFormControllerFamily();
-
-/// See also [ModulFormController].
-class ModulFormControllerFamily extends Family<ModulFormState> {
-  /// See also [ModulFormController].
-  const ModulFormControllerFamily();
-
-  /// See also [ModulFormController].
-  ModulFormControllerProvider call(
-    LevelModel level,
-    ModulModel? initialModul,
-  ) {
-    return ModulFormControllerProvider(
-      level,
-      initialModul,
-    );
-  }
-
+  @$mustCallSuper
   @override
-  ModulFormControllerProvider getProviderOverride(
-    covariant ModulFormControllerProvider provider,
-  ) {
-    return call(
-      provider.level,
-      provider.initialModul,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'modulFormControllerProvider';
-}
-
-/// See also [ModulFormController].
-class ModulFormControllerProvider extends AutoDisposeNotifierProviderImpl<
-    ModulFormController, ModulFormState> {
-  /// See also [ModulFormController].
-  ModulFormControllerProvider(
-    LevelModel level,
-    ModulModel? initialModul,
-  ) : this._internal(
-          () => ModulFormController()
-            ..level = level
-            ..initialModul = initialModul,
-          from: modulFormControllerProvider,
-          name: r'modulFormControllerProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$modulFormControllerHash,
-          dependencies: ModulFormControllerFamily._dependencies,
-          allTransitiveDependencies:
-              ModulFormControllerFamily._allTransitiveDependencies,
-          level: level,
-          initialModul: initialModul,
-        );
-
-  ModulFormControllerProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.level,
-    required this.initialModul,
-  }) : super.internal();
-
-  final LevelModel level;
-  final ModulModel? initialModul;
-
-  @override
-  ModulFormState runNotifierBuild(
-    covariant ModulFormController notifier,
-  ) {
-    return notifier.build(
-      level,
-      initialModul,
-    );
-  }
-
-  @override
-  Override overrideWith(ModulFormController Function() create) {
-    return ProviderOverride(
-      origin: this,
-      override: ModulFormControllerProvider._internal(
-        () => create()
-          ..level = level
-          ..initialModul = initialModul,
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        level: level,
-        initialModul: initialModul,
-      ),
-    );
-  }
-
-  @override
-  AutoDisposeNotifierProviderElement<ModulFormController, ModulFormState>
-      createElement() {
-    return _ModulFormControllerProviderElement(this);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is ModulFormControllerProvider &&
-        other.level == level &&
-        other.initialModul == initialModul;
-  }
-
-  @override
-  int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, level.hashCode);
-    hash = _SystemHash.combine(hash, initialModul.hashCode);
-
-    return _SystemHash.finish(hash);
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<ModulFormState, ModulFormState>;
+    final element = ref.element as $ClassProviderElement<
+        AnyNotifier<ModulFormState, ModulFormState>,
+        ModulFormState,
+        Object?,
+        Object?>;
+    return element.handleCreate(
+        ref,
+        () => build(
+              _$args.$1,
+              _$args.$2,
+            ));
   }
 }
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin ModulFormControllerRef on AutoDisposeNotifierProviderRef<ModulFormState> {
-  /// The parameter `level` of this provider.
-  LevelModel get level;
-
-  /// The parameter `initialModul` of this provider.
-  ModulModel? get initialModul;
-}
-
-class _ModulFormControllerProviderElement
-    extends AutoDisposeNotifierProviderElement<ModulFormController,
-        ModulFormState> with ModulFormControllerRef {
-  _ModulFormControllerProviderElement(super.provider);
-
-  @override
-  LevelModel get level => (origin as ModulFormControllerProvider).level;
-  @override
-  ModulModel? get initialModul =>
-      (origin as ModulFormControllerProvider).initialModul;
-}
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

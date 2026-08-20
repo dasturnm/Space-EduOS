@@ -6,20 +6,54 @@ part of 'app_context_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$appContextHash() => r'c493c5406e55dd18a9542e0fa494a0d5637cc2d2';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [AppContext].
 @ProviderFor(AppContext)
-final appContextProvider =
-    NotifierProvider<AppContext, AppContextState>.internal(
-  AppContext.new,
-  name: r'appContextProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$appContextHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final appContextProvider = AppContextProvider._();
 
-typedef _$AppContext = Notifier<AppContextState>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class AppContextProvider
+    extends $NotifierProvider<AppContext, AppContextState> {
+  AppContextProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'appContextProvider',
+          isAutoDispose: false,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$appContextHash();
+
+  @$internal
+  @override
+  AppContext create() => AppContext();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AppContextState value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AppContextState>(value),
+    );
+  }
+}
+
+String _$appContextHash() => r'cdae6bf490d0b610250f101585bc81a2fbe96ccf';
+
+abstract class _$AppContext extends $Notifier<AppContextState> {
+  AppContextState build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<AppContextState, AppContextState>;
+    final element = ref.element as $ClassProviderElement<
+        AnyNotifier<AppContextState, AppContextState>,
+        AppContextState,
+        Object?,
+        Object?>;
+    return element.handleCreate(ref, build);
+  }
+}

@@ -25,8 +25,8 @@ class _AcademicCalendarTabState extends ConsumerState<AcademicCalendarTab> {
   @override
   Widget build(BuildContext context) {
     // UPDATE: Gunakan CalendarNotifier untuk tampilan bulanan agar lebih ringan
-    final agendasAsync = ref.watch(calendarNotifierProvider(_focusedDay));
-    final programsAsync = ref.watch(programNotifierProvider);
+    final agendasAsync = ref.watch(calendarProvider(_focusedDay));
+    final programsAsync = ref.watch(programProvider);
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
@@ -161,7 +161,7 @@ class _AcademicCalendarTabState extends ConsumerState<AcademicCalendarTab> {
                 if (scope == 'PROG_SPESIFIK') ...[
                   const SizedBox(height: 16),
                   _buildLabel("Pilih Program"),
-                  ref.watch(programNotifierProvider).when(
+                  ref.watch(programProvider).when(
                     data: (progs) => DropdownButtonFormField<String>(
                       // FIX: Menggunakan value bukan initialValue
                       initialValue: targetProgramId,
@@ -200,10 +200,10 @@ class _AcademicCalendarTabState extends ConsumerState<AcademicCalendarTab> {
 
                 if (isEdit) {
                   // FIX: Null-safety pada tahunAjaranId
-                  await ref.read(agendaNotifierProvider(tahunAjaranId: activeTA?.id ?? '', programId: _selectedProgramFilter).notifier).updateAgenda(updatedAgenda);
+                  await ref.read(agendaProvider(activeTA?.id ?? '', _selectedProgramFilter).notifier).updateAgenda(updatedAgenda);
                 } else {
                   // FIX: Null-safety pada tahunAjaranId
-                  await ref.read(agendaNotifierProvider(tahunAjaranId: activeTA?.id ?? '', programId: _selectedProgramFilter).notifier).addAgenda(updatedAgenda);
+                  await ref.read(agendaProvider(activeTA?.id ?? '', _selectedProgramFilter).notifier).addAgenda(updatedAgenda);
                 }
 
                 if (context.mounted) Navigator.pop(context);
@@ -485,10 +485,11 @@ class _AcademicCalendarTabState extends ConsumerState<AcademicCalendarTab> {
               final activeTA = ref.read(appContextProvider).currentTahunAjaran;
               // FIX: Penanganan null-safety agar tidak error argument_type_not_assignable
               if (activeTA != null) {
-                await ref.read(agendaNotifierProvider(tahunAjaranId: activeTA.id, programId: _selectedProgramFilter).notifier).deleteAgenda(id);
+                await ref.read(agendaProvider(activeTA.id, _selectedProgramFilter).notifier).deleteAgenda(id);
               } else {
+
                 // Opsional: Fallback jika TA null
-                await ref.read(agendaNotifierProvider(tahunAjaranId: '', programId: _selectedProgramFilter).notifier).deleteAgenda(id);
+                await ref.read(agendaProvider('', _selectedProgramFilter).notifier).deleteAgenda(id);
               }
               if (context.mounted) Navigator.pop(context);
             },

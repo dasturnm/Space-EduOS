@@ -54,7 +54,7 @@ class _ProgramFormScreenState extends ConsumerState<ProgramFormScreen> {
     try {
       if (widget.program == null) {
         // MODE TAMBAH
-        await ref.read(programNotifierProvider.notifier).addProgram(
+        await ref.read(programProvider.notifier).addProgram(
           nama: _nameController.text.trim(),
           cabangId: _selectedCabangId, // Diubah: Mengirim cabangId bukan tag
           deskripsi: _descController.text.trim(),
@@ -75,7 +75,7 @@ class _ProgramFormScreenState extends ConsumerState<ProgramFormScreen> {
           hariAktif: _selectedDays,
           status: widget.program!.status,
         );
-        await ref.read(programNotifierProvider.notifier).updateProgram(updatedProgram);
+        await ref.read(programProvider.notifier).updateProgram(updatedProgram);
       }
 
       if (mounted) Navigator.pop(context);

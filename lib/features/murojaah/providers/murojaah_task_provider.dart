@@ -1,6 +1,7 @@
 // Lokasi: lib/features/murojaah/providers/murojaah_task_provider.dart
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import '../services/murojaah_task_service.dart';
 import '../../akademik/kurikulum/models/kurikulum_model.dart';
 

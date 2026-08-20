@@ -13,7 +13,7 @@ part 'mutabaah_projection_provider.g.dart';
 /// Menggunakan parameter [siswaId] dan [modul]
 @riverpod
 Future<MutabaahProjectionModel> mutabaahProjection(
-    MutabaahProjectionRef ref, // FIX: Menggunakan tipe generated Ref khusus fungsi ini agar tidak ditolak build_runner
+    Ref ref,
     String siswaId,
     ModulModel modul,
     ) async {

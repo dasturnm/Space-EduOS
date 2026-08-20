@@ -23,11 +23,11 @@ class _AgendaAkademikScreenState extends ConsumerState<AgendaAkademikScreen> {
   Widget build(BuildContext context) {
     final activeTA = ref.watch(appContextProvider).currentTahunAjaran;
     // FIX: Memberikan default value '' untuk menghindari error argument_type_not_assignable
-    final agendasAsync = ref.watch(agendaNotifierProvider(
-        tahunAjaranId: activeTA?.id ?? '',
-        programId: _selectedProgramFilter
+    final agendasAsync = ref.watch(agendaProvider(
+        activeTA?.id ?? '',
+        _selectedProgramFilter
     ));
-    final programsAsync = ref.watch(programNotifierProvider);
+    final programsAsync = ref.watch(programProvider);
 
     return Scaffold(
       backgroundColor: Colors.grey[50],
@@ -241,7 +241,7 @@ class _AgendaAkademikScreenState extends ConsumerState<AgendaAkademikScreen> {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setDialogState) {
-          final programs = ref.watch(programNotifierProvider).value ?? [];
+          final programs = ref.watch(programProvider).value ?? [];
 
           return AlertDialog(
             title: Text(isEdit ? "Edit Agenda" : "Buat Agenda Baru", style: const TextStyle(fontWeight: FontWeight.bold)),
@@ -361,9 +361,9 @@ class _AgendaAkademikScreenState extends ConsumerState<AgendaAkademikScreen> {
                   );
 
                   if (isEdit) {
-                    await ref.read(agendaNotifierProvider(tahunAjaranId: activeTA?.id ?? '', programId: _selectedProgramFilter).notifier).updateAgenda(updatedAgenda);
+                    await ref.read(agendaProvider(activeTA?.id ?? '', _selectedProgramFilter).notifier).updateAgenda(updatedAgenda);
                   } else {
-                    await ref.read(agendaNotifierProvider(tahunAjaranId: activeTA?.id ?? '', programId: _selectedProgramFilter).notifier).addAgenda(
+                    await ref.read(agendaProvider(activeTA?.id ?? '', _selectedProgramFilter).notifier).addAgenda(
                       updatedAgenda,
                       isRecurring: isRecurring,
                       untilDate: untilDate,
@@ -391,7 +391,7 @@ class _AgendaAkademikScreenState extends ConsumerState<AgendaAkademikScreen> {
           TextButton(onPressed: () => Navigator.pop(context), child: const Text("Batal")),
           TextButton(onPressed: () async {
             final activeTA = ref.read(appContextProvider).currentTahunAjaran;
-            await ref.read(agendaNotifierProvider(tahunAjaranId: activeTA?.id ?? '', programId: _selectedProgramFilter).notifier).deleteAgenda(id);
+            await ref.read(agendaProvider(activeTA?.id ?? '', _selectedProgramFilter).notifier).deleteAgenda(id);
             if (context.mounted) Navigator.pop(context);
           }, child: const Text("Hapus", style: TextStyle(color: Colors.red))),
         ],

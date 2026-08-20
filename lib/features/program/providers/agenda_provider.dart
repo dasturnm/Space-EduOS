@@ -1,3 +1,5 @@
+// Lokasi: lib/features/program/providers/agenda_provider.dart
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/providers/app_context_provider.dart';
 import '../../akademik/services/akademik_service.dart';
@@ -10,7 +12,7 @@ class AgendaNotifier extends _$AgendaNotifier {
   final _service = AkademikService();
 
   @override
-  Future<List<AgendaModel>> build({String? tahunAjaranId, String? programId}) async { // UPDATE: Parameter Filter
+  Future<List<AgendaModel>> build(String? tahunAjaranId, String? programId) async { // UPDATE: Parameter Filter
     final lembagaId = ref.watch(appContextProvider).lembaga?.id;
     if (lembagaId == null) return [];
 

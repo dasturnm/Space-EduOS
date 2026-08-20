@@ -6,190 +6,147 @@ part of 'penugasan_staf_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$penugasanStafListHash() => r'3280ed185e7b96345f4c5118d03ab954a2c4e66f';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-abstract class _$PenugasanStafList
-    extends BuildlessAutoDisposeAsyncNotifier<List<PenugasanStafModel>> {
-  late final String lembagaId;
-
-  FutureOr<List<PenugasanStafModel>> build(
-    String lembagaId,
-  );
-}
-
-/// See also [PenugasanStafList].
 @ProviderFor(PenugasanStafList)
-const penugasanStafListProvider = PenugasanStafListFamily();
+final penugasanStafListProvider = PenugasanStafListFamily._();
 
-/// See also [PenugasanStafList].
-class PenugasanStafListFamily
-    extends Family<AsyncValue<List<PenugasanStafModel>>> {
-  /// See also [PenugasanStafList].
-  const PenugasanStafListFamily();
-
-  /// See also [PenugasanStafList].
-  PenugasanStafListProvider call(
-    String lembagaId,
-  ) {
-    return PenugasanStafListProvider(
-      lembagaId,
-    );
-  }
-
-  @override
-  PenugasanStafListProvider getProviderOverride(
-    covariant PenugasanStafListProvider provider,
-  ) {
-    return call(
-      provider.lembagaId,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'penugasanStafListProvider';
-}
-
-/// See also [PenugasanStafList].
-class PenugasanStafListProvider extends AutoDisposeAsyncNotifierProviderImpl<
+final class PenugasanStafListProvider extends $AsyncNotifierProvider<
     PenugasanStafList, List<PenugasanStafModel>> {
-  /// See also [PenugasanStafList].
-  PenugasanStafListProvider(
-    String lembagaId,
-  ) : this._internal(
-          () => PenugasanStafList()..lembagaId = lembagaId,
-          from: penugasanStafListProvider,
+  PenugasanStafListProvider._(
+      {required PenugasanStafListFamily super.from,
+      required String super.argument})
+      : super(
+          retry: null,
           name: r'penugasanStafListProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$penugasanStafListHash,
-          dependencies: PenugasanStafListFamily._dependencies,
-          allTransitiveDependencies:
-              PenugasanStafListFamily._allTransitiveDependencies,
-          lembagaId: lembagaId,
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
         );
 
-  PenugasanStafListProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.lembagaId,
-  }) : super.internal();
-
-  final String lembagaId;
+  @override
+  String debugGetCreateSourceHash() => _$penugasanStafListHash();
 
   @override
-  FutureOr<List<PenugasanStafModel>> runNotifierBuild(
-    covariant PenugasanStafList notifier,
-  ) {
-    return notifier.build(
-      lembagaId,
-    );
+  String toString() {
+    return r'penugasanStafListProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  Override overrideWith(PenugasanStafList Function() create) {
-    return ProviderOverride(
-      origin: this,
-      override: PenugasanStafListProvider._internal(
-        () => create()..lembagaId = lembagaId,
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        lembagaId: lembagaId,
-      ),
-    );
-  }
-
-  @override
-  AutoDisposeAsyncNotifierProviderElement<PenugasanStafList,
-      List<PenugasanStafModel>> createElement() {
-    return _PenugasanStafListProviderElement(this);
-  }
+  PenugasanStafList create() => PenugasanStafList();
 
   @override
   bool operator ==(Object other) {
-    return other is PenugasanStafListProvider && other.lembagaId == lembagaId;
+    return other is PenugasanStafListProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, lembagaId.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin PenugasanStafListRef
-    on AutoDisposeAsyncNotifierProviderRef<List<PenugasanStafModel>> {
-  /// The parameter `lembagaId` of this provider.
-  String get lembagaId;
-}
+String _$penugasanStafListHash() => r'3280ed185e7b96345f4c5118d03ab954a2c4e66f';
 
-class _PenugasanStafListProviderElement
-    extends AutoDisposeAsyncNotifierProviderElement<PenugasanStafList,
-        List<PenugasanStafModel>> with PenugasanStafListRef {
-  _PenugasanStafListProviderElement(super.provider);
+final class PenugasanStafListFamily extends $Family
+    with
+        $ClassFamilyOverride<
+            PenugasanStafList,
+            AsyncValue<List<PenugasanStafModel>>,
+            List<PenugasanStafModel>,
+            FutureOr<List<PenugasanStafModel>>,
+            String> {
+  PenugasanStafListFamily._()
+      : super(
+          retry: null,
+          name: r'penugasanStafListProvider',
+          dependencies: null,
+          $allTransitiveDependencies: null,
+          isAutoDispose: true,
+        );
+
+  PenugasanStafListProvider call(
+    String lembagaId,
+  ) =>
+      PenugasanStafListProvider._(argument: lembagaId, from: this);
 
   @override
-  String get lembagaId => (origin as PenugasanStafListProvider).lembagaId;
+  String toString() => r'penugasanStafListProvider';
+}
+
+abstract class _$PenugasanStafList
+    extends $AsyncNotifier<List<PenugasanStafModel>> {
+  late final _$args = ref.$arg as String;
+  String get lembagaId => _$args;
+
+  FutureOr<List<PenugasanStafModel>> build(
+    String lembagaId,
+  );
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref
+        as $Ref<AsyncValue<List<PenugasanStafModel>>, List<PenugasanStafModel>>;
+    final element = ref.element as $ClassProviderElement<
+        AnyNotifier<AsyncValue<List<PenugasanStafModel>>,
+            List<PenugasanStafModel>>,
+        AsyncValue<List<PenugasanStafModel>>,
+        Object?,
+        Object?>;
+    return element.handleCreate(
+        ref,
+        () => build(
+              _$args,
+            ));
+  }
+}
+
+@ProviderFor(PenugasanStaf)
+final penugasanStafProvider = PenugasanStafProvider._();
+
+final class PenugasanStafProvider
+    extends $NotifierProvider<PenugasanStaf, void> {
+  PenugasanStafProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'penugasanStafProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$penugasanStafHash();
+
+  @$internal
+  @override
+  PenugasanStaf create() => PenugasanStaf();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(void value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<void>(value),
+    );
+  }
 }
 
 String _$penugasanStafHash() => r'0b27df2b8d5b1456474555e804e26b1ce1fde4f0';
 
-/// See also [PenugasanStaf].
-@ProviderFor(PenugasanStaf)
-final penugasanStafProvider =
-    AutoDisposeNotifierProvider<PenugasanStaf, void>.internal(
-  PenugasanStaf.new,
-  name: r'penugasanStafProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$penugasanStafHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$PenugasanStaf = AutoDisposeNotifier<void>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$PenugasanStaf extends $Notifier<void> {
+  void build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<void, void>;
+    final element = ref.element as $ClassProviderElement<
+        AnyNotifier<void, void>, void, Object?, Object?>;
+    return element.handleCreate(ref, build);
+  }
+}

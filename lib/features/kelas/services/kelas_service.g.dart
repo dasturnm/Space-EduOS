@@ -6,21 +6,46 @@ part of 'kelas_service.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$kelasServiceHash() => r'f477323bff8703f0ae800cd0200b196b3cf7e870';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [kelasService].
 @ProviderFor(kelasService)
-final kelasServiceProvider = AutoDisposeProvider<KelasService>.internal(
-  kelasService,
-  name: r'kelasServiceProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$kelasServiceHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final kelasServiceProvider = KelasServiceProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef KelasServiceRef = AutoDisposeProviderRef<KelasService>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+final class KelasServiceProvider
+    extends $FunctionalProvider<KelasService, KelasService, KelasService>
+    with $Provider<KelasService> {
+  KelasServiceProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'kelasServiceProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$kelasServiceHash();
+
+  @$internal
+  @override
+  $ProviderElement<KelasService> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  KelasService create(Ref ref) {
+    return kelasService(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(KelasService value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<KelasService>(value),
+    );
+  }
+}
+
+String _$kelasServiceHash() => r'f477323bff8703f0ae800cd0200b196b3cf7e870';

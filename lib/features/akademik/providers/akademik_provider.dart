@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import '../../program/models/program_model.dart';
 import '../services/akademik_service.dart';
 import '../kurikulum/models/kurikulum_model.dart'; // Ambil LevelModel yang sudah disatukan

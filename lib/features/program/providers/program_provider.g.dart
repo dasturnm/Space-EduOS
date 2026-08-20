@@ -6,192 +6,144 @@ part of 'program_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$programHariEfektifHash() =>
-    r'd2e66265602d00a50540075f18b59278fd8d9adf';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
+@ProviderFor(ProgramNotifier)
+final programProvider = ProgramNotifierProvider._();
 
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-/// --- UTILITAS ESTIMASI (Poin 3 Blueprint) ---
-/// Mengambil daftar hari efektif program secara reaktif untuk kalkulasi estimasi tanggal selesai.
-///
-/// Copied from [programHariEfektif].
-@ProviderFor(programHariEfektif)
-const programHariEfektifProvider = ProgramHariEfektifFamily();
-
-/// --- UTILITAS ESTIMASI (Poin 3 Blueprint) ---
-/// Mengambil daftar hari efektif program secara reaktif untuk kalkulasi estimasi tanggal selesai.
-///
-/// Copied from [programHariEfektif].
-class ProgramHariEfektifFamily extends Family<List<String>> {
-  /// --- UTILITAS ESTIMASI (Poin 3 Blueprint) ---
-  /// Mengambil daftar hari efektif program secara reaktif untuk kalkulasi estimasi tanggal selesai.
-  ///
-  /// Copied from [programHariEfektif].
-  const ProgramHariEfektifFamily();
-
-  /// --- UTILITAS ESTIMASI (Poin 3 Blueprint) ---
-  /// Mengambil daftar hari efektif program secara reaktif untuk kalkulasi estimasi tanggal selesai.
-  ///
-  /// Copied from [programHariEfektif].
-  ProgramHariEfektifProvider call(
-    String programId,
-  ) {
-    return ProgramHariEfektifProvider(
-      programId,
-    );
-  }
-
-  @override
-  ProgramHariEfektifProvider getProviderOverride(
-    covariant ProgramHariEfektifProvider provider,
-  ) {
-    return call(
-      provider.programId,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'programHariEfektifProvider';
-}
-
-/// --- UTILITAS ESTIMASI (Poin 3 Blueprint) ---
-/// Mengambil daftar hari efektif program secara reaktif untuk kalkulasi estimasi tanggal selesai.
-///
-/// Copied from [programHariEfektif].
-class ProgramHariEfektifProvider extends AutoDisposeProvider<List<String>> {
-  /// --- UTILITAS ESTIMASI (Poin 3 Blueprint) ---
-  /// Mengambil daftar hari efektif program secara reaktif untuk kalkulasi estimasi tanggal selesai.
-  ///
-  /// Copied from [programHariEfektif].
-  ProgramHariEfektifProvider(
-    String programId,
-  ) : this._internal(
-          (ref) => programHariEfektif(
-            ref as ProgramHariEfektifRef,
-            programId,
-          ),
-          from: programHariEfektifProvider,
-          name: r'programHariEfektifProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$programHariEfektifHash,
-          dependencies: ProgramHariEfektifFamily._dependencies,
-          allTransitiveDependencies:
-              ProgramHariEfektifFamily._allTransitiveDependencies,
-          programId: programId,
+final class ProgramNotifierProvider
+    extends $AsyncNotifierProvider<ProgramNotifier, List<ProgramModel>> {
+  ProgramNotifierProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'programProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
         );
 
-  ProgramHariEfektifProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.programId,
-  }) : super.internal();
-
-  final String programId;
-
   @override
-  Override overrideWith(
-    List<String> Function(ProgramHariEfektifRef provider) create,
-  ) {
-    return ProviderOverride(
-      origin: this,
-      override: ProgramHariEfektifProvider._internal(
-        (ref) => create(ref as ProgramHariEfektifRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        programId: programId,
-      ),
-    );
-  }
+  String debugGetCreateSourceHash() => _$programNotifierHash();
 
+  @$internal
   @override
-  AutoDisposeProviderElement<List<String>> createElement() {
-    return _ProgramHariEfektifProviderElement(this);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is ProgramHariEfektifProvider && other.programId == programId;
-  }
-
-  @override
-  int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, programId.hashCode);
-
-    return _SystemHash.finish(hash);
-  }
-}
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin ProgramHariEfektifRef on AutoDisposeProviderRef<List<String>> {
-  /// The parameter `programId` of this provider.
-  String get programId;
-}
-
-class _ProgramHariEfektifProviderElement
-    extends AutoDisposeProviderElement<List<String>>
-    with ProgramHariEfektifRef {
-  _ProgramHariEfektifProviderElement(super.provider);
-
-  @override
-  String get programId => (origin as ProgramHariEfektifProvider).programId;
+  ProgramNotifier create() => ProgramNotifier();
 }
 
 String _$programNotifierHash() => r'98c42e9bf765b69d4fa3a45a07ff2c4a0581a0e0';
 
-/// See also [ProgramNotifier].
-@ProviderFor(ProgramNotifier)
-final programNotifierProvider = AutoDisposeAsyncNotifierProvider<
-    ProgramNotifier, List<ProgramModel>>.internal(
-  ProgramNotifier.new,
-  name: r'programNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$programNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+abstract class _$ProgramNotifier extends $AsyncNotifier<List<ProgramModel>> {
+  FutureOr<List<ProgramModel>> build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref =
+        this.ref as $Ref<AsyncValue<List<ProgramModel>>, List<ProgramModel>>;
+    final element = ref.element as $ClassProviderElement<
+        AnyNotifier<AsyncValue<List<ProgramModel>>, List<ProgramModel>>,
+        AsyncValue<List<ProgramModel>>,
+        Object?,
+        Object?>;
+    return element.handleCreate(ref, build);
+  }
+}
 
-typedef _$ProgramNotifier = AutoDisposeAsyncNotifier<List<ProgramModel>>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+/// --- UTILITAS ESTIMASI (Poin 3 Blueprint) ---
+/// Mengambil daftar hari efektif program secara reaktif untuk kalkulasi estimasi tanggal selesai.
+
+@ProviderFor(programHariEfektif)
+final programHariEfektifProvider = ProgramHariEfektifFamily._();
+
+/// --- UTILITAS ESTIMASI (Poin 3 Blueprint) ---
+/// Mengambil daftar hari efektif program secara reaktif untuk kalkulasi estimasi tanggal selesai.
+
+final class ProgramHariEfektifProvider
+    extends $FunctionalProvider<List<String>, List<String>, List<String>>
+    with $Provider<List<String>> {
+  /// --- UTILITAS ESTIMASI (Poin 3 Blueprint) ---
+  /// Mengambil daftar hari efektif program secara reaktif untuk kalkulasi estimasi tanggal selesai.
+  ProgramHariEfektifProvider._(
+      {required ProgramHariEfektifFamily super.from,
+      required String super.argument})
+      : super(
+          retry: null,
+          name: r'programHariEfektifProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$programHariEfektifHash();
+
+  @override
+  String toString() {
+    return r'programHariEfektifProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $ProviderElement<List<String>> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  List<String> create(Ref ref) {
+    final argument = this.argument as String;
+    return programHariEfektif(
+      ref,
+      argument,
+    );
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<String> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<String>>(value),
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ProgramHariEfektifProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$programHariEfektifHash() =>
+    r'107d9e2b9b75c0e4ff3ed22c490f8f9f94ed4da4';
+
+/// --- UTILITAS ESTIMASI (Poin 3 Blueprint) ---
+/// Mengambil daftar hari efektif program secara reaktif untuk kalkulasi estimasi tanggal selesai.
+
+final class ProgramHariEfektifFamily extends $Family
+    with $FunctionalFamilyOverride<List<String>, String> {
+  ProgramHariEfektifFamily._()
+      : super(
+          retry: null,
+          name: r'programHariEfektifProvider',
+          dependencies: null,
+          $allTransitiveDependencies: null,
+          isAutoDispose: true,
+        );
+
+  /// --- UTILITAS ESTIMASI (Poin 3 Blueprint) ---
+  /// Mengambil daftar hari efektif program secara reaktif untuk kalkulasi estimasi tanggal selesai.
+
+  ProgramHariEfektifProvider call(
+    String programId,
+  ) =>
+      ProgramHariEfektifProvider._(argument: programId, from: this);
+
+  @override
+  String toString() => r'programHariEfektifProvider';
+}

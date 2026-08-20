@@ -33,7 +33,7 @@ class _ProgramListScreenState extends ConsumerState<ProgramListScreen> with Sing
 
   @override
   Widget build(BuildContext context) {
-    final programsAsync = ref.watch(programNotifierProvider);
+    final programsAsync = ref.watch(programProvider);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),

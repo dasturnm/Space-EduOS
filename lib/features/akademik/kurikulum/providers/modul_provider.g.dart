@@ -6,170 +6,94 @@ part of 'modul_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$modulListHash() => r'd209e6eb769488e310c3a73e029b410190fab56f';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-abstract class _$ModulList
-    extends BuildlessAutoDisposeAsyncNotifier<List<ModulModel>> {
-  late final String levelId;
-
-  FutureOr<List<ModulModel>> build(
-    String levelId,
-  );
-}
-
-/// See also [ModulList].
 @ProviderFor(ModulList)
-const modulListProvider = ModulListFamily();
+final modulListProvider = ModulListFamily._();
 
-/// See also [ModulList].
-class ModulListFamily extends Family<AsyncValue<List<ModulModel>>> {
-  /// See also [ModulList].
-  const ModulListFamily();
-
-  /// See also [ModulList].
-  ModulListProvider call(
-    String levelId,
-  ) {
-    return ModulListProvider(
-      levelId,
-    );
-  }
-
-  @override
-  ModulListProvider getProviderOverride(
-    covariant ModulListProvider provider,
-  ) {
-    return call(
-      provider.levelId,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'modulListProvider';
-}
-
-/// See also [ModulList].
-class ModulListProvider
-    extends AutoDisposeAsyncNotifierProviderImpl<ModulList, List<ModulModel>> {
-  /// See also [ModulList].
-  ModulListProvider(
-    String levelId,
-  ) : this._internal(
-          () => ModulList()..levelId = levelId,
-          from: modulListProvider,
+final class ModulListProvider
+    extends $AsyncNotifierProvider<ModulList, List<ModulModel>> {
+  ModulListProvider._(
+      {required ModulListFamily super.from, required String super.argument})
+      : super(
+          retry: null,
           name: r'modulListProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$modulListHash,
-          dependencies: ModulListFamily._dependencies,
-          allTransitiveDependencies: ModulListFamily._allTransitiveDependencies,
-          levelId: levelId,
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
         );
 
-  ModulListProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.levelId,
-  }) : super.internal();
-
-  final String levelId;
+  @override
+  String debugGetCreateSourceHash() => _$modulListHash();
 
   @override
-  FutureOr<List<ModulModel>> runNotifierBuild(
-    covariant ModulList notifier,
-  ) {
-    return notifier.build(
-      levelId,
-    );
+  String toString() {
+    return r'modulListProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  Override overrideWith(ModulList Function() create) {
-    return ProviderOverride(
-      origin: this,
-      override: ModulListProvider._internal(
-        () => create()..levelId = levelId,
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        levelId: levelId,
-      ),
-    );
-  }
-
-  @override
-  AutoDisposeAsyncNotifierProviderElement<ModulList, List<ModulModel>>
-      createElement() {
-    return _ModulListProviderElement(this);
-  }
+  ModulList create() => ModulList();
 
   @override
   bool operator ==(Object other) {
-    return other is ModulListProvider && other.levelId == levelId;
+    return other is ModulListProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, levelId.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin ModulListRef on AutoDisposeAsyncNotifierProviderRef<List<ModulModel>> {
-  /// The parameter `levelId` of this provider.
-  String get levelId;
-}
+String _$modulListHash() => r'd209e6eb769488e310c3a73e029b410190fab56f';
 
-class _ModulListProviderElement
-    extends AutoDisposeAsyncNotifierProviderElement<ModulList, List<ModulModel>>
-    with ModulListRef {
-  _ModulListProviderElement(super.provider);
+final class ModulListFamily extends $Family
+    with
+        $ClassFamilyOverride<ModulList, AsyncValue<List<ModulModel>>,
+            List<ModulModel>, FutureOr<List<ModulModel>>, String> {
+  ModulListFamily._()
+      : super(
+          retry: null,
+          name: r'modulListProvider',
+          dependencies: null,
+          $allTransitiveDependencies: null,
+          isAutoDispose: true,
+        );
+
+  ModulListProvider call(
+    String levelId,
+  ) =>
+      ModulListProvider._(argument: levelId, from: this);
 
   @override
-  String get levelId => (origin as ModulListProvider).levelId;
+  String toString() => r'modulListProvider';
 }
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+
+abstract class _$ModulList extends $AsyncNotifier<List<ModulModel>> {
+  late final _$args = ref.$arg as String;
+  String get levelId => _$args;
+
+  FutureOr<List<ModulModel>> build(
+    String levelId,
+  );
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref =
+        this.ref as $Ref<AsyncValue<List<ModulModel>>, List<ModulModel>>;
+    final element = ref.element as $ClassProviderElement<
+        AnyNotifier<AsyncValue<List<ModulModel>>, List<ModulModel>>,
+        AsyncValue<List<ModulModel>>,
+        Object?,
+        Object?>;
+    return element.handleCreate(
+        ref,
+        () => build(
+              _$args,
+            ));
+  }
+}

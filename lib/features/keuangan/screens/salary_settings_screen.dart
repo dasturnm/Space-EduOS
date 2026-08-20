@@ -57,7 +57,7 @@ class _SalarySettingsScreenState extends ConsumerState<SalarySettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final actionState = ref.watch(keuanganNotifierProvider);
+    final actionState = ref.watch(keuanganProvider);
     const Color emerald = Color(0xFF10B981);
     const Color slate = Color(0xFF1E293B);
 
@@ -231,7 +231,7 @@ class _SalarySettingsScreenState extends ConsumerState<SalarySettingsScreen> {
       updatedAt: DateTime.now(),
     );
 
-    await ref.read(keuanganNotifierProvider.notifier).updateSettings(settings);
+    await ref.read(keuanganProvider.notifier).updateSettings(settings);
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(

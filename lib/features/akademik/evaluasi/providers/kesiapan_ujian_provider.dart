@@ -9,7 +9,7 @@ part 'kesiapan_ujian_provider.g.dart';
 
 /// Provider reaktif untuk mengambil daftar santri yang statusnya siap mengikuti ujian formal.
 @riverpod
-Future<List<SiswaModel>> kesiapanUjianList(KesiapanUjianListRef ref) async {
+Future<List<SiswaModel>> kesiapanUjianList(Ref ref) async {
   final supabase = Supabase.instance.client;
 
   // 1. Ambil data lembaga aktif dari konteks global (Proteksi Multi-Tenant sesuai AGENTS.md)

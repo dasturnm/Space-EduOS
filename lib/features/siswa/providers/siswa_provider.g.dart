@@ -6,269 +6,399 @@ part of 'siswa_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$filteredSiswaHash() => r'd19784524ea45341598276990296eed64d892f2a';
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 
-/// See also [filteredSiswa].
-@ProviderFor(filteredSiswa)
-final filteredSiswaProvider = AutoDisposeProvider<List<SiswaModel>>.internal(
-  filteredSiswa,
-  name: r'filteredSiswaProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$filteredSiswaHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+@ProviderFor(SiswaSearch)
+final siswaSearchProvider = SiswaSearchProvider._();
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef FilteredSiswaRef = AutoDisposeProviderRef<List<SiswaModel>>;
-String _$filteredKelasHash() => r'e2e72f6c628b0e997dc06b80bae556b4137d9156';
-
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-/// See also [filteredKelas].
-@ProviderFor(filteredKelas)
-const filteredKelasProvider = FilteredKelasFamily();
-
-/// See also [filteredKelas].
-class FilteredKelasFamily extends Family<List<KelasModel>> {
-  /// See also [filteredKelas].
-  const FilteredKelasFamily();
-
-  /// See also [filteredKelas].
-  FilteredKelasProvider call(
-    String? programId,
-  ) {
-    return FilteredKelasProvider(
-      programId,
-    );
-  }
-
-  @override
-  FilteredKelasProvider getProviderOverride(
-    covariant FilteredKelasProvider provider,
-  ) {
-    return call(
-      provider.programId,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'filteredKelasProvider';
-}
-
-/// See also [filteredKelas].
-class FilteredKelasProvider extends AutoDisposeProvider<List<KelasModel>> {
-  /// See also [filteredKelas].
-  FilteredKelasProvider(
-    String? programId,
-  ) : this._internal(
-          (ref) => filteredKelas(
-            ref as FilteredKelasRef,
-            programId,
-          ),
-          from: filteredKelasProvider,
-          name: r'filteredKelasProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$filteredKelasHash,
-          dependencies: FilteredKelasFamily._dependencies,
-          allTransitiveDependencies:
-              FilteredKelasFamily._allTransitiveDependencies,
-          programId: programId,
+final class SiswaSearchProvider extends $NotifierProvider<SiswaSearch, String> {
+  SiswaSearchProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'siswaSearchProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
         );
 
-  FilteredKelasProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.programId,
-  }) : super.internal();
-
-  final String? programId;
-
   @override
-  Override overrideWith(
-    List<KelasModel> Function(FilteredKelasRef provider) create,
-  ) {
-    return ProviderOverride(
+  String debugGetCreateSourceHash() => _$siswaSearchHash();
+
+  @$internal
+  @override
+  SiswaSearch create() => SiswaSearch();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(String value) {
+    return $ProviderOverride(
       origin: this,
-      override: FilteredKelasProvider._internal(
-        (ref) => create(ref as FilteredKelasRef),
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        programId: programId,
-      ),
+      providerOverride: $SyncValueProvider<String>(value),
     );
   }
-
-  @override
-  AutoDisposeProviderElement<List<KelasModel>> createElement() {
-    return _FilteredKelasProviderElement(this);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is FilteredKelasProvider && other.programId == programId;
-  }
-
-  @override
-  int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, programId.hashCode);
-
-    return _SystemHash.finish(hash);
-  }
-}
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-mixin FilteredKelasRef on AutoDisposeProviderRef<List<KelasModel>> {
-  /// The parameter `programId` of this provider.
-  String? get programId;
-}
-
-class _FilteredKelasProviderElement
-    extends AutoDisposeProviderElement<List<KelasModel>> with FilteredKelasRef {
-  _FilteredKelasProviderElement(super.provider);
-
-  @override
-  String? get programId => (origin as FilteredKelasProvider).programId;
 }
 
 String _$siswaSearchHash() => r'ccfb62a75de8d4d634a880fa97f23fefe2f4fd75';
 
-/// See also [SiswaSearch].
-@ProviderFor(SiswaSearch)
-final siswaSearchProvider =
-    AutoDisposeNotifierProvider<SiswaSearch, String>.internal(
-  SiswaSearch.new,
-  name: r'siswaSearchProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$siswaSearchHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+abstract class _$SiswaSearch extends $Notifier<String> {
+  String build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<String, String>;
+    final element = ref.element as $ClassProviderElement<
+        AnyNotifier<String, String>, String, Object?, Object?>;
+    return element.handleCreate(ref, build);
+  }
+}
 
-typedef _$SiswaSearch = AutoDisposeNotifier<String>;
+@ProviderFor(SiswaFilterCabang)
+final siswaFilterCabangProvider = SiswaFilterCabangProvider._();
+
+final class SiswaFilterCabangProvider
+    extends $NotifierProvider<SiswaFilterCabang, String?> {
+  SiswaFilterCabangProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'siswaFilterCabangProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$siswaFilterCabangHash();
+
+  @$internal
+  @override
+  SiswaFilterCabang create() => SiswaFilterCabang();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(String? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<String?>(value),
+    );
+  }
+}
+
 String _$siswaFilterCabangHash() => r'5269ab108005f000e4937482e11a1209b19b870e';
 
-/// See also [SiswaFilterCabang].
-@ProviderFor(SiswaFilterCabang)
-final siswaFilterCabangProvider =
-    AutoDisposeNotifierProvider<SiswaFilterCabang, String?>.internal(
-  SiswaFilterCabang.new,
-  name: r'siswaFilterCabangProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$siswaFilterCabangHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+abstract class _$SiswaFilterCabang extends $Notifier<String?> {
+  String? build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<String?, String?>;
+    final element = ref.element as $ClassProviderElement<
+        AnyNotifier<String?, String?>, String?, Object?, Object?>;
+    return element.handleCreate(ref, build);
+  }
+}
 
-typedef _$SiswaFilterCabang = AutoDisposeNotifier<String?>;
+@ProviderFor(SiswaFilterProgram)
+final siswaFilterProgramProvider = SiswaFilterProgramProvider._();
+
+final class SiswaFilterProgramProvider
+    extends $NotifierProvider<SiswaFilterProgram, String?> {
+  SiswaFilterProgramProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'siswaFilterProgramProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$siswaFilterProgramHash();
+
+  @$internal
+  @override
+  SiswaFilterProgram create() => SiswaFilterProgram();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(String? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<String?>(value),
+    );
+  }
+}
+
 String _$siswaFilterProgramHash() =>
     r'86c6aa1ac7ba0a022a955605690b26c3f1efe73e';
 
-/// See also [SiswaFilterProgram].
-@ProviderFor(SiswaFilterProgram)
-final siswaFilterProgramProvider =
-    AutoDisposeNotifierProvider<SiswaFilterProgram, String?>.internal(
-  SiswaFilterProgram.new,
-  name: r'siswaFilterProgramProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$siswaFilterProgramHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+abstract class _$SiswaFilterProgram extends $Notifier<String?> {
+  String? build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<String?, String?>;
+    final element = ref.element as $ClassProviderElement<
+        AnyNotifier<String?, String?>, String?, Object?, Object?>;
+    return element.handleCreate(ref, build);
+  }
+}
 
-typedef _$SiswaFilterProgram = AutoDisposeNotifier<String?>;
+@ProviderFor(SiswaFilterKurikulum)
+final siswaFilterKurikulumProvider = SiswaFilterKurikulumProvider._();
+
+final class SiswaFilterKurikulumProvider
+    extends $NotifierProvider<SiswaFilterKurikulum, String?> {
+  SiswaFilterKurikulumProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'siswaFilterKurikulumProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$siswaFilterKurikulumHash();
+
+  @$internal
+  @override
+  SiswaFilterKurikulum create() => SiswaFilterKurikulum();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(String? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<String?>(value),
+    );
+  }
+}
+
 String _$siswaFilterKurikulumHash() =>
     r'a6c4ef55cf85e85327f6500212660cc14af67f0a';
 
-/// See also [SiswaFilterKurikulum].
-@ProviderFor(SiswaFilterKurikulum)
-final siswaFilterKurikulumProvider =
-    AutoDisposeNotifierProvider<SiswaFilterKurikulum, String?>.internal(
-  SiswaFilterKurikulum.new,
-  name: r'siswaFilterKurikulumProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$siswaFilterKurikulumHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+abstract class _$SiswaFilterKurikulum extends $Notifier<String?> {
+  String? build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<String?, String?>;
+    final element = ref.element as $ClassProviderElement<
+        AnyNotifier<String?, String?>, String?, Object?, Object?>;
+    return element.handleCreate(ref, build);
+  }
+}
 
-typedef _$SiswaFilterKurikulum = AutoDisposeNotifier<String?>;
+@ProviderFor(SiswaFilterLevel)
+final siswaFilterLevelProvider = SiswaFilterLevelProvider._();
+
+final class SiswaFilterLevelProvider
+    extends $NotifierProvider<SiswaFilterLevel, String?> {
+  SiswaFilterLevelProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'siswaFilterLevelProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$siswaFilterLevelHash();
+
+  @$internal
+  @override
+  SiswaFilterLevel create() => SiswaFilterLevel();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(String? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<String?>(value),
+    );
+  }
+}
+
 String _$siswaFilterLevelHash() => r'e10ac9d9d73a5126c40433ce6da556f55eda8d14';
 
-/// See also [SiswaFilterLevel].
-@ProviderFor(SiswaFilterLevel)
-final siswaFilterLevelProvider =
-    AutoDisposeNotifierProvider<SiswaFilterLevel, String?>.internal(
-  SiswaFilterLevel.new,
-  name: r'siswaFilterLevelProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$siswaFilterLevelHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+abstract class _$SiswaFilterLevel extends $Notifier<String?> {
+  String? build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref = this.ref as $Ref<String?, String?>;
+    final element = ref.element as $ClassProviderElement<
+        AnyNotifier<String?, String?>, String?, Object?, Object?>;
+    return element.handleCreate(ref, build);
+  }
+}
 
-typedef _$SiswaFilterLevel = AutoDisposeNotifier<String?>;
+@ProviderFor(filteredSiswa)
+final filteredSiswaProvider = FilteredSiswaProvider._();
+
+final class FilteredSiswaProvider extends $FunctionalProvider<List<SiswaModel>,
+    List<SiswaModel>, List<SiswaModel>> with $Provider<List<SiswaModel>> {
+  FilteredSiswaProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'filteredSiswaProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$filteredSiswaHash();
+
+  @$internal
+  @override
+  $ProviderElement<List<SiswaModel>> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  List<SiswaModel> create(Ref ref) {
+    return filteredSiswa(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<SiswaModel> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<SiswaModel>>(value),
+    );
+  }
+}
+
+String _$filteredSiswaHash() => r'a03a4594c5537d1b8d4e58bc0be99edc704d02db';
+
+@ProviderFor(filteredKelas)
+final filteredKelasProvider = FilteredKelasFamily._();
+
+final class FilteredKelasProvider extends $FunctionalProvider<List<KelasModel>,
+    List<KelasModel>, List<KelasModel>> with $Provider<List<KelasModel>> {
+  FilteredKelasProvider._(
+      {required FilteredKelasFamily super.from,
+      required String? super.argument})
+      : super(
+          retry: null,
+          name: r'filteredKelasProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$filteredKelasHash();
+
+  @override
+  String toString() {
+    return r'filteredKelasProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $ProviderElement<List<KelasModel>> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  List<KelasModel> create(Ref ref) {
+    final argument = this.argument as String?;
+    return filteredKelas(
+      ref,
+      argument,
+    );
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<KelasModel> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<KelasModel>>(value),
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is FilteredKelasProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$filteredKelasHash() => r'f47577eaa05c9c4dbf987a64bcaa55cb02b6a385';
+
+final class FilteredKelasFamily extends $Family
+    with $FunctionalFamilyOverride<List<KelasModel>, String?> {
+  FilteredKelasFamily._()
+      : super(
+          retry: null,
+          name: r'filteredKelasProvider',
+          dependencies: null,
+          $allTransitiveDependencies: null,
+          isAutoDispose: true,
+        );
+
+  FilteredKelasProvider call(
+    String? programId,
+  ) =>
+      FilteredKelasProvider._(argument: programId, from: this);
+
+  @override
+  String toString() => r'filteredKelasProvider';
+}
+
+@ProviderFor(SiswaList)
+final siswaListProvider = SiswaListProvider._();
+
+final class SiswaListProvider
+    extends $AsyncNotifierProvider<SiswaList, List<SiswaModel>> {
+  SiswaListProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'siswaListProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$siswaListHash();
+
+  @$internal
+  @override
+  SiswaList create() => SiswaList();
+}
+
 String _$siswaListHash() => r'4833992d766f3c42176b42e02ea40599d66ebcf1';
 
-/// See also [SiswaList].
-@ProviderFor(SiswaList)
-final siswaListProvider =
-    AutoDisposeAsyncNotifierProvider<SiswaList, List<SiswaModel>>.internal(
-  SiswaList.new,
-  name: r'siswaListProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$siswaListHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$SiswaList = AutoDisposeAsyncNotifier<List<SiswaModel>>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$SiswaList extends $AsyncNotifier<List<SiswaModel>> {
+  FutureOr<List<SiswaModel>> build();
+  @$mustCallSuper
+  @override
+  WhenComplete runBuild() {
+    final ref =
+        this.ref as $Ref<AsyncValue<List<SiswaModel>>, List<SiswaModel>>;
+    final element = ref.element as $ClassProviderElement<
+        AnyNotifier<AsyncValue<List<SiswaModel>>, List<SiswaModel>>,
+        AsyncValue<List<SiswaModel>>,
+        Object?,
+        Object?>;
+    return element.handleCreate(ref, build);
+  }
+}

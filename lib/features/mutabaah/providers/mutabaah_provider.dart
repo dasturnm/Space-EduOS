@@ -1,6 +1,7 @@
 // Lokasi: lib/features/mutabaah/providers/mutabaah_provider.dart
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tahfidz_core/core/providers/app_context_provider.dart'; // FIX: Untuk mendapatkan ID Guru yang login
 import 'package:tahfidz_core/features/siswa/services/siswa_service.dart'; // FIX: Untuk akses filter siswa

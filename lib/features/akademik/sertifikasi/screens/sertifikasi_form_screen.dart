@@ -362,7 +362,7 @@ class _SertifikasiFormScreenState extends ConsumerState<SertifikasiFormScreen> {
   }
 
   Widget _buildActionButtons(bool isLulus, SertifikasiScoreModel finalSkor) {
-    final tasmiState = ref.watch(sertifikasiNotifierProvider);
+    final tasmiState = ref.watch(sertifikasiProvider);
 
     return Column(
       children: [
@@ -374,7 +374,7 @@ class _SertifikasiFormScreenState extends ConsumerState<SertifikasiFormScreen> {
                 ? null
                 : () async {
               try {
-                await ref.read(sertifikasiNotifierProvider.notifier).simpanHasilSertifikasi(
+                await ref.read(sertifikasiProvider.notifier).simpanHasilSertifikasi(
                   siswaId: widget.siswaId,
                   modul: widget.modul,
                   skor: finalSkor,

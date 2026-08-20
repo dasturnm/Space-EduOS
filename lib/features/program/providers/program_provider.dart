@@ -126,13 +126,13 @@ class ProgramNotifier extends _$ProgramNotifier {
 /// --- UTILITAS ESTIMASI (Poin 3 Blueprint) ---
 /// Mengambil daftar hari efektif program secara reaktif untuk kalkulasi estimasi tanggal selesai.
 @riverpod
-List<String> programHariEfektif(ProgramHariEfektifRef ref, String programId) {
+List<String> programHariEfektif(Ref ref, String programId) {
   if (programId.isEmpty || programId == 'null') {
     debugPrint("⚠️ Estimasi Lulus: programId KOSONG. Pastikan Level ini sudah terhubung dengan program_id di Database.");
     return [];
   }
 
-  final programs = ref.watch(programNotifierProvider).value ?? [];
+  final programs = ref.watch(programProvider).value ?? [];
   if (programs.isEmpty) {
     debugPrint("⏳ Estimasi Lulus: Menunggu data ProgramNotifier selesai di-load...");
   }

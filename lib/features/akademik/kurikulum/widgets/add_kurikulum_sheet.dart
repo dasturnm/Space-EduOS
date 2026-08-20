@@ -56,7 +56,7 @@ class AddKurikulumSheet {
 
                   // Tambah Dropdown Program (REVISI: Penanganan Stuck Loading & Empty State)
                   // FIX: Gunakan sheetRef, bukan ref parent
-                  sheetRef.watch(programNotifierProvider).when(
+                  sheetRef.watch(programProvider).when(
                     data: (programs) {
                       if (programs.isEmpty) {
                         return Container(
@@ -165,7 +165,7 @@ class AddKurikulumSheet {
                         sheetRef.invalidate(kurikulumListProvider(lembagaId));
 
                         // 🔥 FIX: Refresh juga ProgramProvider agar status "KURIKULUM BELUM DIATUR" di UI hilang
-                        sheetRef.invalidate(programNotifierProvider);
+                        sheetRef.invalidate(programProvider);
 
                         if (ctx.mounted) Navigator.pop(ctx);
                       },
@@ -214,7 +214,7 @@ class AddKurikulumSheet {
                   .deleteKurikulum(kurikulum.id!);
               ref.invalidate(kurikulumListProvider(lembagaId));
               // 🔥 FIX: Refresh juga ProgramProvider saat kurikulum dihapus
-              ref.invalidate(programNotifierProvider);
+              ref.invalidate(programProvider);
             },
             child: const Text("Hapus",
                 style:
