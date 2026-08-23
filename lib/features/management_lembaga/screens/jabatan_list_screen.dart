@@ -6,6 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/providers/app_context_provider.dart';
 import '../../../core/constants/permissions_constant.dart';
 import '../providers/lembaga_provider.dart';
+import '../providers/unit_kerja_provider.dart';
 import '../models/jabatan_model.dart';
 import '../models/divisi_model.dart';
 import '../models/unit_kerja_model.dart';
@@ -264,15 +265,9 @@ class _JabatanListScreenState extends ConsumerState<JabatanListScreen> {
                       .toList();
 
                   try {
-                    final updatedJabatan = (jabatan ?? JabatanModel(
-                      id: '',
+                    final updatedJabatan = JabatanModel(
+                      id: jabatan?.id ?? '',
                       lembagaId: lembagaId,
-                      divisiId: selectedDivisiId!,
-                      unitKerjaId: selectedUnitKerjaId,
-                      namaJabatan: nameController.text.trim(),
-                      defaultRole: selectedRole,
-                      permissions: activePermissions,
-                    )).copyWith(
                       divisiId: selectedDivisiId!,
                       unitKerjaId: selectedUnitKerjaId,
                       namaJabatan: nameController.text.trim(),
@@ -315,25 +310,37 @@ class _JabatanListScreenState extends ConsumerState<JabatanListScreen> {
 
     final jabatanAsync = ref.watch(jabatanListProvider);
     final divisiAsync = ref.watch(divisiListProvider);
+    final unitKerjaAsync = ref.watch(unitKerjaListProvider);
 
     return Scaffold(
       backgroundColor: Colors.white,
       body: jabatanAsync.when(
         data: (jabatanList) => divisiAsync.when(
-          data: (divisiList) => jabatanList.isEmpty
-              ? _buildEmptyState()
-              : ListView.builder(
-            padding: const EdgeInsets.all(24),
-            itemCount: jabatanList.length,
-            itemBuilder: (context, index) {
-              final j = jabatanList[index];
-              final namaDivisi = divisiList.firstWhere(
-                    (d) => d.id == j.divisiId,
-                orElse: () => DivisiModel(id: '', lembagaId: '', namaDivisi: 'N/A'),
-              ).namaDivisi;
+          data: (divisiList) => unitKerjaAsync.when(
+            data: (unitList) => jabatanList.isEmpty
+                ? _buildEmptyState()
+                : ListView.builder(
+              padding: const EdgeInsets.all(24),
+              itemCount: jabatanList.length,
+              itemBuilder: (context, index) {
+                final j = jabatanList[index];
+                final namaDivisi = divisiList.firstWhere(
+                      (d) => d.id == j.divisiId,
+                  orElse: () => DivisiModel(id: '', lembagaId: '', namaDivisi: 'N/A'),
+                ).namaDivisi;
 
-              return _buildJabatanCard(j, namaDivisi);
-            },
+                final namaUnit = j.unitKerjaId != null
+                    ? unitList.firstWhere(
+                      (u) => u.id == j.unitKerjaId,
+                  orElse: () => UnitKerjaModel(id: '', lembagaId: '', divisiId: '', namaUnitKerja: 'N/A'),
+                ).namaUnitKerja
+                    : null;
+
+                return _buildJabatanCard(j, namaDivisi, namaUnit);
+              },
+            ),
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (err, _) => Center(child: Text("Error Unit Kerja: $err")),
           ),
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (err, _) => Center(child: Text("Error Divisi: $err")),
@@ -353,7 +360,7 @@ class _JabatanListScreenState extends ConsumerState<JabatanListScreen> {
     );
   }
 
-  Widget _buildJabatanCard(JabatanModel j, String namaDivisi) {
+  Widget _buildJabatanCard(JabatanModel j, String namaDivisi, String? namaUnit) {
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       elevation: 0,
@@ -393,6 +400,19 @@ class _JabatanListScreenState extends ConsumerState<JabatanListScreen> {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
+                      if (namaUnit != null && namaUnit != 'N/A') ...[
+                        const SizedBox(width: 8),
+                        const Icon(Icons.circle, size: 4, color: Colors.grey),
+                        const SizedBox(width: 8),
+                        Flexible(
+                          child: Text(
+                            namaUnit,
+                            style: TextStyle(color: Colors.blue[700], fontSize: 13, fontWeight: FontWeight.w500),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
                       const SizedBox(width: 8),
                       const Icon(Icons.circle, size: 4, color: Colors.grey),
                       const SizedBox(width: 8),

@@ -24,7 +24,7 @@ class LayananKecerdasanAkademik {
         if (modul.isExamRequired == true) {
           // DUAL/TRIPLE UPDATE: Ubah academic_state, is_ready_for_exam, dan ready_modul_id
           await supabase.from('siswa').update({
-            'academic_state': 'exam_ready',
+            'academic_state': 'tasmi_mode',
             'is_ready_for_exam': true,
             'ready_modul_id': modulId,
           }).eq('id', siswaId);
