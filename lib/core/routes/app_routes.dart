@@ -4,45 +4,45 @@ import 'package:flutter/material.dart'; // FIX: Agar Placeholder dikenali
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // TAMBAHKAN INI
-import 'package:tahfidz_core/core/constants/app_routes.dart';
-import 'package:tahfidz_core/core/layout/auth_layout.dart';
-import 'package:tahfidz_core/features/auth/providers/auth_provider.dart';
-import 'package:tahfidz_core/core/providers/app_context_provider.dart';
-import 'package:tahfidz_core/features/management_lembaga/screens/management_hub_screen.dart'; // FIX: Hub untuk Tab
-import 'package:tahfidz_core/features/akademik/screens/akademik_hub_screen.dart';
+import 'package:space_eduos/core/constants/app_routes.dart';
+import 'package:space_eduos/core/layout/auth_layout.dart';
+import 'package:space_eduos/features/auth/providers/auth_provider.dart';
+import 'package:space_eduos/core/providers/app_context_provider.dart';
+import 'package:space_eduos/features/management_lembaga/screens/management_hub_screen.dart'; // FIX: Hub untuk Tab
+import 'package:space_eduos/features/akademik/screens/akademik_hub_screen.dart';
 
 // Import Screens
-import 'package:tahfidz_core/features/auth/screens/login_screen.dart';
-import 'package:tahfidz_core/features/dashboard/screens/dashboard_admin_screen.dart';
-import 'package:tahfidz_core/features/dashboard/screens/main_layout_screen.dart'; // MENGGUNAKAN MAIN LAYOUT
-import 'package:tahfidz_core/features/mutabaah/screens/mutabaah_hub_screen.dart';
-import 'package:tahfidz_core/features/mutabaah/screens/mutabaah_input_screen.dart';
-import 'package:tahfidz_core/features/mutabaah/screens/mutabaah_monitoring_screen.dart';
-import 'package:tahfidz_core/features/mutabaah/screens/ranking_screen.dart';
-import 'package:tahfidz_core/features/siswa/screens/siswa_list_screen.dart'; // SAFE UPDATE: Perbaikan case sensitivity
-import 'package:tahfidz_core/features/siswa/screens/siswa_form_screen.dart'; // TAMBAHAN: Untuk rute Edit/Tambah Siswa
-import 'package:tahfidz_core/features/siswa/screens/siswa_hub_screen.dart'; // SAFE UPDATE: Hub Kelas
-import 'package:tahfidz_core/features/program/screens/program_list_screen.dart'; // SAFE UPDATE: Hub Program
+import 'package:space_eduos/features/auth/screens/login_screen.dart';
+import 'package:space_eduos/features/dashboard/screens/dashboard_admin_screen.dart';
+import 'package:space_eduos/features/dashboard/screens/main_layout_screen.dart'; // MENGGUNAKAN MAIN LAYOUT
+import 'package:space_eduos/features/mutabaah/screens/mutabaah_hub_screen.dart';
+import 'package:space_eduos/features/mutabaah/screens/mutabaah_input_screen.dart';
+import 'package:space_eduos/features/mutabaah/screens/mutabaah_monitoring_screen.dart';
+import 'package:space_eduos/features/mutabaah/screens/ranking_screen.dart';
+import 'package:space_eduos/features/siswa/screens/siswa_list_screen.dart'; // SAFE UPDATE: Perbaikan case sensitivity
+import 'package:space_eduos/features/siswa/screens/siswa_form_screen.dart'; // TAMBAHAN: Untuk rute Edit/Tambah Siswa
+import 'package:space_eduos/features/siswa/screens/siswa_hub_screen.dart'; // SAFE UPDATE: Hub Kelas
+import 'package:space_eduos/features/program/screens/program_list_screen.dart'; // SAFE UPDATE: Hub Program
 // FIX: Tambahkan import untuk fitur yang baru ditambahkan di Sidebar
-import 'package:tahfidz_core/features/management_lembaga/screens/lembaga_profile_screen.dart';
-import 'package:tahfidz_core/features/auth/screens/user_account_screen.dart';
-import 'package:tahfidz_core/features/management_lembaga/screens/cabang_list_screen.dart';
-import 'package:tahfidz_core/features/management_lembaga/screens/tahun_ajaran_screen.dart';
-import 'package:tahfidz_core/features/management_lembaga/screens/divisi_list_screen.dart';
-import 'package:tahfidz_core/features/program/screens/agenda_akademik_screen.dart';
-import 'package:tahfidz_core/features/program/widgets/academic_calendar_tab.dart'; // FIX: Melengkapi import AcademicCalendarTab
+import 'package:space_eduos/features/management_lembaga/screens/lembaga_profile_screen.dart';
+import 'package:space_eduos/features/auth/screens/user_account_screen.dart';
+import 'package:space_eduos/features/management_lembaga/screens/cabang_list_screen.dart';
+import 'package:space_eduos/features/management_lembaga/screens/tahun_ajaran_screen.dart';
+import 'package:space_eduos/features/management_lembaga/screens/divisi_list_screen.dart';
+import 'package:space_eduos/features/program/screens/agenda_akademik_screen.dart';
+import 'package:space_eduos/features/program/widgets/academic_calendar_tab.dart'; // FIX: Melengkapi import AcademicCalendarTab
 // REMOVED: modul_model.dart (File tidak ada, ModulModel ada di kurikulum_model.dart)
-import 'package:tahfidz_core/features/guru_staff/screens/staff_hub_screen.dart';
-// import 'package:tahfidz_core/features/kelas/screens/kelas_hub_screen.dart'; // REMOVED: File tidak ada
-import 'package:tahfidz_core/features/mushaf/screens/mushaf_index_screen.dart';
-import 'package:tahfidz_core/features/mushaf/screens/mushaf_screen.dart';
-import 'package:tahfidz_core/features/siswa/models/siswa_model.dart';
-import 'package:tahfidz_core/features/akademik/kurikulum/models/kurikulum_model.dart';
-import 'package:tahfidz_core/features/keuangan/screens/keuangan_screen.dart';
-import 'package:tahfidz_core/features/keuangan/screens/salary_settings_screen.dart';
-import 'package:tahfidz_core/features/keuangan/widgets/teacher_payroll_dashboard.dart';
-import 'package:tahfidz_core/features/akademik/evaluasi/screens/form_evaluasi_screen.dart'; // TAMBAHAN: Import Form Evaluasi
-import 'package:tahfidz_core/features/akademik/evaluasi/screens/kesiapan_ujian_screen.dart'; // TAMBAHAN: Import Kesiapan Ujian
+import 'package:space_eduos/features/guru_staff/screens/staff_hub_screen.dart';
+// import 'package:space_eduos/features/kelas/screens/kelas_hub_screen.dart'; // REMOVED: File tidak ada
+import 'package:space_eduos/features/mushaf/screens/mushaf_index_screen.dart';
+import 'package:space_eduos/features/mushaf/screens/mushaf_screen.dart';
+import 'package:space_eduos/features/siswa/models/siswa_model.dart';
+import 'package:space_eduos/features/akademik/kurikulum/models/kurikulum_model.dart';
+import 'package:space_eduos/features/keuangan/screens/keuangan_screen.dart';
+import 'package:space_eduos/features/keuangan/screens/salary_settings_screen.dart';
+import 'package:space_eduos/features/keuangan/widgets/teacher_payroll_dashboard.dart';
+import 'package:space_eduos/features/akademik/evaluasi/screens/form_evaluasi_screen.dart'; // TAMBAHAN: Import Form Evaluasi
+import 'package:space_eduos/features/akademik/evaluasi/screens/kesiapan_ujian_screen.dart'; // TAMBAHAN: Import Kesiapan Ujian
 
 // SAFE UPDATE: Nama part harus identik dengan nama file fisik agar generator berfungsi
 part 'app_routes.g.dart';

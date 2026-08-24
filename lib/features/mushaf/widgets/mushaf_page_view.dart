@@ -139,13 +139,16 @@ class MushafPageView extends StatelessWidget {
 
   // FIX: WidgetSpan sekarang menerima fontSize agar ikut scaling
   List<InlineSpan> _buildTajwidText(MushafLine line, double fontSize, bool showAyahNumber) {
-    final double ayahNumSize = fontSize * 0.7;
+    final double ayahNumSize = (fontSize * 7) / 10;
+    final double badgeSize = (fontSize * 12) / 10;
     return [
       TextSpan(text: "${line.quranText} "),
       if (showAyahNumber)
         WidgetSpan(
           alignment: PlaceholderAlignment.middle,
           child: Container(
+            width: badgeSize,
+            height: badgeSize,
             margin: EdgeInsets.symmetric(horizontal: fontSize * 0.2),
             padding: EdgeInsets.all(fontSize * 0.15),
             decoration: BoxDecoration(

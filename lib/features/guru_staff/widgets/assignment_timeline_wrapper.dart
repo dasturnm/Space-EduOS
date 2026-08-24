@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/staff_provider.dart';
-import 'package:tahfidz_core/shared/models/profile_model.dart';
+import 'package:space_eduos/shared/models/profile_model.dart';
 import 'assignment_timeline.dart';
 
 class AssignmentTimelineWrapper extends ConsumerStatefulWidget {

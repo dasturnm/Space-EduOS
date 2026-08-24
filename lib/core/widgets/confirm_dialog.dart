@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tahfidz_core/core/constants/app_sizes.dart';
-import 'package:tahfidz_core/core/widgets/app_button.dart';
+import 'package:space_eduos/core/constants/app_sizes.dart';
+import 'package:space_eduos/core/widgets/app_button.dart';
 
 class ConfirmDialog extends StatelessWidget {
   final String title;

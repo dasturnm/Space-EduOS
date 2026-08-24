@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart'; // Tambahan untuk integrasi WA
 import 'package:go_router/go_router.dart'; // TAMBAHAN
-import 'package:tahfidz_core/core/constants/app_routes.dart'; // TAMBAHAN
+import 'package:space_eduos/core/constants/app_routes.dart'; // TAMBAHAN
 import '../providers/siswa_provider.dart';
 import '../models/siswa_model.dart'; // TAMBAHAN: Import Model
 import '../../mutabaah/providers/mutabaah_provider.dart'; // TAMBAHAN: Untuk getActiveModuls

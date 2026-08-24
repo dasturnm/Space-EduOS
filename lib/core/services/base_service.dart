@@ -2,7 +2,7 @@
 
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tahfidz_core/core/providers/app_context_provider.dart';
+import 'package:space_eduos/core/providers/app_context_provider.dart';
 import 'dart:convert'; // TAMBAHAN: Untuk manipulasi encoding/decoding JSON cache
 import 'package:shared_preferences/shared_preferences.dart'; // TAMBAHAN: Kompatibel penuh untuk Web & Mobile Offline Fallback
 

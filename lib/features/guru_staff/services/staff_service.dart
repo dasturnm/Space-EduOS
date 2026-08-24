@@ -1,7 +1,7 @@
 // Lokasi: lib/features/guru_staff/services/staff_service.dart
 
-import 'package:tahfidz_core/core/services/base_service.dart';
-import 'package:tahfidz_core/shared/models/profile_model.dart';
+import 'package:space_eduos/core/services/base_service.dart';
+import 'package:space_eduos/shared/models/profile_model.dart';
 
 class StaffService extends BaseService {
   /// 🔍 FETCH LIST STAFF

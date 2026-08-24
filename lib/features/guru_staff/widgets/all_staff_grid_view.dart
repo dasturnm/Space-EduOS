@@ -1,7 +1,7 @@
 // Lokasi: lib/features/guru_staff/widgets/all_staff_grid_view.dart
 
 import 'package:flutter/material.dart';
-import 'package:tahfidz_core/shared/models/profile_model.dart';
+import 'package:space_eduos/shared/models/profile_model.dart';
 import '../screens/staff_detail_screen.dart';
 
 class AllStaffGridView extends StatelessWidget {

@@ -4,9 +4,9 @@ import 'dart:async'; // TAMBAHAN: Untuk StreamSubscription
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:tahfidz_core/features/auth/providers/auth_provider.dart' hide AuthState; // FIX: Sembunyikan AuthState lokal agar tidak bentrok dengan Supabase
-import 'package:tahfidz_core/core/providers/app_context_provider.dart';
-import 'package:tahfidz_core/core/routes/app_routes.dart';
+import 'package:space_eduos/features/auth/providers/auth_provider.dart' hide AuthState; // FIX: Sembunyikan AuthState lokal agar tidak bentrok dengan Supabase
+import 'package:space_eduos/core/providers/app_context_provider.dart';
+import 'package:space_eduos/core/routes/app_routes.dart';
 
 // Navigator key diperlukan untuk pindah halaman dari listener auth
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();

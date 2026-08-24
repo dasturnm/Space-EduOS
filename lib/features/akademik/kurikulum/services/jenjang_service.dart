@@ -1,8 +1,8 @@
 // Lokasi: lib/features/akademik/kurikulum/services/jenjang_service.dart
 
-import 'package:tahfidz_core/core/services/base_service.dart';
+import 'package:space_eduos/core/services/base_service.dart';
 // Gunakan kurikulum_model.dart karena class JenjangModel sekarang digabung di sana
-import 'package:tahfidz_core/features/akademik/kurikulum/models/kurikulum_model.dart';
+import 'package:space_eduos/features/akademik/kurikulum/models/kurikulum_model.dart';
 
 class JenjangService extends BaseService {
   // --- JENJANG ---

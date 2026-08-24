@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/kurikulum_model.dart';
 import '../providers/kurikulum_provider.dart';
 // FIX: Menggunakan Absolute Import untuk menghindari uri_does_not_exist
-import 'package:tahfidz_core/features/program/providers/program_provider.dart';
+import 'package:space_eduos/features/program/providers/program_provider.dart';
 
 class AddKurikulumSheet {
   static void show({

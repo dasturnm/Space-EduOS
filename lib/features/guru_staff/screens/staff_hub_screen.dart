@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 // FIX: Sinkronisasi nama file import (Staff dengan dua 'f')
-import 'package:tahfidz_core/features/guru_staff/services/guru_dan_staff_bulk_service.dart';
-import 'package:tahfidz_core/features/guru_staff/providers/staff_provider.dart';
+import 'package:space_eduos/features/guru_staff/services/guru_dan_staff_bulk_service.dart';
+import 'package:space_eduos/features/guru_staff/providers/staff_provider.dart';
 import 'staff_form_screen.dart';
 // PERBAIKAN: Baris import all_staff_table_screen.dart DIHAPUS karena file akan dihapus
 import '../widgets/import_staff_dialog.dart'; // TAMBAHAN

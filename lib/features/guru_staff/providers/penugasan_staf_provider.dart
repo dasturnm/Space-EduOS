@@ -1,7 +1,7 @@
 // Lokasi: lib/features/guru_staff/providers/penugasan_staf_provider.dart
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:tahfidz_core/core/providers/app_context_provider.dart'; // TAMBAHAN
+import 'package:space_eduos/core/providers/app_context_provider.dart'; // TAMBAHAN
 import '../models/penugasan_staf_model.dart';
 import '../services/penugasan_staf_service.dart';
 

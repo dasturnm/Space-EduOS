@@ -1,7 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:tahfidz_core/features/auth/services/auth_service.dart';
-import 'package:tahfidz_core/shared/models/profile_model.dart';
+import 'package:space_eduos/features/auth/services/auth_service.dart';
+import 'package:space_eduos/shared/models/profile_model.dart';
 
 part 'auth_provider.g.dart';
 

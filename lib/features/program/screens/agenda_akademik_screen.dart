@@ -6,7 +6,7 @@ import '../providers/agenda_provider.dart';
 import '../providers/program_provider.dart';
 import '../../../core/providers/app_context_provider.dart';
 // FIX: Menggunakan absolute import agar sinkron dengan lokasi model yang baru
-import 'package:tahfidz_core/features/program/models/agenda_model.dart';
+import 'package:space_eduos/features/program/models/agenda_model.dart';
 
 class AgendaAkademikScreen extends ConsumerStatefulWidget {
   const AgendaAkademikScreen({super.key});

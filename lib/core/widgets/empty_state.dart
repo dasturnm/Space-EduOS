@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tahfidz_core/core/constants/app_colors.dart';
-import 'package:tahfidz_core/core/constants/app_sizes.dart';
+import 'package:space_eduos/core/constants/app_colors.dart';
+import 'package:space_eduos/core/constants/app_sizes.dart';
 
 class EmptyState extends StatelessWidget {
   final String title;

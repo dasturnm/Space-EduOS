@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/staff_provider.dart';
 import '../providers/penugasan_staf_provider.dart';
-import 'package:tahfidz_core/core/providers/app_context_provider.dart';
-import 'package:tahfidz_core/features/management_lembaga/providers/lembaga_provider.dart';
-import 'package:tahfidz_core/features/management_lembaga/providers/unit_kerja_provider.dart';
+import 'package:space_eduos/core/providers/app_context_provider.dart';
+import 'package:space_eduos/features/management_lembaga/providers/lembaga_provider.dart';
+import 'package:space_eduos/features/management_lembaga/providers/unit_kerja_provider.dart';
 
 class StaffAssignmentScreen extends ConsumerStatefulWidget {
   final Map<String, dynamic> staff;

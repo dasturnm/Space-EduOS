@@ -9,7 +9,7 @@ import '../providers/kalender_provider.dart'; // Baru: Import Kalender
 import '../../management_lembaga/providers/tahun_ajaran_provider.dart'; // FIX: Jalur diperbaiki
 import '../../../core/providers/app_context_provider.dart';
 // FIX: Menggunakan absolute import agar sinkron dengan lokasi model yang baru
-import 'package:tahfidz_core/features/program/models/agenda_model.dart';
+import 'package:space_eduos/features/program/models/agenda_model.dart';
 
 class AcademicCalendarTab extends ConsumerStatefulWidget {
   const AcademicCalendarTab({super.key});

@@ -1,6 +1,6 @@
 // Lokasi: lib/features/kelas/models/kelas_model.dart
 
-import 'package:tahfidz_core/shared/models/profile_model.dart';
+import 'package:space_eduos/shared/models/profile_model.dart';
 import '../../program/models/program_model.dart'; // Sesuaikan foldernya
 
 class KelasModel {

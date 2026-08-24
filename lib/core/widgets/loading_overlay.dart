@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tahfidz_core/core/constants/app_colors.dart';
+import 'package:space_eduos/core/constants/app_colors.dart';
 
 class LoadingOverlay extends StatelessWidget {
   final bool isLoading;

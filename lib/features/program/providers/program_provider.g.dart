@@ -120,7 +120,7 @@ final class ProgramHariEfektifProvider
 }
 
 String _$programHariEfektifHash() =>
-    r'107d9e2b9b75c0e4ff3ed22c490f8f9f94ed4da4';
+    r'5ba06ea858a57835c04615fd960515e9bea4d6f9';
 
 /// --- UTILITAS ESTIMASI (Poin 3 Blueprint) ---
 /// Mengambil daftar hari efektif program secara reaktif untuk kalkulasi estimasi tanggal selesai.

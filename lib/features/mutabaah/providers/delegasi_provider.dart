@@ -2,7 +2,7 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
-import 'package:tahfidz_core/core/providers/app_context_provider.dart';
+import 'package:space_eduos/core/providers/app_context_provider.dart';
 import '../models/delegasi_model.dart';
 import '../services/delegasi_service.dart';
 

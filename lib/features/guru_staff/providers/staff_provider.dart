@@ -3,8 +3,8 @@
 import 'package:flutter/foundation.dart'; // TAMBAHAN: Untuk debugPrint
 import 'package:supabase_flutter/supabase_flutter.dart'; // TAMBAHAN: Untuk direct update
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:tahfidz_core/core/providers/app_context_provider.dart';
-import 'package:tahfidz_core/shared/models/profile_model.dart';
+import 'package:space_eduos/core/providers/app_context_provider.dart';
+import 'package:space_eduos/shared/models/profile_model.dart';
 // FIX: Menggunakan penamaan 'staff' (dua 'f') sesuai instruksi
 import '../services/staff_service.dart';
 import '../models/penugasan_staf_model.dart'; // TAMBAHAN

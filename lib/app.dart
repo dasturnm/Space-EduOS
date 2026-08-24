@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tahfidz_core/core/theme/app_theme.dart';
-import 'package:tahfidz_core/core/routes/app_routes.dart';
+import 'package:space_eduos/core/theme/app_theme.dart';
+import 'package:space_eduos/core/routes/app_routes.dart';
 
 class TahfidzCoreApp extends ConsumerWidget {
   const TahfidzCoreApp({super.key});

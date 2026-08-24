@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/legacy.dart';
 import '../../program/models/program_model.dart';
 import '../services/akademik_service.dart';
 import '../kurikulum/models/kurikulum_model.dart'; // Ambil LevelModel yang sudah disatukan
-import 'package:tahfidz_core/core/providers/app_context_provider.dart';
+import 'package:space_eduos/core/providers/app_context_provider.dart';
 
 class AkademikProvider extends ChangeNotifier {
   final AkademikService _akademikService = AkademikService();

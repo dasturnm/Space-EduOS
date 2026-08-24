@@ -127,8 +127,8 @@ class UklEngineService extends BaseService {
             } else {
               // Poin 4 BR-TAH-006: Jika tidak ada level di jenjang berikutnya -> status graduated
               await supabase.from('siswa').update({
-                'academic_state': 'graduated',
-                'status': 'LULUS',
+                'academic_state': 'daily',
+                'status': 'lulus',
                 'is_ready_for_exam': false,
                 'ready_modul_id': null,
               }).eq('id', siswaId);
@@ -136,8 +136,8 @@ class UklEngineService extends BaseService {
           } else {
             // Poin 4 BR-TAH-006: Jika tidak ada jenjang berikutnya -> status graduated
             await supabase.from('siswa').update({
-              'academic_state': 'graduated',
-              'status': 'LULUS',
+              'academic_state': 'daily',
+              'status': 'lulus',
               'is_ready_for_exam': false,
               'ready_modul_id': null,
             }).eq('id', siswaId);

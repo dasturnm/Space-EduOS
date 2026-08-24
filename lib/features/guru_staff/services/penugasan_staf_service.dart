@@ -1,8 +1,8 @@
 // Lokasi: lib/features/guru_staff/services/penugasan_staf_service.dart
 
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:tahfidz_core/core/services/base_service.dart';
-import 'package:tahfidz_core/features/guru_staff/models/penugasan_staf_model.dart';
+import 'package:space_eduos/core/services/base_service.dart';
+import 'package:space_eduos/features/guru_staff/models/penugasan_staf_model.dart';
 
 class PenugasanStafService extends BaseService {
   /// 🔍 FETCH DAFTAR PENUGASAN

@@ -1,8 +1,8 @@
 // Lokasi: lib/features/akademik/kurikulum/services/kurikulum_service.dart
 
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:tahfidz_core/core/services/base_service.dart';
-import 'package:tahfidz_core/features/akademik/kurikulum/models/kurikulum_model.dart';
+import 'package:space_eduos/core/services/base_service.dart';
+import 'package:space_eduos/features/akademik/kurikulum/models/kurikulum_model.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart';
 // FIX: Import model pendukung dihapus karena semua model (Jenjang, Level, Modul)

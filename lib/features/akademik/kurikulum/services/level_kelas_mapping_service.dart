@@ -1,6 +1,6 @@
 // Lokasi: lib/features/akademik/kurikulum/services/level_kelas_mapping_service.dart
 
-import 'package:tahfidz_core/core/services/base_service.dart';
+import 'package:space_eduos/core/services/base_service.dart';
 
 class LevelKelasMappingService extends BaseService {
   // --- MAPPING KELAS ---

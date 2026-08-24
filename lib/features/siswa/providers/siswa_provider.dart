@@ -1,7 +1,7 @@
 // Lokasi: lib/features/siswa/providers/siswa_provider.dart
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:tahfidz_core/core/providers/app_context_provider.dart';
+import 'package:space_eduos/core/providers/app_context_provider.dart';
 import '../models/siswa_model.dart';
 import '../services/siswa_service.dart';
 import '../../kelas/models/kelas_model.dart'; // Tambahan untuk tipe data

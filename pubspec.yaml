@@ -1,5 +1,5 @@
-name: tahfidz_core
-description: "Platform Manajemen Ekosistem Pendidikan Al-Qur'an Modern"
+name: space_eduos
+description: "Space EduOS - Integrated Academic Platform"
 publish_to: 'none'
 
 version: 1.0.0+1
@@ -51,6 +51,7 @@ dev_dependencies:
   # Wajib ada untuk Riverpod Code Generation (Anti-Typo & Auto-Provider)
   build_runner: ^2.4.8
   riverpod_generator: 4.0.8
+  mockito: ^5.4.4
 
 flutter:
   uses-material-design: true
@@ -59,3 +60,7 @@ flutter:
   # Pastikan folder assets didefinisikan jika ada logo lembaga
   # assets:
   #   - assets/images/
+
+image:
+tasks:
+  -

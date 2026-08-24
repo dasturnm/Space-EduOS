@@ -10,7 +10,7 @@ import '../../program/providers/program_provider.dart'; // FIX: Migrasi ke progr
 import '../../kelas/providers/kelas_provider.dart';
 // FIX: Menggunakan level_provider spesifik
 import '../../akademik/kurikulum/providers/kurikulum_provider.dart'; // TAMBAHAN: Import provider kurikulum
-import 'package:tahfidz_core/core/providers/app_context_provider.dart';
+import 'package:space_eduos/core/providers/app_context_provider.dart';
 
 class SiswaFormScreen extends ConsumerStatefulWidget {
   final SiswaModel? existingSiswa;

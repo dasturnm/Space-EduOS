@@ -5,7 +5,7 @@ import '../../../core/services/base_service.dart';
 import '../../program/models/program_model.dart';
 import '../kurikulum/models/kurikulum_model.dart'; // Tambahan: Menggunakan model terpusat
 // FIX: Memperbaiki typo "porgram" menjadi "program" agar URI ditemukan
-import 'package:tahfidz_core/features/program/models/agenda_model.dart';
+import 'package:space_eduos/features/program/models/agenda_model.dart';
 
 class AkademikService extends BaseService {
   /// Mengambil daftar semua Program yang statusnya 'aktif'

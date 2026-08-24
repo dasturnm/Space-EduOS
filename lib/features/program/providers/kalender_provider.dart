@@ -2,9 +2,9 @@
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 // FIX: Menggunakan absolute import agar aman dari error path folder (uri_does_not_exist)
-import 'package:tahfidz_core/features/akademik/services/akademik_service.dart';
-import 'package:tahfidz_core/core/providers/app_context_provider.dart';
-import 'package:tahfidz_core/features/program/models/agenda_model.dart';
+import 'package:space_eduos/features/akademik/services/akademik_service.dart';
+import 'package:space_eduos/core/providers/app_context_provider.dart';
+import 'package:space_eduos/features/program/models/agenda_model.dart';
 
 part 'kalender_provider.g.dart';
 

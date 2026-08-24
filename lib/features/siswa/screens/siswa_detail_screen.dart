@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // TAMBAHAN
-import 'package:tahfidz_core/core/providers/app_context_provider.dart'; // TAMBAHAN
+import 'package:space_eduos/core/providers/app_context_provider.dart'; // TAMBAHAN
 import '../models/siswa_model.dart';
 import 'siswa_form_screen.dart';
 

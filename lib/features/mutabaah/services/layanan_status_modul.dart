@@ -1,6 +1,6 @@
 // Lokasi: lib/features/mutabaah/services/layanan_status_modul.dart
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:tahfidz_core/features/akademik/kurikulum/models/modul_model.dart';
+import 'package:space_eduos/features/akademik/kurikulum/models/modul_model.dart';
 
 class LayananStatusModul {
   final SupabaseClient _supabase = Supabase.instance.client;

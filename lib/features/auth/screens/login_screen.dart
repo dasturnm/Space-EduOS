@@ -4,12 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:tahfidz_core/features/auth/providers/auth_provider.dart' hide AuthState;
-import 'package:tahfidz_core/core/widgets/app_button.dart';
-import 'package:tahfidz_core/features/auth/screens/register_lembaga_screen.dart';
+import 'package:space_eduos/features/auth/providers/auth_provider.dart' hide AuthState;
+import 'package:space_eduos/core/widgets/app_button.dart';
+import 'package:space_eduos/features/auth/screens/register_lembaga_screen.dart';
 // Import halaman lupa password (pastikan path ini sesuai nanti)
-import 'package:tahfidz_core/features/auth/screens/forgot_password_screen.dart';
-import 'package:tahfidz_core/core/providers/app_context_provider.dart';
+import 'package:space_eduos/features/auth/screens/forgot_password_screen.dart';
+import 'package:space_eduos/core/providers/app_context_provider.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});

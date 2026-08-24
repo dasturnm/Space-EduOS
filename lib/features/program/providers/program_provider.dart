@@ -2,9 +2,9 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:tahfidz_core/core/providers/app_context_provider.dart';
-import 'package:tahfidz_core/features/program/models/program_model.dart';
-import 'package:tahfidz_core/features/program/services/program_service.dart';
+import 'package:space_eduos/core/providers/app_context_provider.dart';
+import 'package:space_eduos/features/program/models/program_model.dart';
+import 'package:space_eduos/features/program/services/program_service.dart';
 
 part 'program_provider.g.dart';
 

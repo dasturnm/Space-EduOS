@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tahfidz_core/core/constants/app_colors.dart';
-import 'package:tahfidz_core/core/constants/app_sizes.dart';
+import 'package:space_eduos/core/constants/app_colors.dart';
+import 'package:space_eduos/core/constants/app_sizes.dart';
 
 class AppTheme {
   static ThemeData get lightTheme {

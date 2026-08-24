@@ -76,7 +76,8 @@ class AppContextState {
   }
 
   bool hasModule(String moduleKey) {
-    return true;
+    const defaultModules = ['tahfidz', 'attendance', 'communication'];
+    return defaultModules.contains(moduleKey.toLowerCase());
   }
 }
 

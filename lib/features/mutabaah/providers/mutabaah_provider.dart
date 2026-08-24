@@ -3,10 +3,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:tahfidz_core/core/providers/app_context_provider.dart'; // FIX: Untuk mendapatkan ID Guru yang login
-import 'package:tahfidz_core/features/siswa/services/siswa_service.dart'; // FIX: Untuk akses filter siswa
-import 'package:tahfidz_core/features/siswa/models/siswa_model.dart';
-import 'package:tahfidz_core/features/akademik/kurikulum/models/kurikulum_model.dart'; // TAMBAHAN
+import 'package:space_eduos/core/providers/app_context_provider.dart'; // FIX: Untuk mendapatkan ID Guru yang login
+import 'package:space_eduos/features/siswa/services/siswa_service.dart'; // FIX: Untuk akses filter siswa
+import 'package:space_eduos/features/siswa/models/siswa_model.dart';
+import 'package:space_eduos/features/akademik/kurikulum/models/kurikulum_model.dart'; // TAMBAHAN
 import '../models/mutabaah_model.dart';
 import '../services/mutabaah_service.dart';
 import 'delegasi_provider.dart'; // FIX: Integrasi Delegasi untuk Guru Pengganti

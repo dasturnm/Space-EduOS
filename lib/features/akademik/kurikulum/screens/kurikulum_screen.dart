@@ -6,7 +6,7 @@ import '../providers/kurikulum_provider.dart';
 import '../models/kurikulum_model.dart';
 import '../../../program/models/program_model.dart';
 import 'kurikulum_detail_screen.dart';
-import 'package:tahfidz_core/shared/widgets/app_drawer.dart';
+import 'package:space_eduos/shared/widgets/app_drawer.dart';
 import '../../../../core/providers/app_context_provider.dart';
 import '../widgets/kurikulum_card.dart'; // Baru: Import KurikulumCard biru
 import '../widgets/add_kurikulum_sheet.dart'; // FIX: Gunakan sheet yang mendukung pilihan program

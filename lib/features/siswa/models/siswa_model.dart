@@ -4,7 +4,7 @@ import '../../kelas/models/kelas_model.dart';
 import '../../program/models/program_model.dart';
 import '../../management_lembaga/models/cabang_model.dart'; // TAMBAHAN
 import '../../akademik/kurikulum/models/kurikulum_model.dart'; // Tambahan untuk LevelModel
-import 'package:tahfidz_core/shared/models/profile_model.dart';
+import 'package:space_eduos/shared/models/profile_model.dart';
 
 class SiswaModel {
   final String? id;

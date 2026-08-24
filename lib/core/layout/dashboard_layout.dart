@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tahfidz_core/core/layout/sidebar.dart';
-import 'package:tahfidz_core/core/constants/app_colors.dart';
+import 'package:space_eduos/core/layout/sidebar.dart';
+import 'package:space_eduos/core/constants/app_colors.dart';
 
 class DashboardLayout extends ConsumerWidget {
   final Widget child;
