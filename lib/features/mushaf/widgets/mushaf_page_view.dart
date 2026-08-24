@@ -25,7 +25,11 @@ class MushafPageView extends StatelessWidget {
         final bool isSpecialPage = pageNum <= 2;
 
         // POIN 2: Sistem Scaling agar pas 15 baris di layar mana pun (Tanpa Scroll)
-        final double dynamicFontSize = constraints.maxHeight * (isSpecialPage ? 0.042 : 0.030);
+        final double rawFontSize = constraints.maxHeight * (isSpecialPage ? 0.042 : 0.030);
+        final double dynamicFontSize = rawFontSize.clamp(16.0, 34.0);
+
+        // Cek apakah halaman ini memiliki banner surah (ada baris dengan ayahStart == 1)
+        final bool hasSurahBanner = lines.any((line) => line.ayahStart == 1);
 
         return Container(
           margin: const EdgeInsets.all(4.0),
@@ -55,13 +59,14 @@ class MushafPageView extends StatelessWidget {
                     // Header Navigasi (Hanya pemberi jarak setelah search/tab dihapus)
                     _buildActionHeader(),
 
-                    if (!isSpecialPage) _buildTopHeader(constraints),
-                    if (!isSpecialPage) const SizedBox(height: 4),
+                    // Hanya tampilkan header atas jika tidak ada banner surah di halaman ini
+                    if (!isSpecialPage && !hasSurahBanner) _buildTopHeader(constraints),
+                    if (!isSpecialPage && !hasSurahBanner) const SizedBox(height: 4),
 
                     Expanded(
                       child: Column(
-                        // PAS 15 BARIS: Menggunakan spaceBetween agar terbagi rata mengikuti tinggi layar
-                        mainAxisAlignment: isSpecialPage ? MainAxisAlignment.center : MainAxisAlignment.spaceBetween,
+                        // PAS 15 BARIS: Menggunakan start agar baris rapat tanpa celah besar
+                        mainAxisAlignment: isSpecialPage ? MainAxisAlignment.center : MainAxisAlignment.start,
                         children: lines.asMap().entries.map((entry) {
                           final int idx = entry.key;
                           final MushafLine line = entry.value;
