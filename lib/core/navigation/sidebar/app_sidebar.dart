@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../features/auth/providers/auth_provider.dart';
 import '../../providers/app_context_provider.dart';
-import 'sidebar_config.dart';
+import 'package:space_eduos/core/navigation/sidebar/sidebar_config.dart';
 
 class AppSidebar extends ConsumerWidget {
   const AppSidebar({super.key});
@@ -71,12 +71,16 @@ class AppSidebar extends ConsumerWidget {
 
                 const SizedBox(height: 12),
 
-                ...SidebarMenuRegistry.sections.map((section) {
-                  final validItems = section.items.where((item) {
-                    return SidebarMenuRegistry.canAccessItem(
-                      item: item,
-                      contextState: contextState,
-                    );
+                ...SidebarConfig.getGroups().map((group) {
+                  // Dual-Gate Filtering: Module Switcher & PBAC Permission Check
+                  if (group.module != null && !contextState.hasModule(group.module!)) {
+                    return const SizedBox.shrink();
+                  }
+
+                  final validItems = group.items.where((item) {
+                    final hasItemModule = item.module == null || contextState.hasModule(item.module!);
+                    final hasItemPermission = item.permission == null || contextState.hasPermission(item.permission!);
+                    return hasItemModule && hasItemPermission;
                   }).toList();
 
                   if (validItems.isEmpty) return const SizedBox.shrink();
@@ -87,7 +91,7 @@ class AppSidebar extends ConsumerWidget {
                       Padding(
                         padding: const EdgeInsets.only(left: 20, top: 16, bottom: 8),
                         child: Text(
-                          section.title,
+                          group.title,
                           style: const TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.bold,
@@ -99,8 +103,8 @@ class AppSidebar extends ConsumerWidget {
                       ...validItems.map((item) {
                         return _SidebarTile(
                           title: item.title,
-                          icon: _getIconForRoute(item.route),
-                          activeIcon: _getIconForRoute(item.route, active: true),
+                          icon: item.icon,
+                          activeIcon: item.icon,
                           route: item.route,
                           isSelected: currentRoute == item.route,
                         );

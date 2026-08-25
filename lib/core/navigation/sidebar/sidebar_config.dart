@@ -1,212 +1,256 @@
-import '../../providers/app_context_provider.dart';
+// Lokasi: lib/core/navigation/sidebar/sidebar_config.dart
 
-class SidebarItemConfig {
+import 'package:flutter/material.dart';
+
+class SidebarItem {
   final String title;
+  final IconData icon;
   final String route;
-  final String? requiredModule;
-  final String? requiredPermission;
-  final List<String>? requiredPermissionsAny;
-  final bool isImplemented;
+  final String? permission;
+  final String? module;
 
-  const SidebarItemConfig({
+  const SidebarItem({
     required this.title,
+    required this.icon,
     required this.route,
-    this.requiredModule,
-    this.requiredPermission,
-    this.requiredPermissionsAny,
-    this.isImplemented = true,
+    this.permission,
+    this.module,
   });
 }
 
-class SidebarSectionConfig {
+class SidebarGroup {
   final String title;
-  final String? requiredModule;
-  final List<SidebarItemConfig> items;
+  final List<SidebarItem> items;
+  final String? module;
 
-  const SidebarSectionConfig({
+  const SidebarGroup({
     required this.title,
-    this.requiredModule,
     required this.items,
+    this.module,
   });
 }
 
-class SidebarMenuRegistry {
-  static const List<SidebarSectionConfig> sections = [
-    // 1. ORGANISASI (CORE)
-    SidebarSectionConfig(
-      title: 'ORGANISASI',
-      items: [
-        SidebarItemConfig(
-          title: 'Profil Organisasi',
-          route: '/organisasi',
-          requiredPermission: 'organization.view',
-        ),
-        SidebarItemConfig(
-          title: 'Cabang & Unit',
-          route: '/cabang',
-          requiredPermission: 'organization.branch.view',
-        ),
-        SidebarItemConfig(
-          title: 'Tahun Ajaran',
-          route: '/tahun-ajaran',
-          requiredPermission: 'academic_year.view',
-        ),
-        SidebarItemConfig(
-          title: 'Divisi',
-          route: '/divisi',
-          requiredPermission: 'department.view',
-        ),
-        SidebarItemConfig(
-          title: 'Unit Kerja',
-          route: '/unit-kerja',
-          requiredPermission: 'work_unit.view',
-        ),
-        SidebarItemConfig(
-          title: 'Jabatan & Permission',
-          route: '/jabatan',
-          requiredPermission: 'job_position.view',
-        ),
-      ],
-    ),
+class SidebarConfig {
+  static List<SidebarGroup> getGroups() {
+    return [
+      // ==========================================
+      // GROUP 1: PANEL UTAMA (DASHBOARD)
+      // ==========================================
+      const SidebarGroup(
+        title: "Panel Utama",
+        items: [
+          SidebarItem(
+            title: "Admin Dashboard",
+            icon: Icons.dashboard,
+            route: "/dashboard/admin",
+            permission: "organization.read",
+          ),
+          SidebarItem(
+            title: "Dashboard Guru",
+            icon: Icons.dashboard_customize,
+            route: "/dashboard/guru",
+            permission: "tahfidz.write",
+          ),
+          SidebarItem(
+            title: "Portal Wali Santri",
+            icon: Icons.family_restroom,
+            route: "/dashboard/wali",
+            permission: "parent.manage",
+            module: "parent",
+          ),
+        ],
+      ),
 
-    // 2. AKADEMIK (CORE)
-    SidebarSectionConfig(
-      title: 'AKADEMIK',
-      items: [
-        SidebarItemConfig(
-          title: 'Program & Kaldik',
-          route: '/program',
-          requiredPermission: 'program.view',
-        ),
-        SidebarItemConfig(
-          title: 'Kurikulum & Modul',
-          route: '/kurikulum',
-          requiredPermission: 'curriculum.view',
-        ),
-        SidebarItemConfig(
-          title: 'Katalog Silabus',
-          route: '/silabus',
-          requiredPermission: 'curriculum.view',
-        ),
-      ],
-    ),
+      // ==========================================
+      // GROUP 2: KELEMBAGAAN (MINGGU 1)
+      // ==========================================
+      const SidebarGroup(
+        title: "Kelembagaan",
+        items: [
+          SidebarItem(
+            title: "Profil Lembaga",
+            icon: Icons.business,
+            route: "/management-lembaga/profile",
+            permission: "organization.manage",
+          ),
+          SidebarItem(
+            title: "Manajemen Cabang",
+            icon: Icons.account_tree,
+            route: "/management-lembaga/cabang",
+            permission: "organization.manage",
+          ),
+          SidebarItem(
+            title: "Tahun Ajaran",
+            icon: Icons.calendar_today,
+            route: "/management-lembaga/tahun-ajaran",
+            permission: "organization.manage",
+          ),
+          SidebarItem(
+            title: "Divisi & Unit Kerja",
+            icon: Icons.groups,
+            route: "/management-lembaga/divisi",
+            permission: "organization.manage",
+          ),
+          SidebarItem(
+            title: "Manajemen Jabatan",
+            icon: Icons.work,
+            route: "/management-lembaga/jabatan",
+            permission: "organization.manage",
+          ),
+        ],
+      ),
 
-    // 3. PESERTA DIDIK (CORE)
-    SidebarSectionConfig(
-      title: 'PESERTA DIDIK',
-      items: [
-        SidebarItemConfig(
-          title: 'Siswa & Kelas',
-          route: '/siswa',
-          requiredPermission: 'student.view',
-        ),
-        SidebarItemConfig(
-          title: 'Penerimaan Siswa',
-          route: '/admission',
-          requiredModule: 'admission',
-          requiredPermission: 'admission.view',
-        ),
-        SidebarItemConfig(
-          title: 'Wali Santri',
-          route: '/wali',
-          requiredModule: 'parent',
-          requiredPermission: 'parent.view',
-        ),
-      ],
-    ),
+      // ==========================================
+      // GROUP 3: AKADEMIK & KESISWAAN (MINGGU 2)
+      // ==========================================
+      const SidebarGroup(
+        title: "Akademik",
+        module: "akademik",
+        items: [
+          SidebarItem(
+            title: "Manajemen Program",
+            icon: Icons.book_online,
+            route: "/akademik/program",
+            permission: "academic.program.manage",
+          ),
+          SidebarItem(
+            title: "Kurikulum & Level",
+            icon: Icons.import_contacts,
+            route: "/akademik/kurikulum",
+            permission: "academic.curriculum.read",
+          ),
+          SidebarItem(
+            title: "Daftar Kelas",
+            icon: Icons.class_,
+            route: "/kelas",
+            permission: "class.read",
+          ),
+          SidebarItem(
+            title: "Daftar Siswa",
+            icon: Icons.people,
+            route: "/siswa",
+            permission: "student.read",
+          ),
+        ],
+      ),
 
-    // 4. TAHFIDZ (ACTIVE MODULE)
-    SidebarSectionConfig(
-      title: 'TAHFIDZ',
-      requiredModule: 'tahfidz',
-      items: [
-        SidebarItemConfig(
-          title: 'Mutaba\'ah Tahfidz',
-          route: '/mutabaah',
-          requiredModule: 'tahfidz',
-          requiredPermission: 'tahfidz.mutabaah.view',
-        ),
-        SidebarItemConfig(
-          title: 'Ujian Tasmi\' & UKL',
-          route: '/tasmi',
-          requiredModule: 'tahfidz',
-          requiredPermission: 'tahfidz.exam.view',
-        ),
-        SidebarItemConfig(
-          title: 'Mushaf Digital',
-          route: '/mushaf',
-          requiredModule: 'tahfidz',
-        ),
-      ],
-    ),
+      // ==========================================
+      // GROUP 4: KETAHFIDZAN & SETORAN (MINGGU 2 & 3)
+      // ==========================================
+      const SidebarGroup(
+        title: "Ketahfidzan",
+        module: "tahfidz",
+        items: [
+          SidebarItem(
+            title: "Input Setoran harian",
+            icon: Icons.draw,
+            route: "/mutabaah/input",
+            permission: "tahfidz.write",
+          ),
+          SidebarItem(
+            title: "Riwayat Mutaba'ah",
+            icon: Icons.history,
+            route: "/mutabaah/history",
+            permission: "tahfidz.read",
+          ),
+          SidebarItem(
+            title: "Mushaf Al-Qur'an",
+            icon: Icons.menu_book,
+            route: "/mushaf",
+            permission: "tahfidz.read",
+          ),
+          SidebarItem(
+            title: "Pendaftaran Ujian",
+            icon: Icons.assignment_turned_in,
+            route: "/akademik/evaluasi",
+            permission: "tahfidz.assess",
+          ),
+        ],
+      ),
 
-    // 5. SDM & PAYROLL (HR)
-    SidebarSectionConfig(
-      title: 'SDM & PAYROLL',
-      requiredModule: 'hr',
-      items: [
-        SidebarItemConfig(
-          title: 'Guru & Staff',
-          route: '/staf',
-          requiredModule: 'hr',
-          requiredPermission: 'hr.staff.view',
-        ),
-        SidebarItemConfig(
-          title: 'Presensi Staff',
-          route: '/presensi',
-          requiredModule: 'hr',
-          requiredPermission: 'hr.attendance.view',
-        ),
-        SidebarItemConfig(
-          title: 'Pengaturan Gaji',
-          route: '/keuangan/payroll-settings',
-          requiredModule: 'hr',
-          requiredPermission: 'payroll.manage',
-        ),
-      ],
-    ),
+      // ==========================================
+      // GROUP 5: PENERIMAAN SISWA (MINGGU 4)
+      // ==========================================
+      const SidebarGroup(
+        title: "Penerimaan Baru",
+        module: "admission",
+        items: [
+          SidebarItem(
+            title: "Form Pendaftaran",
+            icon: Icons.app_registration,
+            route: "/admission/register",
+            permission: "admission.view",
+          ),
+          SidebarItem(
+            title: "Verifikasi & Seleksi",
+            icon: Icons.admin_panel_settings,
+            route: "/admission/dashboard",
+            permission: "admission.manage",
+          ),
+        ],
+      ),
 
-    // 6. KEUANGAN (FINANCE - PARTIAL)
-    SidebarSectionConfig(
-      title: 'KEUANGAN',
-      requiredModule: 'finance',
-      items: [
-        SidebarItemConfig(
-          title: 'Manajemen Keuangan',
-          route: '/keuangan',
-          requiredModule: 'finance',
-          requiredPermission: 'finance.view',
-        ),
-      ],
-    ),
-  ];
+      // ==========================================
+      // GROUP 6: KEUANGAN & SPP (MINGGU 5)
+      // ==========================================
+      const SidebarGroup(
+        title: "Keuangan SPP",
+        module: "finance",
+        items: [
+          SidebarItem(
+            title: "Kelola Tagihan SPP",
+            icon: Icons.receipt_long,
+            route: "/keuangan/spp",
+            permission: "finance.spp.view",
+          ),
+          SidebarItem(
+            title: "Pencatatan Pembayaran",
+            icon: Icons.payment,
+            route: "/keuangan/bayar",
+            permission: "spp.process",
+          ),
+          SidebarItem(
+            title: "Pengeluaran Sekolah",
+            icon: Icons.outbox,
+            route: "/keuangan/expense",
+            permission: "expense.manage",
+          ),
+          SidebarItem(
+            title: "Laporan Keuangan",
+            icon: Icons.analytics,
+            route: "/keuangan/report",
+            permission: "finance.spp.manage",
+          ),
+        ],
+      ),
 
-  /// Evaluasi Dual-Gate: Gate 1 (Active Modules) & Gate 2 (Permissions)
-  static bool canAccessItem({
-    required SidebarItemConfig item,
-    required AppContextState contextState,
-  }) {
-    if (!item.isImplemented) return false;
-
-    // Gate 1: Check Active Module
-    if (item.requiredModule != null && item.requiredModule!.isNotEmpty) {
-      if (!contextState.hasModule(item.requiredModule!)) {
-        return false;
-      }
-    }
-
-    // Gate 2: Check Permission
-    if (item.requiredPermission != null && item.requiredPermission!.isNotEmpty) {
-      if (!contextState.hasPermission(item.requiredPermission!)) {
-        return false;
-      }
-    }
-
-    if (item.requiredPermissionsAny != null && item.requiredPermissionsAny!.isNotEmpty) {
-      final hasAny = item.requiredPermissionsAny!.any((p) => contextState.hasPermission(p));
-      if (!hasAny) return false;
-    }
-
-    return true;
+      // ==========================================
+      // GROUP 7: KEPEGAWAIAN (PAYROLL - MINGGU 3 & 5)
+      // ==========================================
+      const SidebarGroup(
+        title: "SDM & Payroll",
+        module: "hr",
+        items: [
+          SidebarItem(
+            title: "Manajemen Staf",
+            icon: Icons.badge,
+            route: "/guru-staff",
+            permission: "student.manage",
+          ),
+          SidebarItem(
+            title: "Payroll & Slip Gaji",
+            icon: Icons.payments,
+            route: "/keuangan/payroll",
+            permission: "finance.payroll.view",
+          ),
+          SidebarItem(
+            title: "Absensi Staf",
+            icon: Icons.co_present,
+            route: "/guru-staff/attendance",
+            permission: "attendance.read",
+          ),
+        ],
+      ),
+    ];
   }
 }

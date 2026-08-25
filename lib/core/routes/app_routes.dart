@@ -43,6 +43,10 @@ import 'package:space_eduos/features/keuangan/screens/salary_settings_screen.dar
 import 'package:space_eduos/features/keuangan/widgets/teacher_payroll_dashboard.dart';
 import 'package:space_eduos/features/akademik/evaluasi/screens/form_evaluasi_screen.dart'; // TAMBAHAN: Import Form Evaluasi
 import 'package:space_eduos/features/akademik/evaluasi/screens/kesiapan_ujian_screen.dart'; // TAMBAHAN: Import Kesiapan Ujian
+import 'package:space_eduos/features/keuangan/screens/spp_list_screen.dart';
+import 'package:space_eduos/features/keuangan/screens/expense_list_screen.dart';
+import 'package:space_eduos/features/keuangan/screens/finance_report_screen.dart';
+import 'package:space_eduos/features/dashboard/screens/dashboard_wali_screen.dart';
 
 // SAFE UPDATE: Nama part harus identik dengan nama file fisik agar generator berfungsi
 part 'app_routes.g.dart';
@@ -289,6 +293,59 @@ GoRouter router(Ref ref) { // Ganti RouterRef jadi Ref
           GoRoute(
             path: AppRouteNames.presensiSiswa,
             builder: (context, state) => const Scaffold(body: Center(child: Text('Fitur Presensi Siswa dalam Pengembangan'))),
+          ),
+          // SAFE UPDATE: Pendaftaran Rute Navigasi Sidebar Minggu 1 - 5
+          GoRoute(
+            path: '/dashboard/admin',
+            builder: (context, state) => const DashboardAdminScreen(),
+          ),
+          GoRoute(
+            path: '/dashboard/guru',
+            builder: (context, state) => const DashboardAdminScreen(),
+          ),
+          GoRoute(
+            path: '/dashboard/wali',
+            builder: (context, state) => const DashboardWaliScreen(),
+          ),
+          GoRoute(
+            path: '/management-lembaga/jabatan',
+            builder: (context, state) => const ManagementHubScreen(),
+          ),
+          GoRoute(
+            path: '/akademik/evaluasi',
+            builder: (context, state) => const KesiapanUjianScreen(),
+          ),
+          GoRoute(
+            path: '/admission/register',
+            builder: (context, state) => const Scaffold(body: Center(child: Text('Form Pendaftaran PPDB dalam Pengembangan'))),
+          ),
+          GoRoute(
+            path: '/admission/dashboard',
+            builder: (context, state) => const Scaffold(body: Center(child: Text('Dashboard PPDB dalam Pengembangan'))),
+          ),
+          GoRoute(
+            path: '/keuangan/spp',
+            builder: (context, state) => const SppListScreen(),
+          ),
+          GoRoute(
+            path: '/keuangan/bayar',
+            builder: (context, state) => const SppListScreen(),
+          ),
+          GoRoute(
+            path: '/keuangan/expense',
+            builder: (context, state) => const ExpenseListScreen(),
+          ),
+          GoRoute(
+            path: '/keuangan/report',
+            builder: (context, state) => const FinanceReportScreen(),
+          ),
+          GoRoute(
+            path: '/keuangan/payroll',
+            builder: (context, state) => const TeacherPayrollDashboard(),
+          ),
+          GoRoute(
+            path: '/guru-staff/attendance',
+            builder: (context, state) => const Scaffold(body: Center(child: Text('Presensi Staf dalam Pengembangan'))),
           ),
         ],
       ),
