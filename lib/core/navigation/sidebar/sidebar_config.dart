@@ -76,19 +76,19 @@ class SidebarConfig {
           SidebarItem(
             title: "Manajemen Cabang",
             icon: Icons.account_tree,
-            route: "/management-lembaga/cabang",
+            route: "/cabang",
             permission: "organization.manage",
           ),
           SidebarItem(
             title: "Tahun Ajaran",
             icon: Icons.calendar_today,
-            route: "/management-lembaga/tahun-ajaran",
+            route: "/tahun-ajaran",
             permission: "organization.manage",
           ),
           SidebarItem(
             title: "Divisi & Unit Kerja",
             icon: Icons.groups,
-            route: "/management-lembaga/divisi",
+            route: "/divisi",
             permission: "organization.manage",
           ),
           SidebarItem(
@@ -110,13 +110,13 @@ class SidebarConfig {
           SidebarItem(
             title: "Manajemen Program",
             icon: Icons.book_online,
-            route: "/akademik/program",
+            route: "/program",
             permission: "academic.program.manage",
           ),
           SidebarItem(
             title: "Kurikulum & Level",
             icon: Icons.import_contacts,
-            route: "/akademik/kurikulum",
+            route: "/kurikulum",
             permission: "academic.curriculum.read",
           ),
           SidebarItem(
@@ -150,7 +150,7 @@ class SidebarConfig {
           SidebarItem(
             title: "Riwayat Mutaba'ah",
             icon: Icons.history,
-            route: "/mutabaah/history",
+            route: "/mutabaah",
             permission: "tahfidz.read",
           ),
           SidebarItem(
@@ -234,7 +234,7 @@ class SidebarConfig {
           SidebarItem(
             title: "Manajemen Staf",
             icon: Icons.badge,
-            route: "/guru-staff",
+            route: "/staf",
             permission: "student.manage",
           ),
           SidebarItem(

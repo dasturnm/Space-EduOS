@@ -340,10 +340,6 @@ GoRouter router(Ref ref) { // Ganti RouterRef jadi Ref
             builder: (context, state) => const FinanceReportScreen(),
           ),
           GoRoute(
-            path: '/keuangan/payroll',
-            builder: (context, state) => const TeacherPayrollDashboard(),
-          ),
-          GoRoute(
             path: '/guru-staff/attendance',
             builder: (context, state) => const Scaffold(body: Center(child: Text('Presensi Staf dalam Pengembangan'))),
           ),
