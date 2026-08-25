@@ -1,49 +1,104 @@
-// Lokasi: lib/features/keuangan/providers/keuangan_provider.dart
-
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart'; // FIX: Menambahkan akses ke Ref dan AsyncValue
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import '../models/invoice_model.dart';
+import '../models/expense_model.dart';
 import '../models/salary_settings_model.dart';
 import '../services/keuangan_service.dart';
 
-part 'keuangan_provider.g.dart';
+/// Provider Instance untuk Service Keuangan
+final keuanganServiceProvider = Provider<KeuanganService>((ref) => KeuanganService());
 
-// 1. Service Provider
-final keuanganServiceProvider = Provider((ref) => KeuanganService());
+/// Provider untuk Mengambil Konfigurasi Gaji (Salary Settings)
+final salarySettingsProvider = FutureProvider<SalarySettingsModel?>((ref) async {
+  final service = ref.watch(keuanganServiceProvider);
+  return await service.getSettings(ref);
+});
 
-// 2. Provider untuk mengambil Konfigurasi Gaji (Settings)
-@riverpod
-Future<SalarySettingsModel?> salarySettings(Ref ref) async {
-  return ref.watch(keuanganServiceProvider).getSettings(ref);
-}
-
-// 3. Provider untuk kalkulasi Payroll (Bisa dipanggil per Guru & per Bulan)
-// Penggunaan: ref.watch(monthlyPayrollProvider(guruId: '...', month: DateTime.now()))
-@riverpod
-Future<Map<String, dynamic>> monthlyPayroll(
-    Ref ref, {
-      required String guruId,
-      required DateTime month,
-    }) async {
-  return ref.watch(keuanganServiceProvider).calculateMonthlyPayroll(ref, guruId, month);
-}
-
-// 4. Notifier untuk Aksi Keuangan (Save Settings)
-@riverpod
-class KeuanganNotifier extends _$KeuanganNotifier {
+/// Notifier untuk Aksi Keuangan (Save/Update Settings)
+class KeuanganNotifier extends AsyncNotifier<void> {
   @override
-  AsyncValue<void> build() {
-    return const AsyncValue.data(null);
-  }
+  Future<void> build() async {}
 
-  /// Menyimpan atau memperbarui konfigurasi gaji lembaga
   Future<void> updateSettings(SalarySettingsModel settings) async {
-    state = const AsyncValue.loading();
-    try {
-      await ref.read(keuanganServiceProvider).saveSettings(settings);
-      ref.invalidate(salarySettingsProvider); // Refresh data settings
-      state = const AsyncValue.data(null);
-    } catch (e, st) {
-      state = AsyncValue.error(e, st);
-    }
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      final service = ref.read(keuanganServiceProvider);
+      await service.saveSettings(settings);
+      ref.invalidate(salarySettingsProvider);
+    });
   }
 }
+
+final keuanganProvider = AsyncNotifierProvider<KeuanganNotifier, void>(KeuanganNotifier.new);
+
+/// Notifier Filter Status Tagihan SPP ('', 'issued', 'partial', 'paid', 'overdue')
+class SppStatusFilterNotifier extends Notifier<String> {
+  @override
+  String build() => '';
+
+  void setStatus(String status) => state = status;
+}
+
+final sppStatusFilterProvider =
+NotifierProvider<SppStatusFilterNotifier, String>(SppStatusFilterNotifier.new);
+
+/// Provider mengambil daftar Invoice SPP berdasarkan filter status
+final invoiceListProvider = FutureProvider<List<InvoiceModel>>((ref) async {
+  final filter = ref.watch(sppStatusFilterProvider);
+  final supabase = Supabase.instance.client;
+
+  final user = supabase.auth.currentUser;
+  if (user == null) return [];
+
+  final profileData = await supabase
+      .from('profiles')
+      .select('organization_id, lembaga_id')
+      .eq('id', user.id)
+      .maybeSingle();
+
+  final orgId = (profileData?['organization_id'] ?? profileData?['lembaga_id'] ?? '').toString();
+
+  var query = supabase.from('invoices').select();
+
+  if (orgId.isNotEmpty) {
+    query = query.eq('organization_id', orgId);
+  }
+
+  if (filter.isNotEmpty) {
+    query = query.eq('status', filter);
+  }
+
+  final response = await query.order('issue_date', ascending: false);
+  return (response as List).map((json) => InvoiceModel.fromJson(json)).toList();
+});
+
+/// Provider mengambil daftar Pengeluaran Operasional (Expenses)
+final expenseListProvider = FutureProvider<List<ExpenseModel>>((ref) async {
+  final service = ref.watch(keuanganServiceProvider);
+  return await service.getExpenses(ref);
+});
+
+/// Notifier Tahun Laporan Keuangan Eksekutif
+class SelectedFinanceYearNotifier extends Notifier<int> {
+  @override
+  int build() => DateTime.now().year;
+
+  void setYear(int year) => state = year;
+}
+
+final selectedFinanceYearProvider =
+NotifierProvider<SelectedFinanceYearNotifier, int>(SelectedFinanceYearNotifier.new);
+
+/// Provider data grafik Laporan Keuangan Eksekutif (Income vs Expense)
+final financeReportProvider = FutureProvider<Map<String, dynamic>>((ref) async {
+  final year = ref.watch(selectedFinanceYearProvider);
+  final service = ref.watch(keuanganServiceProvider);
+  return await service.getFinanceReportData(ref, year: year);
+});
+
+/// Provider Kalkulasi Slip Gaji Guru (Payroll)
+final monthlyPayrollProvider =
+FutureProvider.family<Map<String, dynamic>, ({String guruId, DateTime month})>((ref, arg) async {
+  final service = ref.watch(keuanganServiceProvider);
+  return await service.calculateMonthlyPayroll(ref, arg.guruId, arg.month);
+});

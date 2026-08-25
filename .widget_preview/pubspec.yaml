@@ -5,7 +5,22 @@ version: 0.0.1
 environment:
   sdk: ^3.13.0
 dependencies:
+  dtd: ^4.0.0
   flutter:
     sdk: flutter
+  flutter_lints: ^6.0.0
+  google_fonts: ^6.3.3
+  json_rpc_2: ^4.1.0
+  path: ^1.9.1
+  space_eduos:
+    path: C:\Users\Thinkpad\Documents\Space_EduOS
+  stack_trace: ^1.12.1
+  url_launcher: ^6.3.2
+  web: ^1.1.1
+  webview_flutter: ^4.14.1
+  webview_flutter_web: ^0.2.3+4
 flutter:
   uses-material-design: true
+dependency_overrides:
+  space_eduos:
+    path: C:\Users\Thinkpad\Documents\Space_EduOS

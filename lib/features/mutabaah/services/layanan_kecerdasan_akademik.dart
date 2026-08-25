@@ -6,6 +6,31 @@ class LayananKecerdasanAkademik {
 
   SupabaseClient get supabase => _mainService.supabase;
 
+  Map<String, dynamic> evaluateExamReadiness({
+    required bool isExamRequired,
+    required bool volumeAchieved,
+    required String currentAcademicState,
+  }) {
+    if (!volumeAchieved) {
+      return {
+        'academic_state': currentAcademicState,
+        'is_ready_for_exam': false,
+      };
+    }
+    if (isExamRequired) {
+      return {
+        'academic_state': 'tasmi_mode',
+        'is_ready_for_exam': true,
+      };
+    } else {
+      return {
+        'academic_state': currentAcademicState,
+        'is_ready_for_exam': false,
+        'trigger_promotion': true,
+      };
+    }
+  }
+
   Future<void> _evaluateExamReadiness(String siswaId, String? modulId) async {
     if (modulId == null) return;
     try {

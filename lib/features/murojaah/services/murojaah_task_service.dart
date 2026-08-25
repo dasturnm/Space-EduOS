@@ -42,8 +42,8 @@ class MurojaahTaskService extends BaseService {
       double pct = amount > 0 ? amount : 4.0;
       targetLines = ((lines * pct) / 100).round();
     } else {
-      // Jika fixed, asumsi input adalah Halaman (1 Hal = 15 Baris)
-      targetLines = (amount * 15).toInt();
+      // Jika fixed, asumsi input adalah Juz (1 Juz = 300 Baris) sesuai SDD Bab 7.3.1
+      targetLines = (amount * 300).round();
     }
 
     // Untuk sementara, Manzil mengambil 'porsi' secara acak atau berurutan

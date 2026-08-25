@@ -89,3 +89,8 @@ class MutabaahTahfidzService extends BaseService {
   /// 12. PENDETEKSI SANTRI "GHAIB" (Belum Setoran Hari Ini)
   Future<List<String>> getSiswaIdsSudahSetoranHariIni(DateTime tanggal) => _baca.getSiswaIdsSudahSetoranHariIni(tanggal);
 }
+
+// Wrapper class untuk memenuhi signature SDD Test (M2) tanpa mengubah class produksi asli
+class MutabaahService extends MutabaahTahfidzService {
+  MutabaahService([SupabaseClient? client]);
+}

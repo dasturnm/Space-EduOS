@@ -21,10 +21,10 @@ class _TeacherPayrollDashboardState extends ConsumerState<TeacherPayrollDashboar
     final profile = ref.watch(appContextProvider).profile;
     if (profile == null) return const Scaffold(body: Center(child: Text("Profil tidak ditemukan")));
 
-    final payrollAsync = ref.watch(monthlyPayrollProvider(
-      guruId: profile.id,
-      month: _selectedMonth,
-    ));
+    final payrollAsync = ref.watch(monthlyPayrollProvider((
+    guruId: profile.id,
+    month: _selectedMonth,
+    )));
 
     const Color emerald = Color(0xFF10B981);
     const Color slate = Color(0xFF1E293B);

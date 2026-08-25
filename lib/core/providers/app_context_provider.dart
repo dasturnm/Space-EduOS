@@ -76,14 +76,20 @@ class AppContextState {
   }
 
   bool hasModule(String moduleKey) {
-    const defaultModules = ['tahfidz', 'attendance', 'communication'];
+    const defaultModules = [
+      'tahfidz',
+      'attendance',
+      'communication',
+      'akademik',
+      'keuangan',
+    ];
     return defaultModules.contains(moduleKey.toLowerCase());
   }
 }
 
 @Riverpod(keepAlive: true)
 class AppContext extends _$AppContext {
-  final _supabase = Supabase.instance.client;
+  SupabaseClient get _supabase => Supabase.instance.client;
 
   @override
   AppContextState build() {

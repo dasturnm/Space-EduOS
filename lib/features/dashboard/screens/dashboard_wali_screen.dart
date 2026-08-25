@@ -1,10 +1,11 @@
-// Lokasi: lib/features/dashboard/screens/dashboard_wali_screen.dart
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/providers/app_context_provider.dart';
 import '../../murojaah/widgets/murojaah_checklist_widget.dart';
 import '../../akademik/kurikulum/models/kurikulum_model.dart';
+import 'package:space_eduos/features/parent/providers/parent_provider.dart';
+import 'package:space_eduos/features/parent/widgets/wali_child_selector.dart';
+import '../../siswa/models/siswa_model.dart';
 
 class DashboardWaliScreen extends ConsumerWidget {
   const DashboardWaliScreen({super.key});
@@ -13,6 +14,7 @@ class DashboardWaliScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final contextState = ref.watch(appContextProvider);
     final profile = contextState.profile;
+    final selectedChild = ref.watch(selectedChildProvider);
     const Color emerald = Color(0xFF10B981);
 
     return Scaffold(
@@ -47,24 +49,26 @@ class DashboardWaliScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                profile?.namaLengkap ?? "Ananda",
+                profile?.namaLengkap ?? "Wali Santri",
                 style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 24, color: Color(0xFF1E293B)),
               ),
+              const SizedBox(height: 16),
+              const WaliChildSelector(),
               const SizedBox(height: 32),
 
               // 2. PROGRESS SUMMARY CARD
-              _buildProgressCard(emerald),
+              _buildProgressCard(emerald, selectedChild: selectedChild),
               const SizedBox(height: 32),
 
               // 3. MONITORING TARGET & HUTANG (V2026 - MUTABAAH PINTAR)
-              if (profile != null) ...[
+              if (selectedChild != null || profile != null) ...[
                 // Banner Hutang: Muncul jika santri memiliki akumulasi beban
                 _buildDebtBanner(emerald),
                 const SizedBox(height: 16),
 
                 // Checklist Murojaah Mandiri (Manzil)
                 // Hanya muncul jika diaktifkan di Kurikulum (showManzilInDashboard: true)
-                _buildMurojaahSection(profile.id),
+                _buildMurojaahSection(selectedChild?.id ?? profile!.id),
               ],
 
               const SizedBox(height: 32),
@@ -151,7 +155,8 @@ class DashboardWaliScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildProgressCard(Color color) {
+  Widget _buildProgressCard(Color color, {SiswaModel? selectedChild}) {
+    final totalJuz = selectedChild?.totalJuzHafalan ?? 0.0;
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -165,19 +170,22 @@ class DashboardWaliScreen extends ConsumerWidget {
           BoxShadow(color: color.withValues(alpha: 0.3), blurRadius: 20, offset: const Offset(0, 10)),
         ],
       ),
-      child: const Row(
+      child: Row(
         children: [
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Total Hafalan", style: TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.bold)),
-                SizedBox(height: 4),
-                Text("12 Juz 5 Halaman", style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w900)),
+                const Text("Total Hafalan", style: TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 4),
+                Text(
+                  selectedChild != null ? "$totalJuz Juz" : "12 Juz 5 Halaman",
+                  style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w900),
+                ),
               ],
             ),
           ),
-          CircleAvatar(
+          const CircleAvatar(
             radius: 24,
             backgroundColor: Colors.white24,
             child: Icon(Icons.trending_up_rounded, color: Colors.white),
