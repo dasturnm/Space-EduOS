@@ -1,61 +1,69 @@
-// Lokasi: lib/features/akademik/sertifikasi/models/sertifikasi_model.dart
+class SertifikasiModel {
+  final String id;
+  final String organizationId;
+  final String studentId;
+  final String? moduleId;
+  final String type; // 'tasmi', 'ukl', 'program'
+  final String certificateNumber;
+  final String qrCodeData;
+  final String? fileUrl;
+  final String status; // 'generated', 'published', 'revoked'
+  final DateTime issuedDate;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
-// =============================================================================
-// FILE: sertifikasi_model.dart
-// Model untuk menampung skor mentah per kategori dan menghitung nilai akhir
-// berdasarkan bobot kurikulum yang berlaku.
-// =============================================================================
-
-class SertifikasiScoreModel {
-  final double itqon;
-  final double makhraj;
-  final double tajwid;
-  final double adab;
-  final double nada;
-  final double penampilan;
-  final double tebakSurah; // TAMBAHAN: Kategori ke-7
-
-  SertifikasiScoreModel({
-    this.itqon = 0,
-    this.makhraj = 0,
-    this.tajwid = 0,
-    this.adab = 0,
-    this.nada = 0,
-    this.penampilan = 0,
-    this.tebakSurah = 0,
+  SertifikasiModel({
+    required this.id,
+    required this.organizationId,
+    required this.studentId,
+    this.moduleId,
+    required this.type,
+    required this.certificateNumber,
+    required this.qrCodeData,
+    this.fileUrl,
+    this.status = 'generated',
+    required this.issuedDate,
+    this.createdAt,
+    this.updatedAt,
   });
 
-  /// Menghitung Nilai Akhir (0-100) menggunakan metode Weighted Average.
-  /// Rumus: Σ(Skor_Kategori * Bobot_Kategori) / ΣTotal_Bobot
-  ///
-  /// Catatan:
-  /// - Kategori Itqon, Makhraj, Tajwid biasanya menggunakan sistem pengurangan (Pinalti).
-  /// - Kategori Adab, Nada biasanya menggunakan sistem penambahan (Point-In).
-  double calculateFinalScore({
-    required int bItqon,
-    required int bMakhraj,
-    required int bTajwid,
-    required int bAdab,
-    required int bNada,
-    required int bPenampilan,
-    required int bTebakSurah,
-  }) {
-    double weightedSum =
-        (itqon * bItqon) +
-            (makhraj * bMakhraj) +
-            (tajwid * bTajwid) +
-            (adab * bAdab) +
-            (nada * bNada) +
-            (penampilan * bPenampilan) +
-            (tebakSurah * bTebakSurah);
+  factory SertifikasiModel.fromJson(Map<String, dynamic> json) {
+    return SertifikasiModel(
+      id: json['id'] as String,
+      organizationId: json['organization_id'] as String,
+      studentId: json['student_id'] as String,
+      moduleId: json['module_id'] as String?,
+      type: json['type'] as String,
+      certificateNumber: json['certificate_number'] as String,
+      qrCodeData: json['qr_code_data'] as String,
+      fileUrl: json['file_url'] as String?,
+      status: json['status'] as String? ?? 'generated',
+      issuedDate: json['issued_date'] != null
+          ? DateTime.parse(json['issued_date'] as String)
+          : DateTime.now(),
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'] as String)
+          : null,
+      updatedAt: json['updated_at'] != null
+          ? DateTime.parse(json['updated_at'] as String)
+          : null,
+    );
+  }
 
-    int totalWeight = bItqon + bMakhraj + bTajwid + bAdab + bNada + bPenampilan + bTebakSurah;
-
-    // Jika tidak ada bobot yang diatur (0), return rata-rata sederhana dari seluruh parameter yang diisi
-    if (totalWeight == 0) {
-      return (itqon + makhraj + tajwid + adab + nada + penampilan + tebakSurah) / 7;
-    }
-
-    return weightedSum / totalWeight;
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'organization_id': organizationId,
+      'student_id': studentId,
+      'module_id': moduleId,
+      'type': type,
+      'certificate_number': certificateNumber,
+      'qr_code_data': qrCodeData,
+      'file_url': fileUrl,
+      'status': status,
+      'issued_date': issuedDate.toIso8601String().split('T').first,
+      if (createdAt != null) 'created_at': createdAt!.toIso8601String(),
+      if (updatedAt != null) 'updated_at': updatedAt!.toIso8601String(),
+    };
   }
 }

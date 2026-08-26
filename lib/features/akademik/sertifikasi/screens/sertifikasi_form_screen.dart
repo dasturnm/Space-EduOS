@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 import '../../kurikulum/models/kurikulum_model.dart';
 import '../models/sertifikasi_model.dart';
 import '../providers/sertifikasi_provider.dart';
@@ -15,12 +16,14 @@ class SertifikasiFormScreen extends ConsumerStatefulWidget {
   final String siswaId;
   final String namaSiswa;
   final ModulModel modul;
+  final String organizationId;
 
   const SertifikasiFormScreen({
     super.key,
     required this.siswaId,
     required this.namaSiswa,
     required this.modul,
+    this.organizationId = '',
   });
 
   @override
@@ -362,7 +365,7 @@ class _SertifikasiFormScreenState extends ConsumerState<SertifikasiFormScreen> {
   }
 
   Widget _buildActionButtons(bool isLulus, SertifikasiScoreModel finalSkor) {
-    final tasmiState = ref.watch(sertifikasiProvider);
+    final tasmiState = ref.watch(certificateProvider(widget.organizationId));
 
     return Column(
       children: [
@@ -374,11 +377,23 @@ class _SertifikasiFormScreenState extends ConsumerState<SertifikasiFormScreen> {
                 ? null
                 : () async {
               try {
-                await ref.read(sertifikasiProvider.notifier).simpanHasilSertifikasi(
-                  siswaId: widget.siswaId,
-                  modul: widget.modul,
-                  skor: finalSkor,
+                final certNumber = 'TSM-${DateTime.now().year}${DateTime.now().month.toString().padLeft(2, '0')}-${const Uuid().v4().substring(0, 4).toUpperCase()}';
+                await ref.read(sertifikasiServiceProvider).generateCertificate(
+                  SertifikasiModel(
+                    id: const Uuid().v4(),
+                    organizationId: widget.organizationId,
+                    studentId: widget.siswaId,
+                    moduleId: widget.modul.id,
+                    type: 'tasmi',
+                    certificateNumber: certNumber,
+                    qrCodeData: 'https://spaceeduos.com/verify/$certNumber',
+                    status: isLulus ? 'published' : 'generated',
+                    issuedDate: DateTime.now(),
+                    createdAt: DateTime.now().toUtc(),
+                    updatedAt: DateTime.now().toUtc(),
+                  ),
                 );
+                ref.invalidate(certificateProvider(widget.organizationId));
 
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -418,5 +433,46 @@ class _SertifikasiFormScreenState extends ConsumerState<SertifikasiFormScreen> {
         ],
       ],
     );
+  }
+}
+
+class SertifikasiScoreModel {
+  final double itqon;
+  final double makhraj;
+  final double tajwid;
+  final double adab;
+  final double nada;
+  final double penampilan;
+  final double tebakSurah;
+
+  SertifikasiScoreModel({
+    required this.itqon,
+    required this.makhraj,
+    required this.tajwid,
+    required this.adab,
+    required this.nada,
+    required this.penampilan,
+    required this.tebakSurah,
+  });
+
+  double calculateFinalScore({
+    required int bItqon,
+    required int bMakhraj,
+    required int bTajwid,
+    required int bAdab,
+    required int bNada,
+    required int bPenampilan,
+    required int bTebakSurah,
+  }) {
+    final totalBobot = bItqon + bMakhraj + bTajwid + bAdab + bNada + bPenampilan + bTebakSurah;
+    if (totalBobot == 0) return 0.0;
+    final weightedSum = (itqon * bItqon) +
+        (makhraj * bMakhraj) +
+        (tajwid * bTajwid) +
+        (adab * bAdab) +
+        (nada * bNada) +
+        (penampilan * bPenampilan) +
+        (tebakSurah * bTebakSurah);
+    return weightedSum / totalBobot;
   }
 }

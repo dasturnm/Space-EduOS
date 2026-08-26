@@ -117,7 +117,7 @@ class _PendaftarCard extends ConsumerWidget {
   void _updateStatus(BuildContext context, WidgetRef ref, String newStatus, {String? keterangan}) async {
     try {
       final service = ref.read(admissionServiceProvider);
-      await service.updateStatus(pendaftar.id, newStatus);
+      await service.updateStatus(pendaftar.id, newStatus, catatanAdmin: keterangan);
       ref.invalidate(admissionListProvider);
 
       if (context.mounted) {
@@ -175,33 +175,46 @@ class _PendaftarCard extends ConsumerWidget {
 
   void _showRejectDialog(BuildContext context, WidgetRef ref) {
     final catatanController = TextEditingController();
+    final formKey = GlobalKey<FormState>();
+
     showDialog(
       context: context,
-      builder: (dialogCtx) => AlertDialog(
-        title: const Text('Tolak Pendaftaran'),
-        content: TextField(
-          controller: catatanController,
-          decoration: const InputDecoration(
-            labelText: 'Catatan Penolakan',
-            hintText: 'Alasan penolakan pendaftaran...',
-            border: OutlineInputBorder(),
-          ),
-          maxLines: 3,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogCtx),
-            child: const Text('Batal'),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            onPressed: () {
-              Navigator.pop(dialogCtx);
-              _updateStatus(context, ref, 'ditolak', keterangan: catatanController.text.trim());
-            },
-            child: const Text('Tolak', style: TextStyle(color: Colors.white)),
-          ),
-        ],
+      builder: (dialogCtx) => StatefulBuilder(
+        builder: (context, setState) {
+          return AlertDialog(
+            title: const Text('Tolak Pendaftaran'),
+            content: Form(
+              key: formKey,
+              child: TextFormField(
+                controller: catatanController,
+                decoration: const InputDecoration(
+                  labelText: 'Catatan Penolakan *',
+                  hintText: 'Alasan penolakan pendaftaran...',
+                  border: OutlineInputBorder(),
+                ),
+                maxLines: 3,
+                validator: (val) => val == null || val.trim().isEmpty ? 'Catatan penolakan wajib diisi' : null,
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(dialogCtx),
+                child: const Text('Batal'),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                onPressed: () {
+                  if (formKey.currentState?.validate() ?? false) {
+                    final reason = catatanController.text.trim();
+                    Navigator.pop(dialogCtx);
+                    _updateStatus(context, ref, 'ditolak', keterangan: reason);
+                  }
+                },
+                child: const Text('Tolak', style: TextStyle(color: Colors.white)),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

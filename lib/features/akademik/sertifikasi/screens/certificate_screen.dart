@@ -1,146 +1,189 @@
-// Lokasi: lib/features/akademik/tasmi/screens/certificate_screen.dart
-
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
+import '../models/sertifikasi_model.dart';
+import '../providers/sertifikasi_provider.dart';
+import '../widgets/certificate_preview_dialog.dart';
 
-class TasmiCertificateScreen extends StatelessWidget {
-  final Map<String, dynamic> recordData; // Diambil dari data_payload mutabaah_records
+class CertificateScreen extends ConsumerStatefulWidget {
+  final String organizationId;
 
-  const TasmiCertificateScreen({super.key, required this.recordData});
+  const CertificateScreen({
+    super.key,
+    required this.organizationId,
+  });
+
+  @override
+  ConsumerState<CertificateScreen> createState() => _CertificateScreenState();
+}
+
+class _CertificateScreenState extends ConsumerState<CertificateScreen> {
+  final _studentIdController = TextEditingController();
+  String _certType = 'ukl';
+  bool _isGenerating = false;
+
+  @override
+  void dispose() {
+    _studentIdController.dispose();
+    super.dispose();
+  }
+
+  // Aturan BR-CER-002: Format Nomor Unik Sertifikat
+  String _generateCertificateNumber() {
+    final now = DateTime.now();
+    final year = now.year;
+    final month = now.month.toString().padLeft(2, '0');
+    final shortUuid = const Uuid().v4().substring(0, 4).toUpperCase();
+    return 'TSM-$year$month-$shortUuid';
+  }
+
+  Future<void> _issueCertificate() async {
+    final studentId = _studentIdController.text.trim();
+    if (studentId.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('ID Santri wajib diisi')),
+      );
+      return;
+    }
+
+    setState(() => _isGenerating = true);
+
+    final certNumber = _generateCertificateNumber();
+    // Aturan BR-CER-003: QR Code berisi URL verifikasi publik
+    final qrData = 'https://spaceeduos.com/verify/$certNumber';
+
+    final cert = SertifikasiModel(
+      id: const Uuid().v4(),
+      organizationId: widget.organizationId,
+      studentId: studentId,
+      type: _certType,
+      certificateNumber: certNumber,
+      qrCodeData: qrData,
+      status: 'published',
+      issuedDate: DateTime.now(),
+      createdAt: DateTime.now().toUtc(),
+      updatedAt: DateTime.now().toUtc(),
+    );
+
+    try {
+      await ref.read(sertifikasiServiceProvider).generateCertificate(cert);
+      ref.invalidate(certificateProvider(widget.organizationId));
+      if (mounted) {
+        _studentIdController.clear();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Sertifikat $certNumber berhasil diterbitkan')),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Gagal menerbitkan sertifikat: $e')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isGenerating = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final detail = recordData['skor_detail'] ?? {};
-    final double nilaiAkhir = recordData['nilai_akhir'] ?? 0.0;
-    final String nomorSertifikat = recordData['nomor_sertifikat'] ?? '-';
-    final DateTime tanggal = DateTime.parse(recordData['tanggal_ujian']);
+    final certsAsync = ref.watch(certificateProvider(widget.organizationId));
 
     return Scaffold(
-      backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        title: const Text("Sertifikat Tasmi'"),
-        backgroundColor: const Color(0xFF10B981),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.download_rounded),
-            onPressed: () { /* TODO: Implementasi PDF */ },
-          ),
-        ],
+        title: const Text('Kelola Sertifikat Kelulusan'),
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: AspectRatio(
-              aspectRatio: 3 / 4, // Proporsi kertas A4 potret
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8),
-                  boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 20, spreadRadius: 5)],
-                  border: Border.all(color: const Color(0xFF10B981), width: 15), // Bingkai Utama
-                ),
-                child: Container(
-                  margin: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.amber[700]!, width: 2), // Garis Emas Dalam
-                  ),
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 40),
-                      // Header
-                      Icon(Icons.verified_user_rounded, size: 60, color: Colors.amber[700]),
-                      const SizedBox(height: 10),
-                      Text("SERTIFIKAT TASMI'",
-                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.amber[900], letterSpacing: 2)),
-                      Text("Nomor: $nomorSertifikat", style: const TextStyle(fontSize: 10)),
-
-                      const Spacer(),
-
-                      const Text("Diberikan Kepada:", style: TextStyle(fontStyle: FontStyle.italic)),
-                      const SizedBox(height: 10),
-                      const Text("NAMA SANTRI TESTER", // Nanti ambil dari profile_id
-                          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, decoration: TextDecoration.underline)),
-
-                      const SizedBox(height: 20),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 40),
-                        child: Text(
-                          "Telah berhasil menyelesaikan Ujian Tasmi' pada unit modul ${recordData['nama_modul']} dengan hasil sebagai berikut:",
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(fontSize: 12),
-                        ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Terbitkan Sertifikat Baru',
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: _studentIdController,
+                      decoration: const InputDecoration(
+                        labelText: 'ID Santri / Siswa *',
+                        border: OutlineInputBorder(),
                       ),
-
-                      const SizedBox(height: 30),
-
-                      // Tabel Nilai
-                      _buildScoreRow("Kelancaran (Itqon)", detail['itqon']),
-                      _buildScoreRow("Makhraj Al-Huruf", detail['makhraj']),
-                      _buildScoreRow("Hukum Tajwid", detail['tajwid']),
-                      _buildScoreRow("Adab & Tartil", detail['adab']),
-
-                      const Divider(indent: 60, endIndent: 60),
-
-                      // Nilai Akhir
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text("NILAI AKHIR: ", style: TextStyle(fontWeight: FontWeight.bold)),
-                          Text(nilaiAkhir.toStringAsFixed(1),
-                              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xFF10B981))),
-                        ],
+                    ),
+                    const SizedBox(height: 12),
+                    DropdownButtonFormField<String>(
+                      value: _certType,
+                      decoration: const InputDecoration(
+                        labelText: 'Jenis Sertifikat',
+                        border: OutlineInputBorder(),
                       ),
-
-                      const Spacer(),
-
-                      // Tanda Tangan
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 40),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            _buildSignBox("Penguji", "Nama Guru"),
-                            _buildSignBox("Kepala Lembaga", "Nama Mudir"),
-                          ],
-                        ),
+                      items: const [
+                        DropdownMenuItem(value: 'tasmi', child: Text('Sertifikat Tasmi\'')),
+                        DropdownMenuItem(value: 'ukl', child: Text('Sertifikat UKL')),
+                        DropdownMenuItem(value: 'program', child: Text('Sertifikat Kelulusan Program')),
+                      ],
+                      onChanged: (val) => setState(() => _certType = val ?? 'ukl'),
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton.icon(
+                      onPressed: _isGenerating ? null : _issueCertificate,
+                      icon: const Icon(Icons.verified),
+                      label: _isGenerating
+                          ? const CircularProgressIndicator()
+                          : const Text('Terbitkan Sertifikat'),
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size.fromHeight(48),
                       ),
-
-                      const SizedBox(height: 10),
-                      Text(DateFormat('dd MMMM yyyy', 'id_ID').format(tanggal), style: const TextStyle(fontSize: 10)),
-                      const SizedBox(height: 40),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildScoreRow(String label, dynamic score) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 2),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label, style: const TextStyle(fontSize: 12)),
-          Text(score.toString(), style: const TextStyle(fontWeight: FontWeight.bold)),
+          const Divider(),
+          Expanded(
+            child: certsAsync.when(
+              data: (certificates) {
+                if (certificates.isEmpty) {
+                  return const Center(
+                    child: Text('Belum ada sertifikat yang diterbitkan.'),
+                  );
+                }
+                return ListView.builder(
+                  itemCount: certificates.length,
+                  itemBuilder: (context, index) {
+                    final cert = certificates[index];
+                    return ListTile(
+                      leading: const Icon(Icons.card_membership, color: Colors.amber),
+                      title: Text(
+                        cert.certificateNumber,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text('Siswa ID: ${cert.studentId} | Tipe: ${cert.type.toUpperCase()}'),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.qr_code_2),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (_) => CertificatePreviewDialog(certificate: cert),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                );
+              },
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (err, stack) => Center(child: Text('Error: $err')),
+            ),
+          ),
         ],
       ),
-    );
-  }
-
-  Widget _buildSignBox(String jabatan, String nama) {
-    return Column(
-      children: [
-        Text(jabatan, style: const TextStyle(fontSize: 10)),
-        const SizedBox(height: 40),
-        Text(nama, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-        Container(height: 1, width: 100, color: Colors.black),
-      ],
     );
   }
 }

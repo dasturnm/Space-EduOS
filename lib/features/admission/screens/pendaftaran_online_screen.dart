@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:file_picker/file_picker.dart';
 
 class PendaftaranOnlineScreen extends StatefulWidget {
   final String organizationId;
@@ -24,6 +25,37 @@ class _PendaftaranOnlineScreenState extends State<PendaftaranOnlineScreen> {
   String _jenisKelamin = 'L';
   bool _isLoading = false;
 
+  PlatformFile? _akteFile;
+  PlatformFile? _kkFile;
+  PlatformFile? _fotoFile;
+
+  Future<void> _pickFile(String type) async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf', 'jpg', 'jpeg', 'png'],
+      withData: true,
+    );
+    if (result != null && result.files.isNotEmpty) {
+      final file = result.files.first;
+      if (file.size > 2 * 1024 * 1024) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Ukuran berkas maksimal adalah 2MB'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+        return;
+      }
+      setState(() {
+        if (type == 'akte') _akteFile = file;
+        if (type == 'kk') _kkFile = file;
+        if (type == 'foto') _fotoFile = file;
+      });
+    }
+  }
+
   void _submitPendaftaran() async {
     if (!_formKey.currentState!.validate()) return;
     if (_tanggalLahir == null) {
@@ -36,6 +68,29 @@ class _PendaftaranOnlineScreenState extends State<PendaftaranOnlineScreen> {
     setState(() => _isLoading = true);
 
     try {
+      Map<String, String> dokumenUrls = {};
+
+      if (_akteFile != null && _akteFile!.bytes != null) {
+        final path = '${widget.organizationId}/akte_${DateTime.now().millisecondsSinceEpoch}_${_akteFile!.name}';
+        await Supabase.instance.client.storage.from('documents').uploadBinary(path, _akteFile!.bytes!);
+        final url = Supabase.instance.client.storage.from('documents').getPublicUrl(path);
+        dokumenUrls['akte'] = url;
+      }
+
+      if (_kkFile != null && _kkFile!.bytes != null) {
+        final path = '${widget.organizationId}/kk_${DateTime.now().millisecondsSinceEpoch}_${_kkFile!.name}';
+        await Supabase.instance.client.storage.from('documents').uploadBinary(path, _kkFile!.bytes!);
+        final url = Supabase.instance.client.storage.from('documents').getPublicUrl(path);
+        dokumenUrls['kk'] = url;
+      }
+
+      if (_fotoFile != null && _fotoFile!.bytes != null) {
+        final path = '${widget.organizationId}/foto_${DateTime.now().millisecondsSinceEpoch}_${_fotoFile!.name}';
+        await Supabase.instance.client.storage.from('documents').uploadBinary(path, _fotoFile!.bytes!);
+        final url = Supabase.instance.client.storage.from('documents').getPublicUrl(path);
+        dokumenUrls['foto'] = url;
+      }
+
       await Supabase.instance.client.from('pendaftaran_siswa').insert({
         'organization_id': widget.organizationId,
         'nama_lengkap': _namaLengkapController.text.trim(),
@@ -46,6 +101,7 @@ class _PendaftaranOnlineScreenState extends State<PendaftaranOnlineScreen> {
         'alamat': _alamatController.text.trim().isEmpty ? null : _alamatController.text.trim(),
         'nama_wali': _namaWaliController.text.trim(),
         'no_hp_wali': _noHpWaliController.text.trim(),
+        'dokumen_urls': dokumenUrls,
         'status': 'registrasi',
       });
 
@@ -65,6 +121,9 @@ class _PendaftaranOnlineScreenState extends State<PendaftaranOnlineScreen> {
                   setState(() {
                     _tanggalLahir = null;
                     _jenisKelamin = 'L';
+                    _akteFile = null;
+                    _kkFile = null;
+                    _fotoFile = null;
                   });
                 },
                 child: const Text('OK', style: TextStyle(color: Colors.white)),
@@ -82,6 +141,50 @@ class _PendaftaranOnlineScreenState extends State<PendaftaranOnlineScreen> {
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
+  }
+
+  Widget _buildFileUploadTile({
+    required String title,
+    required PlatformFile? file,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.shade400),
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.upload_file, color: Color(0xFF10B981)),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                  Text(
+                    file != null ? file.name : 'Pilih berkas...',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: file != null ? Colors.black : Colors.grey.shade600,
+                      fontWeight: file != null ? FontWeight.bold : FontWeight.normal,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+            if (file != null)
+              const Icon(Icons.check_circle, color: Color(0xFF10B981))
+            else
+              const Icon(Icons.attach_file, color: Colors.grey),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -236,6 +339,29 @@ class _PendaftaranOnlineScreenState extends State<PendaftaranOnlineScreen> {
                   prefixIcon: Icon(Icons.phone, color: Color(0xFF10B981)),
                 ),
                 validator: (val) => val == null || val.trim().isEmpty ? 'Nomor HP wali wajib diisi' : null,
+              ),
+              const SizedBox(height: 32),
+              const Text(
+                'Upload Dokumen (Akte, KK, Foto)',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF10B981)),
+              ),
+              const SizedBox(height: 16),
+              _buildFileUploadTile(
+                title: 'Akte Kelahiran (Maks 2MB)',
+                file: _akteFile,
+                onTap: () => _pickFile('akte'),
+              ),
+              const SizedBox(height: 12),
+              _buildFileUploadTile(
+                title: 'Kartu Keluarga (KK) (Maks 2MB)',
+                file: _kkFile,
+                onTap: () => _pickFile('kk'),
+              ),
+              const SizedBox(height: 12),
+              _buildFileUploadTile(
+                title: 'Pas Foto (Maks 2MB)',
+                file: _fotoFile,
+                onTap: () => _pickFile('foto'),
               ),
               const SizedBox(height: 32),
               SizedBox(

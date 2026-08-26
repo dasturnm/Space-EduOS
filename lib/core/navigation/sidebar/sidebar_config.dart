@@ -76,19 +76,19 @@ class SidebarConfig {
           SidebarItem(
             title: "Manajemen Cabang",
             icon: Icons.account_tree,
-            route: "/cabang",
+            route: "/management-lembaga/cabang",
             permission: "organization.manage",
           ),
           SidebarItem(
             title: "Tahun Ajaran",
             icon: Icons.calendar_today,
-            route: "/tahun-ajaran",
+            route: "/management-lembaga/tahun-ajaran",
             permission: "organization.manage",
           ),
           SidebarItem(
             title: "Divisi & Unit Kerja",
             icon: Icons.groups,
-            route: "/divisi",
+            route: "/management-lembaga/divisi",
             permission: "organization.manage",
           ),
           SidebarItem(
@@ -110,13 +110,13 @@ class SidebarConfig {
           SidebarItem(
             title: "Manajemen Program",
             icon: Icons.book_online,
-            route: "/program",
+            route: "/akademik/program",
             permission: "academic.program.manage",
           ),
           SidebarItem(
             title: "Kurikulum & Level",
             icon: Icons.import_contacts,
-            route: "/kurikulum",
+            route: "/akademik/kurikulum",
             permission: "academic.curriculum.read",
           ),
           SidebarItem(
@@ -142,7 +142,7 @@ class SidebarConfig {
         module: "tahfidz",
         items: [
           SidebarItem(
-            title: "Input Setoran harian",
+            title: "Input Setoran",
             icon: Icons.draw,
             route: "/mutabaah/input",
             permission: "tahfidz.write",
@@ -150,7 +150,7 @@ class SidebarConfig {
           SidebarItem(
             title: "Riwayat Mutaba'ah",
             icon: Icons.history,
-            route: "/mutabaah",
+            route: "/mutabaah/history",
             permission: "tahfidz.read",
           ),
           SidebarItem(
@@ -204,7 +204,7 @@ class SidebarConfig {
             permission: "finance.spp.view",
           ),
           SidebarItem(
-            title: "Pencatatan Pembayaran",
+            title: "Pencatatan Bayar",
             icon: Icons.payment,
             route: "/keuangan/bayar",
             permission: "spp.process",
@@ -234,11 +234,11 @@ class SidebarConfig {
           SidebarItem(
             title: "Manajemen Staf",
             icon: Icons.badge,
-            route: "/staf",
+            route: "/guru-staff",
             permission: "student.manage",
           ),
           SidebarItem(
-            title: "Payroll & Slip Gaji",
+            title: "Payroll Slip Gaji",
             icon: Icons.payments,
             route: "/keuangan/payroll",
             permission: "finance.payroll.view",

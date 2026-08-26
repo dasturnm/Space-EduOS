@@ -183,42 +183,45 @@ class AppSidebar extends ConsumerWidget {
 
   IconData _getIconForRoute(String route, {bool active = false}) {
     switch (route) {
-      case '/organisasi':
+      case '/management-lembaga/profile':
         return active ? Icons.business : Icons.business_outlined;
-      case '/cabang':
+      case '/management-lembaga/cabang':
         return active ? Icons.account_tree : Icons.account_tree_outlined;
-      case '/tahun-ajaran':
+      case '/management-lembaga/tahun-ajaran':
         return active ? Icons.calendar_month : Icons.calendar_month_outlined;
-      case '/divisi':
+      case '/management-lembaga/divisi':
         return active ? Icons.domain : Icons.domain_outlined;
-      case '/unit-kerja':
-        return active ? Icons.work : Icons.work_outline;
-      case '/jabatan':
+      case '/management-lembaga/jabatan':
         return active ? Icons.admin_panel_settings : Icons.admin_panel_settings_outlined;
-      case '/program':
+      case '/akademik/program':
         return active ? Icons.school : Icons.school_outlined;
-      case '/kurikulum':
+      case '/akademik/kurikulum':
         return active ? Icons.menu_book : Icons.menu_book_outlined;
       case '/silabus':
         return active ? Icons.auto_stories : Icons.auto_stories_outlined;
       case '/siswa':
         return active ? Icons.people : Icons.people_outline;
-      case '/admission':
+      case '/admission/register':
+      case '/admission/dashboard':
         return active ? Icons.how_to_reg : Icons.how_to_reg_outlined;
-      case '/wali':
+      case '/dashboard/wali':
         return active ? Icons.family_restroom : Icons.family_restroom_outlined;
-      case '/mutabaah':
+      case '/mutabaah/input':
+      case '/mutabaah/history':
         return active ? Icons.menu_book_rounded : Icons.menu_book_outlined;
-      case '/tasmi':
+      case '/akademik/evaluasi':
         return active ? Icons.verified : Icons.verified_outlined;
       case '/mushaf':
         return active ? Icons.import_contacts : Icons.import_contacts_outlined;
-      case '/staf':
+      case '/guru-staff':
         return active ? Icons.badge : Icons.badge_outlined;
-      case '/presensi':
+      case '/guru-staff/attendance':
         return active ? Icons.co_present : Icons.co_present_outlined;
-      case '/keuangan':
-      case '/keuangan/payroll-settings':
+      case '/keuangan/spp':
+      case '/keuangan/bayar':
+      case '/keuangan/expense':
+      case '/keuangan/report':
+      case '/keuangan/payroll':
         return active ? Icons.payments : Icons.payments_outlined;
       default:
         return active ? Icons.circle : Icons.circle_outlined;
