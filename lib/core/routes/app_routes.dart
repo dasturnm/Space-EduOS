@@ -308,8 +308,39 @@ GoRouter router(Ref ref) { // Ganti RouterRef jadi Ref
             builder: (context, state) => const DashboardWaliScreen(),
           ),
           GoRoute(
+            path: '/management-lembaga/profile',
+            builder: (context, state) => const LembagaProfileScreen(),
+          ),
+          GoRoute(
+            path: '/management-lembaga/cabang',
+            builder: (context, state) => const CabangListScreen(),
+          ),
+          GoRoute(
+            path: '/management-lembaga/tahun-ajaran',
+            builder: (context, state) => const TahunAjaranScreen(),
+          ),
+          GoRoute(
+            path: '/management-lembaga/divisi',
+            builder: (context, state) => const DivisiListScreen(),
+          ),
+          GoRoute(
             path: '/management-lembaga/jabatan',
             builder: (context, state) => const ManagementHubScreen(),
+          ),
+          GoRoute(
+            path: '/akademik/program',
+            builder: (context, state) => const ProgramListScreen(),
+          ),
+          GoRoute(
+            path: '/akademik/kurikulum',
+            builder: (context, state) {
+              final lembagaId = ref.read(appContextProvider).lembaga?.id ?? '';
+              return AkademikHubScreen(lembagaId: lembagaId);
+            },
+          ),
+          GoRoute(
+            path: '/mutabaah/history',
+            builder: (context, state) => const MutabaahMonitoringScreen(),
           ),
           GoRoute(
             path: '/akademik/evaluasi',
@@ -338,6 +369,14 @@ GoRouter router(Ref ref) { // Ganti RouterRef jadi Ref
           GoRoute(
             path: '/keuangan/report',
             builder: (context, state) => const FinanceReportScreen(),
+          ),
+          GoRoute(
+            path: '/guru-staff',
+            builder: (context, state) => const StaffHubScreen(),
+          ),
+          GoRoute(
+            path: '/keuangan/payroll',
+            builder: (context, state) => const TeacherPayrollDashboard(),
           ),
           GoRoute(
             path: '/guru-staff/attendance',
