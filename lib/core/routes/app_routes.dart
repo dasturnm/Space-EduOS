@@ -8,7 +8,7 @@ import 'package:space_eduos/core/constants/app_routes.dart';
 import 'package:space_eduos/core/layout/auth_layout.dart';
 import 'package:space_eduos/features/auth/providers/auth_provider.dart';
 import 'package:space_eduos/core/providers/app_context_provider.dart';
-import 'package:space_eduos/features/management_lembaga/screens/management_hub_screen.dart'; // FIX: Hub untuk Tab
+import 'package:space_eduos/features/management_lembaga/screens/struktur_organisasi_hub_screen'; // FIX: Hub untuk Tab
 import 'package:space_eduos/features/akademik/screens/akademik_hub_screen.dart';
 
 // Import Screens
@@ -191,7 +191,7 @@ GoRouter router(Ref ref) { // Ganti RouterRef jadi Ref
           // Tetap di dalam Shell agar Sidebar tetap muncul saat setup profil
           GoRoute(
             path: AppRouteNames.setupLembaga,
-            builder: (context, state) => const ManagementHubScreen(),
+            builder: (context, state) => const StrukturOrganisasiHubScreen(),
           ),
 
           // SAFE UPDATE: Daftarkan Route untuk modul lembaga yang baru ditambahkan di Sidebar
@@ -325,7 +325,7 @@ GoRouter router(Ref ref) { // Ganti RouterRef jadi Ref
           ),
           GoRoute(
             path: '/management-lembaga/jabatan',
-            builder: (context, state) => const ManagementHubScreen(),
+            builder: (context, state) => const StrukturOrganisasiHubScreen(),
           ),
           GoRoute(
             path: '/akademik/program',
