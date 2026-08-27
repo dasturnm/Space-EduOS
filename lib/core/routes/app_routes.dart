@@ -8,7 +8,7 @@ import 'package:space_eduos/core/constants/app_routes.dart';
 import 'package:space_eduos/core/layout/auth_layout.dart';
 import 'package:space_eduos/features/auth/providers/auth_provider.dart';
 import 'package:space_eduos/core/providers/app_context_provider.dart';
-import 'package:space_eduos/features/management_lembaga/screens/struktur_organisasi_hub_screen'; // FIX: Hub untuk Tab
+import 'package:space_eduos/features/management_lembaga/screens/struktur_organisasi_hub_screen.dart'; // FIX: Hub untuk Tab
 import 'package:space_eduos/features/akademik/screens/akademik_hub_screen.dart';
 
 // Import Screens
@@ -324,8 +324,12 @@ GoRouter router(Ref ref) { // Ganti RouterRef jadi Ref
             builder: (context, state) => const DivisiListScreen(),
           ),
           GoRoute(
-            path: '/management-lembaga/jabatan',
+            path: '/management-lembaga/organisasi',
             builder: (context, state) => const StrukturOrganisasiHubScreen(),
+          ),
+          GoRoute(
+            path: '/kelas',
+            builder: (context, state) => const SiswaHubScreen(),
           ),
           GoRoute(
             path: '/akademik/program',

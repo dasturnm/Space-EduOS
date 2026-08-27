@@ -15,13 +15,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Supabase.initialize(
-    url: const String.fromEnvironment('SUPABASE_URL', defaultValue: 'https://mrxtnwmyqfmfdncdvssh.supabase.co'),
+    url: const String.fromEnvironment(
+      'SUPABASE_URL',
+      defaultValue: 'https://mrxtnwmyqfmfdncdvssh.supabase.co',
+    ),
     anonKey: const String.fromEnvironment(
       'SUPABASE_ANON_KEY',
-      defaultValue: const String.fromEnvironment(
-        'SUPABASE_PUBLISHABLE_KEY',
-        defaultValue: 'sb_publishable_OAPUWnbXxiDjKDFMkgvIng_xUKs67lg',
-      ),
+      defaultValue: 'sb_publishable_OAPUWnbXxiDjKDFMkgvIng_xUKs67lg',
     ),
     authOptions: const FlutterAuthClientOptions(
       authFlowType: AuthFlowType.pkce,

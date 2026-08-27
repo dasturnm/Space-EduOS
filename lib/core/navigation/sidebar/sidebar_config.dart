@@ -86,15 +86,9 @@ class SidebarConfig {
             permission: "organization.manage",
           ),
           SidebarItem(
-            title: "Divisi & Unit Kerja",
-            icon: Icons.groups_outlined,
-            route: "/management-lembaga/divisi",
-            permission: "organization.manage",
-          ),
-          SidebarItem(
-            title: "Manajemen Jabatan",
-            icon: Icons.work_outline_outlined,
-            route: "/management-lembaga/jabatan",
+            title: "Struktur Organisasi",
+            icon: Icons.corporate_fare_outlined,
+            route: "/management-lembaga/organisasi",
             permission: "organization.manage",
           ),
         ],
