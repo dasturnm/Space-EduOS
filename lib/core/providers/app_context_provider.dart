@@ -82,6 +82,10 @@ class AppContextState {
       'communication',
       'akademik',
       'keuangan',
+      'finance',
+      'admission',
+      'hr',
+      'parent',
     ];
     return defaultModules.contains(moduleKey.toLowerCase());
   }
