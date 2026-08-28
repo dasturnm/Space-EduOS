@@ -247,54 +247,6 @@ class _MutabaahHubScreenState extends ConsumerState<MutabaahHubScreen> {
     );
   }
 
-  Widget _buildActivityTile(MutabaahRecord record) {
-    final timeStr = DateFormat('HH:mm').format(record.createdAt);
-
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFF1F5F9)),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 45,
-            height: 45,
-            decoration: BoxDecoration(
-              color: (record.tipeModul == 'HAFALAN' ? _emerald : Colors.blue).withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(
-              record.tipeModul == 'HAFALAN' ? Icons.menu_book_rounded : Icons.psychology_rounded,
-              color: record.tipeModul == 'HAFALAN' ? _emerald : Colors.blue,
-              size: 20,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Siswa ID: ${record.siswaId.substring(0, 8)}...", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                Text(record.tipeModul, style: TextStyle(color: Colors.grey[500], fontSize: 11, fontWeight: FontWeight.bold)),
-              ],
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(timeStr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
-              const Icon(Icons.chevron_right, size: 16, color: Colors.grey),
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
   Widget _buildEmptyState() {
     return Center(
       child: Column(

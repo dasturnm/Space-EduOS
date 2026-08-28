@@ -65,7 +65,7 @@ class SiswaListScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     // REAKTIF: Watch data siswa (v2026.03.22)
     final state = ref.watch(siswaListProvider);
     final filteredData = ref.watch(filteredSiswaProvider); // FIX: Gunakan filteredSiswaProvider agar fitur pencarian berfungsi
