@@ -47,4 +47,4 @@ final class KesiapanUjianListProvider extends $FunctionalProvider<
   }
 }
 
-String _$kesiapanUjianListHash() => r'88f345058790b3a5c9cf93197aaeacd57844f661';
+String _$kesiapanUjianListHash() => r'fbd3fc4e6acc2b89d442d0509de4d06f71312d33';
