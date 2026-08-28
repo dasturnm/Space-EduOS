@@ -147,9 +147,9 @@ class _AgendaAkademikScreenState extends ConsumerState<AgendaAkademikScreen> {
                 data: (programs) => DropdownButtonHideUnderline(
                   child: DropdownButton<String?>(
                     value: _selectedProgramFilter,
-                    hint: const Text("Filter Program", style: TextStyle(fontSize: 12)),
+                    hint: const Text("Filter Program Pendidikan", style: TextStyle(fontSize: 12)),
                     items: <DropdownMenuItem<String?>>[
-                      const DropdownMenuItem<String?>(value: null, child: Text("Semua Program", style: TextStyle(fontSize: 12))),
+                      const DropdownMenuItem<String?>(value: null, child: Text("Semua Program Pendidikan", style: TextStyle(fontSize: 12))),
                       ...programs.map((p) => DropdownMenuItem<String?>(
                         value: p.id,
                         child: Text(p.namaProgram, style: const TextStyle(fontSize: 12)),
@@ -260,8 +260,8 @@ class _AgendaAkademikScreenState extends ConsumerState<AgendaAkademikScreen> {
                     // FIX: Dropdown menggunakan 'value' bukan 'initialValue'
                     initialValue: scope,
                     items: const [
-                      DropdownMenuItem(value: 'GLOBAL', child: Text("🌍 Seluruh Program")),
-                      DropdownMenuItem(value: 'PROG_SPESIFIK', child: Text("🎯 Program Spesifik")),
+                      DropdownMenuItem(value: 'GLOBAL', child: Text("🌍 Seluruh Program Pendidikan")),
+                      DropdownMenuItem(value: 'PROG_SPESIFIK', child: Text("🎯 Program Pendidikan Spesifik")),
                     ],
                     onChanged: (val) => setDialogState(() => scope = val!),
                     decoration: _inputDecor(""),
@@ -269,13 +269,13 @@ class _AgendaAkademikScreenState extends ConsumerState<AgendaAkademikScreen> {
                   const SizedBox(height: 12),
 
                   if (scope == 'PROG_SPESIFIK') ...[
-                    _buildLabel("Pilih Program"),
+                    _buildLabel("Pilih Program Pendidikan"),
                     DropdownButtonFormField<String>(
                       // FIX: Dropdown menggunakan 'value' bukan 'initialValue'
                       initialValue: targetProgramId,
                       items: programs.map((p) => DropdownMenuItem(value: p.id, child: Text(p.namaProgram))).toList(),
                       onChanged: (val) => setDialogState(() => targetProgramId = val),
-                      decoration: _inputDecor("Pilih target program"),
+                      decoration: _inputDecor("Pilih target program pendidikan"),
                     ),
                     const SizedBox(height: 16),
                   ],

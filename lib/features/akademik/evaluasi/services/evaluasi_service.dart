@@ -1,3 +1,5 @@
+// Lokasi: lib/features/akademik/evaluasi/services/evaluasi_service.dart
+
 import '../../../../core/services/base_service.dart';
 import '../models/evaluasi_record_model.dart';
 import '../models/evaluasi_config_model.dart';
@@ -23,15 +25,27 @@ class EvaluasiService extends BaseService {
         }
       }
 
-      await supabase.from('siswa_evaluasi_nilai').insert(data);
+      try {
+        await supabase.from('siswa_evaluasi_nilai').insert(data);
+      } catch (_) {
+        await supabase.from('tahfidz_assessments').insert(data);
+      }
 
       // TAMBAHAN OPSI B: Reset kembali flag kesiapan ujian di profil siswa setelah dievaluasi (Pembersihan Antrean)
       if (record.isLulus) {
-        await supabase.from('siswa').update({
-          'is_ready_for_exam': false,
-          'ready_modul_id': null,
-          'academic_state': 'daily', // TAMBAHAN: Reset kembali ke daily agar gembok input harian terbuka kembali
-        }).eq('id', record.siswaId);
+        try {
+          await supabase.from('siswa').update({
+            'is_ready_for_exam': false,
+            'ready_modul_id': null,
+            'academic_state': 'daily', // TAMBAHAN: Reset kembali ke daily agar gembok input harian terbuka kembali
+          }).eq('id', record.siswaId);
+        } catch (_) {
+          await supabase.from('students').update({
+            'is_ready_for_exam': false,
+            'ready_modul_id': null,
+            'academic_state': 'daily',
+          }).eq('id', record.siswaId);
+        }
       }
     } catch (e) {
       throw Exception(handleError(e));
@@ -41,11 +55,20 @@ class EvaluasiService extends BaseService {
   /// 2. READ: Mengambil riwayat ujian formal seorang siswa
   Future<List<EvaluasiRecordModel>> getRiwayatEvaluasi(String siswaId) async {
     try {
-      final response = await supabase
-          .from('siswa_evaluasi_nilai')
-          .select('*, modul:modul_kurikulum(nama_modul), guru:profiles(nama_lengkap)')
-          .eq('siswa_id', siswaId)
-          .order('tanggal_evaluasi', ascending: false);
+      dynamic response;
+      try {
+        response = await supabase
+            .from('siswa_evaluasi_nilai')
+            .select('*, modul:modul_kurikulum(nama_modul), guru:profiles(nama_lengkap)')
+            .eq('siswa_id', siswaId)
+            .order('tanggal_evaluasi', ascending: false);
+      } catch (_) {
+        response = await supabase
+            .from('tahfidz_assessments')
+            .select('*, modul:modules(name), guru:profiles(nama_lengkap)')
+            .eq('student_id', siswaId)
+            .order('evaluation_date', ascending: false);
+      }
 
       return (response as List).map((json) => EvaluasiRecordModel.fromJson(json)).toList();
     } catch (e) {
@@ -56,13 +79,28 @@ class EvaluasiService extends BaseService {
   /// TAMBAHAN: Mengambil data rekaman ujian terakhir yang spesifik berdasarkan kombinasi siswa dan modul
   Future<Map<String, dynamic>?> fetchSavedEvaluasi(String siswaId, String modulId) async {
     try {
-      final response = await supabase
-          .from('siswa_evaluasi_nilai')
-          .select('*')
-          .eq('siswa_id', siswaId)
-          .eq('modul_id', modulId)
-          .order('tanggal_evaluasi', ascending: false)
-          .maybeSingle();
+      Map<String, dynamic>? response;
+      try {
+        response = await supabase
+            .from('siswa_evaluasi_nilai')
+            .select('*')
+            .eq('siswa_id', siswaId)
+            .eq('modul_id', modulId)
+            .order('tanggal_evaluasi', ascending: false)
+            .maybeSingle();
+      } catch (_) {}
+
+      if (response == null) {
+        try {
+          response = await supabase
+              .from('tahfidz_assessments')
+              .select('*')
+              .eq('student_id', siswaId)
+              .eq('module_id', modulId)
+              .order('evaluation_date', ascending: false)
+              .maybeSingle();
+        } catch (_) {}
+      }
       return response;
     } catch (e) {
       throw Exception(handleError(e));
@@ -72,9 +110,15 @@ class EvaluasiService extends BaseService {
   /// TAMBAHAN: Fungsi transisi untuk menyelesaikan validasi volume Tasmi' dan bergeser ke siap mengisi ujian formal
   Future<void> completeTasmiVolume(String siswaId) async {
     try {
-      await supabase.from('siswa').update({
-        'academic_state': 'exam_ready',
-      }).eq('id', siswaId);
+      try {
+        await supabase.from('siswa').update({
+          'academic_state': 'exam_ready',
+        }).eq('id', siswaId);
+      } catch (_) {
+        await supabase.from('students').update({
+          'academic_state': 'exam_ready',
+        }).eq('id', siswaId);
+      }
     } catch (e) {
       throw Exception(handleError(e));
     }

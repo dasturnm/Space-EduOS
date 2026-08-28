@@ -35,10 +35,10 @@ class _JabatanListScreenState extends ConsumerState<JabatanListScreen> {
     try {
       final supabase = Supabase.instance.client;
       final unitData = await supabase
-          .from('unit_kerja')
-          .select()
-          .eq('lembaga_id', lembagaId)
-          .order('nama_unit_kerja');
+          .from('work_units')
+          .select('*, department:departments!inner(*)')
+          .eq('department.organization_id', lembagaId)
+          .order('name');
 
       unitKerjaList = (unitData as List).map((e) => UnitKerjaModel.fromJson(e)).toList();
     } catch (e) {
@@ -142,7 +142,7 @@ class _JabatanListScreenState extends ConsumerState<JabatanListScreen> {
                         decoration: const InputDecoration(labelText: "Hak Akses Default (Role)"),
                         items: const [
                           DropdownMenuItem(value: 'ADMIN_PUSAT', child: Text("Admin Pusat")),
-                          DropdownMenuItem(value: 'ADMIN_CABANG', child: Text("Admin Cabang")),
+                          DropdownMenuItem(value: 'ADMIN_CABANG', child: Text("Admin Satuan Pendidikan")),
                           DropdownMenuItem(value: 'GURU', child: Text("Guru / Pengajar")),
                           DropdownMenuItem(value: 'STAFF', child: Text("Staff Administrasi")),
                         ],
@@ -155,13 +155,13 @@ class _JabatanListScreenState extends ConsumerState<JabatanListScreen> {
                             child: DropdownButtonFormField<int>(
                               isExpanded: true,
                               value: selectedLevel,
-                              decoration: const InputDecoration(labelText: "Hierarki / Level Jabatan"),
+                              decoration: const InputDecoration(labelText: "Hierarki / Jenjang Jabatan"),
                               items: const [
-                                DropdownMenuItem(value: 1, child: Text("Level 1 (Pimpinan Pusat)")),
-                                DropdownMenuItem(value: 2, child: Text("Level 2 (Pimpinan Unit/Cabang)")),
-                                DropdownMenuItem(value: 3, child: Text("Level 3 (Staf Ahli/Koordinator)")),
-                                DropdownMenuItem(value: 4, child: Text("Level 4 (Pelaksana Teknis)")),
-                                DropdownMenuItem(value: 5, child: Text("Level 5 (Staf Pendukung)")),
+                                DropdownMenuItem(value: 1, child: Text("Jenjang 1 (Pimpinan Pusat)")),
+                                DropdownMenuItem(value: 2, child: Text("Jenjang 2 (Pimpinan Unit/Satuan Pendidikan)")),
+                                DropdownMenuItem(value: 3, child: Text("Jenjang 3 (Staf Ahli/Koordinator)")),
+                                DropdownMenuItem(value: 4, child: Text("Jenjang 4 (Pelaksana Teknis)")),
+                                DropdownMenuItem(value: 5, child: Text("Jenjang 5 (Staf Pendukung)")),
                               ],
                               onChanged: (val) => setDialogState(() => selectedLevel = val!),
                             ),
@@ -175,13 +175,13 @@ class _JabatanListScreenState extends ConsumerState<JabatanListScreen> {
                               showDialog(
                                 context: context,
                                 builder: (ctx) => AlertDialog(
-                                  title: const Text("Keterangan Level Jabatan"),
+                                  title: const Text("Keterangan Jenjang Jabatan"),
                                   content: const Text(
-                                    "• Level 1: Direktur, Ketua Yayasan, Mudir\n"
-                                        "• Level 2: Kepala Cabang, Kepala Sekolah\n"
-                                        "• Level 3: Kurikulum, Bendahara, Koordinator Guru\n"
-                                        "• Level 4: Guru, Pengajar, Administrasi\n"
-                                        "• Level 5: Keamanan, Kebersihan, Driver",
+                                    "• Jenjang 1: Direktur, Ketua Yayasan, Mudir\n"
+                                        "• Jenjang 2: Kepala Satuan Pendidikan, Kepala Sekolah\n"
+                                        "• Jenjang 3: Kurikulum, Bendahara, Koordinator Guru\n"
+                                        "• Jenjang 4: Guru, Pengajar, Administrasi\n"
+                                        "• Jenjang 5: Keamanan, Kebersihan, Driver",
                                     style: TextStyle(fontSize: 13, height: 1.5),
                                   ),
                                   actions: [

@@ -134,35 +134,82 @@ class EffectiveDayService extends BaseService {
 
       // Ambil Tahun Ajaran Aktif
       Map<String, dynamic>? taData;
-      if (tahunAjaranId != null && tahunAjaranId.isNotEmpty && tahunAjaranId != 'null') {
-        taData = await supabase.from('tahun_ajaran').select('*').eq('id', tahunAjaranId).maybeSingle();
-      } else {
-        taData = await supabase.from('tahun_ajaran').select('*').eq('lembaga_id', lembagaId).eq('is_active', true).maybeSingle();
+      try {
+        if (tahunAjaranId != null && tahunAjaranId.isNotEmpty && tahunAjaranId != 'null') {
+          taData = await supabase.from('tahun_ajaran').select('*').eq('id', tahunAjaranId).maybeSingle();
+        } else {
+          taData = await supabase.from('tahun_ajaran').select('*').eq('lembaga_id', lembagaId).eq('is_active', true).maybeSingle();
+        }
+      } catch (_) {}
+
+      if (taData == null) {
+        try {
+          if (tahunAjaranId != null && tahunAjaranId.isNotEmpty && tahunAjaranId != 'null') {
+            taData = await supabase.from('academic_years').select('*').eq('id', tahunAjaranId).maybeSingle();
+          } else {
+            taData = await supabase.from('academic_years').select('*').eq('organization_id', lembagaId).eq('is_active', true).maybeSingle();
+          }
+        } catch (_) {}
       }
 
-      if (taData == null || taData['tanggal_mulai'] == null || taData['tanggal_selesai'] == null) {
+      final startDateStr = taData?['tanggal_mulai'] ?? taData?['start_date'];
+      final endDateStr = taData?['tanggal_selesai'] ?? taData?['end_date'];
+
+      if (taData == null || startDateStr == null || endDateStr == null) {
         return AcademicSummaryModel.empty();
       }
 
-      final DateTime startDate = DateTime.parse(taData['tanggal_mulai'].toString());
-      final DateTime endDate = DateTime.parse(taData['tanggal_selesai'].toString());
+      final DateTime startDate = DateTime.parse(startDateStr.toString());
+      final DateTime endDate = DateTime.parse(endDateStr.toString());
 
       // Ambil Hari Aktif Program
-      final programData = await supabase.from('program').select('hari_aktif').eq('id', programId).maybeSingle();
+      Map<String, dynamic>? programData;
+      try {
+        programData = await supabase.from('program').select('hari_aktif').eq('id', programId).maybeSingle();
+      } catch (_) {}
+
+      if (programData == null) {
+        try {
+          programData = await supabase.from('programs').select('hari_aktif, active_days').eq('id', programId).maybeSingle();
+        } catch (_) {}
+      }
+
       List<String> hariAktif = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
-      if (programData != null && programData['hari_aktif'] != null) {
-        final raw = programData['hari_aktif'];
-        if (raw is List) {
-          hariAktif = raw.map((e) => e.toString()).toList();
+      final rawActiveDays = programData?['hari_aktif'] ?? programData?['active_days'];
+      if (programData != null && rawActiveDays != null) {
+        if (rawActiveDays is List) {
+          hariAktif = rawActiveDays.map((e) => e.toString()).toList();
         }
       }
 
       // Ambil Agenda Akademik
-      var agendaQuery = supabase.from('agenda_akademik').select('*').eq('lembaga_id', lembagaId);
-      if (tahunAjaranId != null && tahunAjaranId.isNotEmpty && tahunAjaranId != 'null') {
-        agendaQuery = agendaQuery.eq('tahun_ajaran_id', tahunAjaranId);
+      List<dynamic> rawAgendas = [];
+      try {
+        var agendaQuery = supabase.from('agenda_akademik').select('*').eq('lembaga_id', lembagaId);
+        if (tahunAjaranId != null && tahunAjaranId.isNotEmpty && tahunAjaranId != 'null') {
+          agendaQuery = agendaQuery.eq('tahun_ajaran_id', tahunAjaranId);
+        }
+        rawAgendas = await agendaQuery;
+      } catch (_) {}
+
+      if (rawAgendas.isEmpty) {
+        try {
+          var agendaQuery = supabase.from('academic_calendars').select('*').eq('organization_id', lembagaId);
+          if (tahunAjaranId != null && tahunAjaranId.isNotEmpty && tahunAjaranId != 'null') {
+            agendaQuery = agendaQuery.eq('academic_year_id', tahunAjaranId);
+          }
+          rawAgendas = await agendaQuery;
+        } catch (_) {
+          try {
+            var agendaQuery = supabase.from('schedules').select('*').eq('organization_id', lembagaId);
+            if (tahunAjaranId != null && tahunAjaranId.isNotEmpty && tahunAjaranId != 'null') {
+              agendaQuery = agendaQuery.eq('academic_year_id', tahunAjaranId);
+            }
+            rawAgendas = await agendaQuery;
+          } catch (_) {}
+        }
       }
-      final List<dynamic> rawAgendas = await agendaQuery;
+
       final List<AgendaModel> allAgendas = rawAgendas.map((e) => AgendaModel.fromJson(e)).toList();
 
       // Jalankan Kalkulator Utama

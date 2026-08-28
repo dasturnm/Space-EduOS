@@ -1,3 +1,5 @@
+// Lokasi: lib/features/management_lembaga/models/lembaga_model.dart
+
 class LembagaModel {
   final String id;
   final String namaLembaga;
@@ -59,12 +61,12 @@ class LembagaModel {
 
   factory LembagaModel.fromJson(Map<String, dynamic> json) => LembagaModel(
     id: json['id'],
-    namaLembaga: json['nama_lembaga'] ?? '',
-    kodeLembaga: json['kode_lembaga'] ?? '',
-    alamat: json['alamat_pusat'],
-    kontak: json['wa_official'],
-    emailOfficial: json['email_official'],
-    visi: json['visi'],
+    namaLembaga: json['name'] ?? json['nama_lembaga'] ?? '',
+    kodeLembaga: json['code'] ?? json['kode_lembaga'] ?? '',
+    alamat: json['address'] ?? json['alamat_pusat'] ?? json['alamat'],
+    kontak: json['phone'] ?? json['wa_official'] ?? json['kontak'],
+    emailOfficial: json['email'] ?? json['email_official'],
+    visi: json['vision'] ?? json['visi'],
     misi: json['misi'],
     logoUrl: json['logo_url'],
     tahunAjaranAktifId: json['tahun_ajaran_aktif_id'],
@@ -73,12 +75,19 @@ class LembagaModel {
   );
 
   Map<String, dynamic> toJson() => {
+    'name': namaLembaga,
     'nama_lembaga': namaLembaga,
+    'code': kodeLembaga,
     'kode_lembaga': kodeLembaga,
+    'address': alamat,
     'alamat_pusat': alamat,
+    'phone': kontak,
     'wa_official': kontak,
+    'email': emailOfficial,
     'email_official': emailOfficial,
+    'vision': visi,
     'visi': visi,
+    'mission': misi,
     'misi': misi,
     'logo_url': logoUrl,
     'tahun_ajaran_aktif_id': tahunAjaranAktifId,

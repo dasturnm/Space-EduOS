@@ -38,27 +38,42 @@ class EvaluasiRecordModel {
   });
 
   factory EvaluasiRecordModel.fromJson(Map<String, dynamic> json) {
+    final lId = json['lembaga_id'] ?? json['organization_id'];
+    final sId = json['siswa_id'] ?? json['student_id'];
+    final gId = json['guru_id'] ?? json['teacher_id'];
+    final mId = json['modul_id'] ?? json['module_id'];
+    final tEval = json['tipe_evaluasi'] ?? json['evaluation_type'];
+    final score = json['nilai_akhir'] ?? json['final_score'];
+    final passed = json['is_lulus'] ?? json['is_passed'];
+    final evalDate = json['tanggal_evaluasi'] ?? json['evaluation_date'];
+    final notes = json['catatan'] ?? json['notes'];
+    final details = json['detail_penilaian'] ?? json['assessment_detail'];
+
+    final studentObj = json['siswa'] ?? json['student'];
+    final teacherObj = json['guru'] ?? json['teacher'];
+    final moduleObj = json['modul'] ?? json['module'];
+
     return EvaluasiRecordModel(
-      id: json['id']?.toString(),
-      lembagaId: json['lembaga_id']?.toString() ?? '',
-      siswaId: json['siswa_id']?.toString() ?? '',
-      guruId: json['guru_id']?.toString() ?? '',
-      modulId: json['modul_id']?.toString() ?? '',
-      tipeEvaluasi: json['tipe_evaluasi']?.toString() ?? 'TASMI',
+      id: (json['id'] == null || json['id'].toString() == 'null') ? null : json['id'].toString(),
+      lembagaId: (lId == null || lId.toString() == 'null') ? '' : lId.toString(),
+      siswaId: (sId == null || sId.toString() == 'null') ? '' : sId.toString(),
+      guruId: (gId == null || gId.toString() == 'null') ? '' : gId.toString(),
+      modulId: (mId == null || mId.toString() == 'null') ? '' : mId.toString(),
+      tipeEvaluasi: (tEval ?? 'TASMI').toString(),
       // Explicit Casting sesuai AGENTS.md
-      nilaiAkhir: (json['nilai_akhir'] as num?)?.toDouble() ?? 0.0,
-      isLulus: json['is_lulus'] == true, // Boolean mapping
+      nilaiAkhir: (score as num?)?.toDouble() ?? 0.0,
+      isLulus: passed == true, // Boolean mapping
       // Safe Date Parsing
-      tanggalEvaluasi: json['tanggal_evaluasi'] != null
-          ? DateTime.tryParse(json['tanggal_evaluasi'].toString())
+      tanggalEvaluasi: evalDate != null
+          ? DateTime.tryParse(evalDate.toString())
           : null,
-      catatan: json['catatan']?.toString(),
-      detailPenilaian: json['detail_penilaian'] as Map<String, dynamic>? ?? {},
+      catatan: notes?.toString(),
+      detailPenilaian: details as Map<String, dynamic>? ?? {},
 
       // Relasi (jika di-join dengan tabel lain)
-      namaSiswa: json['siswa']?['nama_lengkap']?.toString(),
-      namaGuru: json['guru']?['nama_lengkap']?.toString(),
-      namaModul: json['modul']?['nama_modul']?.toString(),
+      namaSiswa: (studentObj is Map ? (studentObj['nama_lengkap'] ?? studentObj['full_name']) : null)?.toString(),
+      namaGuru: (teacherObj is Map ? (teacherObj['nama_lengkap'] ?? teacherObj['full_name']) : null)?.toString(),
+      namaModul: (moduleObj is Map ? (moduleObj['nama_modul'] ?? moduleObj['name']) : null)?.toString(),
     );
   }
 

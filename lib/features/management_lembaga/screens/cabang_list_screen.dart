@@ -1,3 +1,5 @@
+// Lokasi: lib/features/management_lembaga/screens/cabang_list_screen.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/providers/app_context_provider.dart';
@@ -51,7 +53,7 @@ class _CabangListScreenState extends ConsumerState<CabangListScreen> {
         onPressed: () => _showCabangDialog(lembaga.id),
         backgroundColor: const Color(0xFF10B981),
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text("Tambah Cabang", style: TextStyle(color: Colors.white)),
+        label: const Text("Tambah Satuan Pendidikan", style: TextStyle(color: Colors.white)),
       ),
     );
   }
@@ -146,8 +148,8 @@ class _CabangListScreenState extends ConsumerState<CabangListScreen> {
                     final confirmed = await showDialog<bool>(
                       context: context,
                       builder: (ctx) => AlertDialog(
-                        title: const Text("Hapus Cabang?"),
-                        content: Text("Anda yakin ingin menghapus cabang ${cabang.namaCabang}?"),
+                        title: const Text("Hapus Satuan Pendidikan?"),
+                        content: Text("Anda yakin ingin menghapus Satuan Pendidikan ${cabang.namaCabang}?"),
                         actions: [
                           TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text("Batal")),
                           TextButton(
@@ -184,7 +186,7 @@ class _CabangListScreenState extends ConsumerState<CabangListScreen> {
         children: [
           Icon(Icons.location_off_outlined, size: 80, color: Colors.grey[300]),
           const SizedBox(height: 16),
-          const Text("Belum ada Cabang Guru & Staff terdaftar",
+          const Text("Belum ada Satuan Pendidikan terdaftar",
               style: TextStyle(color: Colors.grey, fontSize: 16)),
         ],
       ),
@@ -246,7 +248,7 @@ class _CabangFormDialogState extends ConsumerState<CabangFormDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(isEdit ? "Edit Detail Cabang" : "Tambah Cabang Baru", style: const TextStyle(fontWeight: FontWeight.bold)),
+      title: Text(isEdit ? "Edit Detail Satuan Pendidikan" : "Tambah Satuan Pendidikan Baru", style: const TextStyle(fontWeight: FontWeight.bold)),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       content: SingleChildScrollView(
         child: Form(
@@ -256,31 +258,31 @@ class _CabangFormDialogState extends ConsumerState<CabangFormDialog> {
             children: [
               TextFormField(
                 controller: nameController,
-                decoration: const InputDecoration(labelText: "Nama Cabang", hintText: "Misal: Cabang Bekasi"),
+                decoration: const InputDecoration(labelText: "Nama Satuan Pendidikan", hintText: "Misal: Kampus / Unit Bekasi"),
                 validator: (val) => val!.isEmpty ? "Nama wajib diisi" : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: kodeController,
-                decoration: const InputDecoration(labelText: "Kode Cabang", hintText: "Misal: BKS-01"),
+                decoration: const InputDecoration(labelText: "Kode Satuan Pendidikan", hintText: "Misal: BKS-01"),
                 validator: (val) => val!.isEmpty ? "Kode wajib diisi" : null,
                 enabled: !isEdit, // Kode cabang biasanya tidak diubah setelah dibuat
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: kepalaCabangController,
-                decoration: const InputDecoration(labelText: "Nama Kepala Cabang", hintText: "Nama lengkap"),
+                decoration: const InputDecoration(labelText: "Nama Kepala Satuan Pendidikan", hintText: "Nama lengkap"),
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: waController,
-                decoration: const InputDecoration(labelText: "WhatsApp Cabang", hintText: "0812..."),
+                decoration: const InputDecoration(labelText: "WhatsApp Satuan Pendidikan", hintText: "0812..."),
                 keyboardType: TextInputType.phone,
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: emailController,
-                decoration: const InputDecoration(labelText: "Email Cabang", hintText: "cabang@lembaga.com"),
+                decoration: const InputDecoration(labelText: "Email Satuan Pendidikan", hintText: "unit@lembaga.com"),
                 keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 16),
@@ -301,7 +303,7 @@ class _CabangFormDialogState extends ConsumerState<CabangFormDialog> {
               const SizedBox(height: 16),
               TextFormField(
                 controller: addressController,
-                decoration: const InputDecoration(labelText: "Alamat", hintText: "Alamat lengkap cabang"),
+                decoration: const InputDecoration(labelText: "Alamat", hintText: "Alamat lengkap Satuan Pendidikan"),
                 maxLines: 2,
               ),
               const SizedBox(height: 16),
@@ -350,7 +352,7 @@ class _CabangFormDialogState extends ConsumerState<CabangFormDialog> {
               navigator.pop();
 
               messenger.showSnackBar(
-                SnackBar(content: Text(isEdit ? "Perubahan berhasil disimpan!" : "Cabang berhasil ditambahkan!")),
+                SnackBar(content: Text(isEdit ? "Perubahan berhasil disimpan!" : "Satuan Pendidikan berhasil ditambahkan!")),
               );
             } catch (e) {
               if (!mounted) return;

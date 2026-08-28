@@ -95,7 +95,7 @@ class KurikulumScreen extends ConsumerWidget {
         children: [
           Icon(Icons.library_books_outlined, size: 80, color: Colors.grey[300]),
           const SizedBox(height: 16),
-          const Text("Belum ada kurikulum untuk program ini.", style: TextStyle(color: Colors.grey)),
+          const Text("Belum ada kurikulum untuk program pendidikan ini.", style: TextStyle(color: Colors.grey)),
         ],
       ),
     );

@@ -32,20 +32,20 @@ class AgendaModel {
   factory AgendaModel.fromJson(Map<String, dynamic> json) => AgendaModel(
     // FIX: Gunakan pengecekan string 'null' untuk UUID safety
     id: (json['id'] == null || json['id'].toString() == 'null') ? null : json['id'].toString(),
-    lembagaId: json['lembaga_id']?.toString() ?? '',
-    tahunAjaranId: (json['tahun_ajaran_id'] == null || json['tahun_ajaran_id'].toString() == 'null')
+    lembagaId: (json['lembaga_id'] ?? json['organization_id'])?.toString() ?? '',
+    tahunAjaranId: ((json['tahun_ajaran_id'] ?? json['academic_year_id']) == null || (json['tahun_ajaran_id'] ?? json['academic_year_id']).toString() == 'null')
         ? null
-        : json['tahun_ajaran_id'].toString(),
-    namaAgenda: json['nama_agenda']?.toString() ?? '',
+        : (json['tahun_ajaran_id'] ?? json['academic_year_id']).toString(),
+    namaAgenda: (json['nama_agenda'] ?? json['title'])?.toString() ?? '',
     // Parsing tanggal aman
-    tanggalMulai: DateTime.tryParse(json['tanggal_mulai']?.toString() ?? '') ?? DateTime.now(),
-    tanggalBerakhir: DateTime.tryParse(json['tanggal_berakhir']?.toString() ?? '') ?? DateTime.now(),
-    statusHariBelajar: json['status_hari_belajar']?.toString() ?? 'EFEKTIF',
+    tanggalMulai: DateTime.tryParse((json['tanggal_mulai'] ?? json['start_date'])?.toString() ?? '') ?? DateTime.now(),
+    tanggalBerakhir: DateTime.tryParse((json['tanggal_berakhir'] ?? json['end_date'])?.toString() ?? '') ?? DateTime.now(),
+    statusHariBelajar: (json['status_hari_belajar'] ?? json['learning_status'])?.toString() ?? 'EFEKTIF',
     scope: json['scope']?.toString() ?? 'GLOBAL',
     programId: json['program_id']?.toString(),
-    keterangan: json['keterangan']?.toString(),
-    isSiswaLibur: json['is_siswa_libur'] == true,
-    isGuruMasuk: json['is_guru_masuk'] ?? true,
+    keterangan: (json['keterangan'] ?? json['description'])?.toString(),
+    isSiswaLibur: (json['is_siswa_libur'] ?? json['is_student_holiday']) == true,
+    isGuruMasuk: (json['is_guru_masuk'] ?? json['is_teacher_attendance']) ?? true,
   );
 
   Map<String, dynamic> toJson() => {

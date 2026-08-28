@@ -306,7 +306,7 @@ class _ModulInputScreenState extends ConsumerState<MutabaahInputScreen> with Tic
                   const SizedBox(height: 10),
                   Text(
                     _currentSiswa.academicState == 'tasmi_mode'
-                        ? "Santri telah menuntaskan target kuantitas materi harian. Input setoran harian dikunci sementara karena santri diwajibkan menempuh Ujian Tasmi' Kelancaran Sekali Duduk tanpa jeda hari terlebih dahulu."
+                        ? "Santri telah menuntaskan target kuantitas materi harian. Penilaian mutabaah harian dikunci sementara karena santri diwajibkan menempuh Ujian Tasmi' Kelancaran Sekali Duduk tanpa jeda hari terlebih dahulu."
                         : "Alhamdulillah, capaian materi pada modul ini telah tuntas. Silakan koordinasikan jadwal dengan Tim Penguji untuk pelaksanaan Ujian Tasmi' / UKL santri.",
                     style: TextStyle(fontSize: 12, color: Colors.blueGrey.shade900, height: 1.5, fontWeight: FontWeight.w500),
                   ),
@@ -486,7 +486,7 @@ class _ModulInputScreenState extends ConsumerState<MutabaahInputScreen> with Tic
           if (!isExamRequired) ...[
             const SizedBox(height: 8),
             const Text(
-              "Siswa akan otomatis naik ke modul berikutnya setelah semua modul di level ini tuntas.",
+              "Siswa akan otomatis naik ke modul berikutnya setelah semua modul di jenjang ini tuntas.",
               style: TextStyle(fontSize: 12, color: Color(0xFF546E7A), height: 1.4),
             ),
           ],

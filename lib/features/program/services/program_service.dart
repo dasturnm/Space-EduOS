@@ -1,3 +1,5 @@
+// Lokasi: lib/features/program/services/program_service.dart
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/services/base_service.dart';
 import '../models/program_model.dart';
@@ -11,7 +13,7 @@ class ProgramService extends BaseService {
     try {
       // 🔥 FIX: Tambahkan relasi kurikulum(id) agar ProgramModel bisa mengecek hasKurikulum
       // Menggunakan !kurikulum_id untuk mematikan ambiguitas relasi ganda
-      PostgrestFilterBuilder query = supabase.from('program').select('*, kurikulum!kurikulum_id(id)');
+      PostgrestFilterBuilder query = supabase.from('programs').select('*, kurikulum:curricula!kurikulum_id(id)');
 
       // Gunakan helper BaseService untuk keamanan data
       query = applyLembagaFilter(query: query, lembagaId: lembagaId);
@@ -22,7 +24,7 @@ class ProgramService extends BaseService {
       }
 
       // FIX: Tambahkan explicit casting ke PostgrestList dan penanganan null
-      final response = await query.order('nama_program');
+      final response = await query.order('name');
 
       if (response == null) return [];
 
@@ -47,16 +49,18 @@ class ProgramService extends BaseService {
   }) async {
     try {
       final data = cleanData({
+        'organization_id': lembagaId,
         'lembaga_id': lembagaId,
         'kurikulum_id': kurikulumId,
         'cabang_id': cabangId,
+        'name': nama,
         'nama_program': nama,
         'deskripsi': deskripsi,
         'biaya_pendaftaran': pendaftaran,
         'biaya_spp': spp,
         'hari_aktif': hari,
       });
-      await supabase.from('program').insert(data);
+      await supabase.from('programs').insert(data);
     } catch (e) {
       throw Exception(handleError(e));
     }
@@ -66,6 +70,7 @@ class ProgramService extends BaseService {
   Future<void> updateProgram(ProgramModel updated) async {
     try {
       final data = cleanData({
+        'name': updated.namaProgram,
         'nama_program': updated.namaProgram,
         'kurikulum_id': updated.kurikulumId,
         'cabang_id': updated.cabangId,
@@ -74,7 +79,7 @@ class ProgramService extends BaseService {
         'biaya_spp': updated.biayaSpp,
         'hari_aktif': updated.hariAktif,
       });
-      await supabase.from('program').update(data).eq('id', updated.id);
+      await supabase.from('programs').update(data).eq('id', updated.id);
     } catch (e) {
       throw Exception(handleError(e));
     }
@@ -83,7 +88,7 @@ class ProgramService extends BaseService {
   /// 🗑️ HAPUS PROGRAM
   Future<void> deleteProgram(String programId) async {
     try {
-      await supabase.from('program').delete().eq('id', programId);
+      await supabase.from('programs').delete().eq('id', programId);
     } catch (e) {
       throw Exception(handleError(e));
     }

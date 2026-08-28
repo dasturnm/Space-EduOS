@@ -1,3 +1,5 @@
+// Lokasi: lib/features/management_lembaga/models/divisi_model.dart
+
 class DivisiModel {
   final String id;
   final String lembagaId;
@@ -31,16 +33,19 @@ class DivisiModel {
 
   factory DivisiModel.fromJson(Map<String, dynamic> json) => DivisiModel(
     id: json['id'],
-    lembagaId: json['lembaga_id'] ?? '',
-    namaDivisi: json['nama_divisi'] ?? '',
-    deskripsi: json['deskripsi'],
-    status: json['status'],
+    lembagaId: json['organization_id']?.toString() ?? json['lembaga_id']?.toString() ?? '',
+    namaDivisi: json['name']?.toString() ?? json['nama_divisi']?.toString() ?? '',
+    deskripsi: json['description']?.toString() ?? json['deskripsi']?.toString(),
+    status: json['status']?.toString(),
   );
 
   Map<String, dynamic> toJson() => {
     'id': id,
+    'organization_id': lembagaId,
     'lembaga_id': lembagaId,
+    'name': namaDivisi,
     'nama_divisi': namaDivisi,
+    'description': deskripsi,
     'deskripsi': deskripsi,
     'status': status,
   };

@@ -20,7 +20,11 @@ class LayananSimpanMutabaah {
         data.remove('id');
       }
 
-      await supabase.from('mutabaah_records').insert(data);
+      try {
+        await supabase.from('mutabaah_records').insert(data);
+      } catch (_) {
+        await supabase.from('tahfidz_submissions').insert(data);
+      }
 
       await _mainService._kecerdasanAkademik._evaluateExamReadiness(record.siswaId, record.modulId);
       await _mainService._kecerdasanAkademik._evaluateStudentPromotion(record.siswaId);

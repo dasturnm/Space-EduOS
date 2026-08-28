@@ -1,3 +1,5 @@
+// Lokasi: lib/features/lms/services/lms_service.dart
+
 import 'dart:typed_data';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/subject_model.dart';
@@ -13,66 +15,126 @@ class LmsService {
 
   // --- SUBJECTS ---
   Future<List<SubjectModel>> fetchSubjects(String organizationId) async {
-    final response = await _supabase
-        .from('subjects')
-        .select()
-        .eq('organization_id', organizationId)
-        .filter('deleted_at', 'is', null)
-        .order('name', ascending: true);
+    dynamic response;
+    try {
+      response = await _supabase
+          .from('subjects')
+          .select()
+          .eq('organization_id', organizationId)
+          .filter('deleted_at', 'is', null)
+          .order('name', ascending: true);
+    } catch (_) {
+      response = await _supabase
+          .from('mata_pelajaran')
+          .select()
+          .eq('lembaga_id', organizationId)
+          .filter('deleted_at', 'is', null)
+          .order('name', ascending: true);
+    }
     return (response as List).map((json) => SubjectModel.fromJson(json)).toList();
   }
 
   Future<void> saveSubject(SubjectModel subject) async {
-    await _supabase.from('subjects').upsert(subject.toJson());
+    try {
+      await _supabase.from('subjects').upsert(subject.toJson());
+    } catch (_) {
+      await _supabase.from('mata_pelajaran').upsert(subject.toJson());
+    }
   }
 
   // --- COURSES ---
   Future<List<CourseModel>> fetchCourses(String organizationId) async {
-    final response = await _supabase
-        .from('courses')
-        .select()
-        .eq('organization_id', organizationId)
-        .filter('deleted_at', 'is', null)
-        .order('created_at', ascending: false);
+    dynamic response;
+    try {
+      response = await _supabase
+          .from('courses')
+          .select()
+          .eq('organization_id', organizationId)
+          .filter('deleted_at', 'is', null)
+          .order('created_at', ascending: false);
+    } catch (_) {
+      response = await _supabase
+          .from('courseListScreen')
+          .select()
+          .eq('organization_id', organizationId)
+          .filter('deleted_at', 'is', null)
+          .order('created_at', ascending: false);
+    }
     return (response as List).map((json) => CourseModel.fromJson(json)).toList();
   }
 
   Future<void> saveCourse(CourseModel course) async {
-    await _supabase.from('courses').upsert(course.toJson());
+    try {
+      await _supabase.from('courses').upsert(course.toJson());
+    } catch (_) {
+      await _supabase.from('courseListScreen').upsert(course.toJson());
+    }
   }
 
   Future<void> deleteCourse(String courseId) async {
-    await _supabase.from('courses').update({
-      'deleted_at': DateTime.now().toUtc().toIso8601String(),
-    }).eq('id', courseId);
+    try {
+      await _supabase.from('courses').update({
+        'deleted_at': DateTime.now().toUtc().toIso8601String(),
+      }).eq('id', courseId);
+    } catch (_) {
+      await _supabase.from('courseListScreen').update({
+        'deleted_at': DateTime.now().toUtc().toIso8601String(),
+      }).eq('id', courseId);
+    }
   }
 
   // --- MODULES ---
   Future<List<ModuleModel>> fetchModules(String courseId) async {
-    final response = await _supabase
-        .from('course_modules')
-        .select()
-        .eq('course_id', courseId)
-        .order('order', ascending: true);
+    dynamic response;
+    try {
+      response = await _supabase
+          .from('course_modules')
+          .select()
+          .eq('course_id', courseId)
+          .order('order', ascending: true);
+    } catch (_) {
+      response = await _supabase
+          .from('modules')
+          .select()
+          .eq('course_id', courseId)
+          .order('order', ascending: true);
+    }
     return (response as List).map((json) => ModuleModel.fromJson(json)).toList();
   }
 
   Future<void> saveModule(ModuleModel module) async {
-    await _supabase.from('course_modules').upsert(module.toJson());
+    try {
+      await _supabase.from('course_modules').upsert(module.toJson());
+    } catch (_) {
+      await _supabase.from('modules').upsert(module.toJson());
+    }
   }
 
   // --- LESSONS ---
   Future<List<LessonModel>> fetchLessons(String moduleId) async {
-    final response = await _supabase
-        .from('course_lessons')
-        .select()
-        .eq('module_id', moduleId)
-        .order('order', ascending: true);
+    dynamic response;
+    try {
+      response = await _supabase
+          .from('course_lessons')
+          .select()
+          .eq('module_id', moduleId)
+          .order('order', ascending: true);
+    } catch (_) {
+      response = await _supabase
+          .from('lessons')
+          .select()
+          .eq('module_id', moduleId)
+          .order('order', ascending: true);
+    }
     return (response as List).map((json) => LessonModel.fromJson(json)).toList();
   }
 
   Future<void> saveLesson(LessonModel lesson) async {
-    await _supabase.from('course_lessons').upsert(lesson.toJson());
+    try {
+      await _supabase.from('course_lessons').upsert(lesson.toJson());
+    } catch (_) {
+      await _supabase.from('lessons').upsert(lesson.toJson());
+    }
   }
 
   // --- ASSIGNMENTS ---

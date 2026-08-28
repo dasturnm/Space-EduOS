@@ -136,9 +136,9 @@ class _SiswaHubScreenState extends ConsumerState<SiswaHubScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // 1. Filter Cabang
+                // 1. Filter Satuan Pendidikan
                 _buildFilterDropdown<String>(
-                  label: "Berdasarkan Cabang",
+                  label: "Berdasarkan Satuan Pendidikan",
                   value: selectedCabang,
                   items: cabangs.map((c) => DropdownMenuItem(value: c.id, child: Text(c.namaCabang))).toList(),
                   onChanged: (val) => ref.read(siswaFilterCabangProvider.notifier).update(val),
@@ -147,7 +147,7 @@ class _SiswaHubScreenState extends ConsumerState<SiswaHubScreen> {
 
                 // 2. Filter Program
                 _buildFilterDropdown<String>(
-                  label: "Berdasarkan Program",
+                  label: "Berdasarkan Program Pendidikan",
                   value: selectedProgram,
                   items: programs.map((p) => DropdownMenuItem(value: p.id, child: Text(p.namaProgram))).toList(),
                   onChanged: (val) {
@@ -157,7 +157,7 @@ class _SiswaHubScreenState extends ConsumerState<SiswaHubScreen> {
                 ),
                 const SizedBox(height: 16),
 
-                // 3. Filter Jenjang (Level)
+                // 3. Filter Jenjang
                 _buildFilterDropdown<String>(
                   label: "Berdasarkan Jenjang",
                   value: selectedLevel,

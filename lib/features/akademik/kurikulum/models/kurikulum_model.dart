@@ -65,11 +65,11 @@ class KurikulumModel {
 
   factory KurikulumModel.fromJson(Map<String, dynamic> json) => KurikulumModel(
     id: (json['id'] == null || json['id'].toString() == 'null') ? null : json['id'].toString(),
-    lembagaId: json['lembaga_id']?.toString() ?? '',
-    tahunAjaranId: json['tahun_ajaran_id']?.toString(),
+    lembagaId: json['organization_id']?.toString() ?? json['lembaga_id']?.toString() ?? '',
+    tahunAjaranId: json['academic_year_id']?.toString() ?? json['tahun_ajaran_id']?.toString(),
     programId: json['program_id']?.toString(),
-    namaKurikulum: json['nama_kurikulum']?.toString() ?? '',
-    deskripsi: json['deskripsi']?.toString(),
+    namaKurikulum: json['name']?.toString() ?? json['nama_kurikulum']?.toString() ?? '',
+    deskripsi: json['description']?.toString() ?? json['deskripsi']?.toString(),
     status: json['status']?.toString() ?? 'aktif',
     isActive: json['is_active'] == true,
     isLinear: json['is_linear'] == true,
@@ -84,10 +84,14 @@ class KurikulumModel {
 
   Map<String, dynamic> toJson() => {
     if (id != null && id!.isNotEmpty) 'id': id,
+    'organization_id': lembagaId,
     'lembaga_id': lembagaId,
+    'academic_year_id': tahunAjaranId,
     'tahun_ajaran_id': tahunAjaranId,
     'program_id': programId,
+    'name': namaKurikulum,
     'nama_kurikulum': namaKurikulum,
+    'description': deskripsi,
     'deskripsi': deskripsi,
     'status': status,
     'is_active': isActive,
@@ -147,10 +151,10 @@ class JenjangModel {
 
   factory JenjangModel.fromJson(Map<String, dynamic> json) => JenjangModel(
     id: (json['id'] == null || json['id'].toString() == 'null') ? null : json['id'].toString(),
-    kurikulumId: json['kurikulum_id']?.toString() ?? '',
-    namaJenjang: json['nama_jenjang']?.toString() ?? '',
-    deskripsi: json['deskripsi']?.toString(),
-    urutan: (json['urutan'] as num?)?.toInt() ?? 0, // TAMBAHAN
+    kurikulumId: json['curriculum_id']?.toString() ?? json['kurikulum_id']?.toString() ?? '',
+    namaJenjang: json['name']?.toString() ?? json['nama_jenjang']?.toString() ?? '',
+    deskripsi: json['description']?.toString() ?? json['deskripsi']?.toString(),
+    urutan: (json['order_index'] as num?)?.toInt() ?? (json['urutan'] as num?)?.toInt() ?? 0, // TAMBAHAN
     level: (json['level'] is List)
         ? (json['level'] as List)
         .whereType<Map<String, dynamic>>()
@@ -161,9 +165,13 @@ class JenjangModel {
 
   Map<String, dynamic> toJson() => {
     if (id != null && id!.isNotEmpty) 'id': id,
+    'curriculum_id': kurikulumId,
     'kurikulum_id': kurikulumId,
+    'name': namaJenjang,
     'nama_jenjang': namaJenjang,
+    'description': deskripsi,
     'deskripsi': deskripsi,
+    'order_index': urutan,
     'urutan': urutan, // TAMBAHAN
     'level': List<dynamic>.from(level.map((x) => x.toJson())),
   };
@@ -215,11 +223,11 @@ class LevelModel {
 
   factory LevelModel.fromJson(Map<String, dynamic> json) => LevelModel(
     id: (json['id'] == null || json['id'].toString() == 'null') ? null : json['id'].toString(),
-    kurikulumId: json['kurikulum_id']?.toString() ?? '',
+    kurikulumId: json['curriculum_id']?.toString() ?? json['kurikulum_id']?.toString() ?? '',
     jenjangId: json['jenjang_id']?.toString() ?? '',
     programId: json['program_id']?.toString(),
-    namaLevel: json['nama_level']?.toString() ?? '',
-    urutan: (json['urutan'] as num?)?.toInt() ?? 0,
+    namaLevel: json['name']?.toString() ?? json['nama_level']?.toString() ?? '',
+    urutan: (json['order_index'] as num?)?.toInt() ?? (json['urutan'] as num?)?.toInt() ?? 0,
     isExamRequired: json['is_exam_required'] == true, // TAMBAHAN
     examConfig: json['exam_config'] != null
         ? LevelExamConfig.fromJson(json['exam_config'])
@@ -234,10 +242,13 @@ class LevelModel {
 
   Map<String, dynamic> mapToJson() => {
     if (id != null && id!.isNotEmpty) 'id': id,
+    'curriculum_id': kurikulumId,
     'kurikulum_id': kurikulumId,
     'jenjang_id': jenjangId,
     'program_id': programId,
+    'name': namaLevel,
     'nama_level': namaLevel,
+    'order_index': urutan,
     'urutan': urutan,
     'is_exam_required': isExamRequired,
     if (examConfig != null) 'exam_config': examConfig?.toJson(),

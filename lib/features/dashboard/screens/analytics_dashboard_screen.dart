@@ -75,7 +75,7 @@ class AnalyticsDashboardScreen extends ConsumerWidget {
                   const Card(
                     child: Padding(
                       padding: EdgeInsets.all(16.0),
-                      child: Text("Belum ada data setoran santri."),
+                      child: Text("Belum ada data penilaian mutabaah santri."),
                     ),
                   )
                 else

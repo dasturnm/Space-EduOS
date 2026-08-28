@@ -74,7 +74,7 @@ class SidebarConfig {
             permission: "organization.manage",
           ),
           SidebarItem(
-            title: "Manajemen Cabang",
+            title: "Satuan Pendidikan",
             icon: Icons.account_tree_outlined,
             route: "/management-lembaga/cabang",
             permission: "organization.manage",
@@ -102,13 +102,13 @@ class SidebarConfig {
         module: "akademik",
         items: [
           SidebarItem(
-            title: "Manajemen Program",
+            title: "Program Pendidikan",
             icon: Icons.book_online_outlined,
             route: "/akademik/program",
             permission: "academic.program.manage",
           ),
           SidebarItem(
-            title: "Kurikulum & Level",
+            title: "Kurikulum & Jenjang",
             icon: Icons.import_contacts_outlined,
             route: "/akademik/kurikulum",
             permission: "academic.curriculum.read",
@@ -136,7 +136,7 @@ class SidebarConfig {
         module: "tahfidz",
         items: [
           SidebarItem(
-            title: "Input Setoran",
+            title: "Penilaian Mutabaah Harian",
             icon: Icons.draw_outlined,
             route: "/mutabaah/input",
             permission: "tahfidz.write",

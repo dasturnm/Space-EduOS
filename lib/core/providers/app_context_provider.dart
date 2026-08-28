@@ -117,15 +117,15 @@ class AppContext extends _$AppContext {
     if (state.lembaga == null) {
       // --- SKENARIO 1: DATA BARU (INSERT) ---
       final response = await _supabase
-          .from('lembaga')
+          .from('organizations')
           .insert({
-        'nama_lembaga': nama,
-        'alamat_pusat': alamat,
-        'wa_official': kontak,
+        'name': nama,
+        'address': alamat,
+        'phone': kontak,
         'logo_url': logoUrl,
-        'email_official': emailOfficial,
-        'visi': visi,
-        'misi': misi,
+        'email': emailOfficial,
+        'vision': visi,
+        'mission': misi,
       })
           .select()
           .single();
@@ -162,15 +162,15 @@ class AppContext extends _$AppContext {
 
       // FIX: Gunakan Map spesifik untuk update guna menghindari konflik RLS/ID di Supabase
       await _supabase
-          .from('lembaga')
+          .from('organizations')
           .update({
-        'nama_lembaga': nama,
-        'alamat_pusat': alamat,
-        'wa_official': kontak,
+        'name': nama,
+        'address': alamat,
+        'phone': kontak,
         'logo_url': logoUrl,
-        'email_official': emailOfficial,
-        'visi': visi,
-        'misi': misi,
+        'email': emailOfficial,
+        'vision': visi,
+        'mission': misi,
       })
           .eq('id', updatedLembaga.id);
 
@@ -265,15 +265,15 @@ class AppContext extends _$AppContext {
 
       // 1b. Cek Jumlah Divisi untuk Deteksi Lembaga Baru (Setup Wizard)
       final divisiCountData = await _supabase
-          .from('divisi')
+          .from('departments')
           .select('id')
-          .eq('lembaga_id', lembaga.id);
+          .eq('organization_id', lembaga.id);
       final bool isNewLembagaDetected = (divisiCountData as List).isEmpty;
 
       // 2. Ambil Penugasan Staf, Jabatan & Granular Permissions (PBAC)
       final penugasanData = await _supabase
-          .from('penugasan_staf')
-          .select('id, status, cabang:cabang_id(*), jabatan:jabatan_id(nama_jabatan, permissions)')
+          .from('employee_assignments')
+          .select('id, status, organizational_unit:organizational_unit_id(*), job_position:job_position_id(title, permissions)')
           .eq('profile_id', user.id)
           .eq('status', 'AKTIF');
 
@@ -283,13 +283,13 @@ class AppContext extends _$AppContext {
 
       if ((penugasanData as List).isNotEmpty) {
         for (final item in penugasanData) {
-          if (item['cabang'] != null) {
-            branches.add(CabangModel.fromJson(item['cabang']));
+          if (item['organizational_unit'] != null) {
+            branches.add(CabangModel.fromJson(item['organizational_unit']));
           }
-          if (item['jabatan'] != null) {
-            final jabatan = item['jabatan'];
-            if (currentRole == null && jabatan['nama_jabatan'] != null) {
-              currentRole = jabatan['nama_jabatan'].toString().toUpperCase();
+          if (item['job_position'] != null) {
+            final jabatan = item['job_position'];
+            if (currentRole == null && jabatan['title'] != null) {
+              currentRole = jabatan['title'].toString().toUpperCase();
             }
             if (jabatan['permissions'] != null && jabatan['permissions'] is List) {
               for (final perm in jabatan['permissions']) {
@@ -303,9 +303,9 @@ class AppContext extends _$AppContext {
       // FIX: Jika cabang kosong (kasus OWNER), ambil semua cabang milik lembaga ini
       if (branches.isEmpty) {
         final allBranches = await _supabase
-            .from('cabang')
+            .from('organizational_units')
             .select()
-            .eq('lembaga_id', lembaga.id);
+            .eq('organization_id', lembaga.id);
         branches = (allBranches as List)
             .map((e) => CabangModel.fromJson(e))
             .toList();
@@ -319,7 +319,7 @@ class AppContext extends _$AppContext {
       if (lembaga.tahunAjaranAktifId != null) {
         try {
           final taData = await _supabase
-              .from('tahun_ajaran')
+              .from('academic_years')
               .select()
               .eq('id', lembaga.tahunAjaranAktifId!)
               .maybeSingle();
@@ -333,10 +333,10 @@ class AppContext extends _$AppContext {
 
       if (tahunAktif == null) {
         final taFallback = await _supabase
-            .from('tahun_ajaran')
+            .from('academic_years')
             .select()
-            .eq('lembaga_id', lembaga.id)
-            .order('tanggal_mulai', ascending: false)
+            .eq('organization_id', lembaga.id)
+            .order('start_date', ascending: false)
             .limit(1)
             .maybeSingle();
 
@@ -367,7 +367,7 @@ class AppContext extends _$AppContext {
   }
 
   // --- FUNGSI PINDAH CABANG (CONTEXT SWITCHER) ---
-  void switchCabang(CabangModel cabang) {
+  void switchSatuanPendidikan(CabangModel cabang) {
     state = state.copyWith(currentCabang: cabang);
   }
 

@@ -25,17 +25,25 @@ class DelegasiModel {
 
   // factory untuk konversi dari JSON Supabase dengan UUID Safety
   factory DelegasiModel.fromJson(Map<String, dynamic> json) {
+    final lId = json['lembaga_id'] ?? json['organization_id'];
+    final pId = json['pemberi_izin_id'] ?? json['granter_id'] ?? json['grantor_id'];
+    final rId = json['penerima_izin_id'] ?? json['receiver_id'];
+    final kId = json['kelas_id'] ?? json['class_id'];
+    final tIzin = json['tanggal_izin'] ?? json['permit_date'] ?? json['date'];
+    final act = json['is_active'] ?? json['active'];
+    final notes = json['catatan'] ?? json['notes'];
+
     return DelegasiModel(
       id: (json['id'] == null || json['id'].toString() == 'null') ? null : json['id'].toString(),
-      lembagaId: json['lembaga_id']?.toString() ?? '',
-      pemberiIzinId: (json['pemberi_izin_id'] == null || json['pemberi_izin_id'].toString() == 'null') ? '' : json['pemberi_izin_id'].toString(),
-      penerimaIzinId: (json['penerima_izin_id'] == null || json['penerima_izin_id'].toString() == 'null') ? '' : json['penerima_izin_id'].toString(),
-      kelasId: (json['kelas_id'] == null || json['kelas_id'].toString() == 'null') ? '' : json['kelas_id'].toString(),
-      tanggalIzin: json['tanggal_izin'] != null
-          ? DateTime.tryParse(json['tanggal_izin'].toString()) ?? DateTime.now()
+      lembagaId: (lId == null || lId.toString() == 'null') ? '' : lId.toString(),
+      pemberiIzinId: (pId == null || pId.toString() == 'null') ? '' : pId.toString(),
+      penerimaIzinId: (rId == null || rId.toString() == 'null') ? '' : rId.toString(),
+      kelasId: (kId == null || kId.toString() == 'null') ? '' : kId.toString(),
+      tanggalIzin: tIzin != null
+          ? DateTime.tryParse(tIzin.toString()) ?? DateTime.now()
           : DateTime.now(),
-      isActive: json['is_active'] ?? true,
-      catatan: json['catatan']?.toString(),
+      isActive: act ?? true,
+      catatan: notes?.toString(),
       createdAt: json['created_at'] != null
           ? DateTime.tryParse(json['created_at'].toString()) ?? DateTime.now()
           : DateTime.now(),

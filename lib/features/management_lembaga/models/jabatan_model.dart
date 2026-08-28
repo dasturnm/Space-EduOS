@@ -1,3 +1,5 @@
+// Lokasi: lib/features/management_lembaga/models/jabatan_model.dart
+
 class JabatanModel {
   final String id;
   final String lembagaId; // Ditambahkan agar data tidak jadi hantu
@@ -51,22 +53,26 @@ class JabatanModel {
 
   factory JabatanModel.fromJson(Map<String, dynamic> json) => JabatanModel(
     id: json['id'],
-    lembagaId: json['lembaga_id'] ?? '',
-    divisiId: json['divisi_id'] ?? '',
-    unitKerjaId: json['unit_kerja_id'],
-    namaJabatan: json['nama_jabatan'] ?? '',
-    defaultRole: json['default_role'] ?? 'GURU',
-    status: json['status'],
+    lembagaId: json['organization_id']?.toString() ?? json['lembaga_id']?.toString() ?? '',
+    divisiId: json['department_id']?.toString() ?? json['divisi_id']?.toString() ?? '',
+    unitKerjaId: json['work_unit_id']?.toString() ?? json['unit_kerja_id']?.toString(),
+    namaJabatan: json['title']?.toString() ?? json['nama_jabatan']?.toString() ?? '',
+    defaultRole: json['default_role']?.toString() ?? 'GURU',
+    status: json['status']?.toString(),
     levelJabatan: json['level_jabatan'],
-    catatanJabatan: json['catatan_jabatan'],
+    catatanJabatan: json['catatan_jabatan']?.toString(),
     permissions: json['permissions'] != null ? List<String>.from(json['permissions']) : null,
   );
 
   Map<String, dynamic> toJson() => {
     'id': id,
+    'organization_id': lembagaId,
     'lembaga_id': lembagaId,
+    'department_id': divisiId,
     'divisi_id': divisiId,
+    'work_unit_id': unitKerjaId,
     'unit_kerja_id': unitKerjaId,
+    'title': namaJabatan,
     'nama_jabatan': namaJabatan,
     'default_role': defaultRole,
     'status': status,

@@ -63,27 +63,36 @@ class MutabaahRecord {
 
   // FIX: Factory untuk konversi dari JSON Supabase dengan UUID safety & Audit Fields
   factory MutabaahRecord.fromJson(Map<String, dynamic> json) {
+    final sId = json['siswa_id'] ?? json['student_id'];
+    final gId = json['guru_id'] ?? json['teacher_id'];
+    final ogId = json['original_guru_id'] ?? json['original_teacher_id'];
+    final delId = json['delegasi_id'] ?? json['delegation_id'];
+    final mId = json['modul_id'] ?? json['module_id'];
+    final tMod = json['tipe_modul'] ?? json['module_type'];
+    final ach = json['achieved_amount'] ?? json['achieved'];
+    final notes = json['catatan'] ?? json['notes'];
+
     return MutabaahRecord(
       id: (json['id'] == null || json['id'].toString() == 'null') ? null : json['id'].toString(),
-      siswaId: (json['siswa_id'] == null || json['siswa_id'].toString() == 'null') ? '' : json['siswa_id'].toString(),
-      guruId: (json['guru_id'] == null || json['guru_id'].toString() == 'null') ? '' : json['guru_id'].toString(),
-      originalGuruId: (json['original_guru_id'] == null || json['original_guru_id'].toString() == 'null') ? null : json['original_guru_id'].toString(),
-      isDelegasi: json['is_delegasi'] ?? false,
-      delegasiId: (json['delegasi_id'] == null || json['delegasi_id'].toString() == 'null') ? null : json['delegasi_id'].toString(),
-      payrollStatus: json['payroll_status']?.toString() ?? 'pending',
-      modulId: (json['modul_id'] == null || json['modul_id'].toString() == 'null') ? '' : json['modul_id'].toString(),
-      surahId: (json['surah_id'] as num?)?.toInt() ?? 0,
-      endSurahId: (json['end_surah_id'] as num?)?.toInt() ?? 0,
-      ayahStart: (json['ayah_start'] as num?)?.toInt() ?? 0,
-      ayahEnd: (json['ayah_end'] as num?)?.toInt() ?? 0,
-      totalBaris: (json['total_baris'] as num?)?.toInt() ?? 0,
-      tipeModul: json['tipe_modul']?.toString() ?? '',
-      dataPayload: json['data_payload'] as Map<String, dynamic>? ?? {},
-      targetSnapshot: (json['target_snapshot'] as num?)?.toDouble() ?? 0.0,
-      achievedAmount: (json['achieved_amount'] as num?)?.toDouble() ?? 0.0,
-      debtCreated: (json['debt_created'] as num?)?.toDouble() ?? 0.0,
-      isPassedTarget: json['is_passed_target'] ?? true,
-      catatan: json['catatan']?.toString(),
+      siswaId: (sId == null || sId.toString() == 'null') ? '' : sId.toString(),
+      guruId: (gId == null || gId.toString() == 'null') ? '' : gId.toString(),
+      originalGuruId: (ogId == null || ogId.toString() == 'null') ? null : ogId.toString(),
+      isDelegasi: (json['is_delegasi'] ?? json['is_delegation']) ?? false,
+      delegasiId: (delId == null || delId.toString() == 'null') ? null : delId.toString(),
+      payrollStatus: (json['payroll_status'] ?? json['payroll_state'])?.toString() ?? 'pending',
+      modulId: (mId == null || mId.toString() == 'null') ? '' : mId.toString(),
+      surahId: ((json['surah_id'] ?? json['surah_start_id']) as num?)?.toInt() ?? 0,
+      endSurahId: ((json['end_surah_id'] ?? json['surah_end_id']) as num?)?.toInt() ?? 0,
+      ayahStart: ((json['ayah_start'] ?? json['start_ayah']) as num?)?.toInt() ?? 0,
+      ayahEnd: ((json['ayah_end'] ?? json['end_ayah']) as num?)?.toInt() ?? 0,
+      totalBaris: ((json['total_baris'] ?? json['total_lines']) as num?)?.toInt() ?? 0,
+      tipeModul: (tMod ?? '').toString(),
+      dataPayload: (json['data_payload'] ?? json['payload']) as Map<String, dynamic>? ?? {},
+      targetSnapshot: ((json['target_snapshot'] ?? json['target']) as num?)?.toDouble() ?? 0.0,
+      achievedAmount: (ach as num?)?.toDouble() ?? 0.0,
+      debtCreated: ((json['debt_created'] ?? json['debt']) as num?)?.toDouble() ?? 0.0,
+      isPassedTarget: (json['is_passed_target'] ?? json['passed_target']) ?? true,
+      catatan: notes?.toString(),
       internalStart: (json['internal_start'] as num?)?.toInt() ??
           (json['data_payload'] is Map ? (json['data_payload']['halaman_awal'] as num?)?.toInt() : null) ?? 0,
       internalEnd: (json['internal_end'] as num?)?.toInt() ??

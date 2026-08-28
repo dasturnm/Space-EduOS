@@ -81,7 +81,7 @@ class _StaffAssignmentScreenState extends ConsumerState<StaffAssignmentScreen> {
             const SizedBox(height: 16),
             SwitchListTile(
               title: const Text("Jadikan Jabatan Utama", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-              subtitle: const Text("Gaji dan absensi akan merujuk ke cabang ini"),
+              subtitle: const Text("Gaji dan absensi akan merujuk ke satuan pendidikan ini"),
               value: _isUtama,
               activeThumbColor: const Color(0xFF10B981),
               onChanged: (val) => setState(() => _isUtama = val),
@@ -175,10 +175,10 @@ class _StaffAssignmentScreenState extends ConsumerState<StaffAssignmentScreen> {
     // FIX: cabangListProvider sekarang tidak menerima parameter (Auto AppContext)
     final cabangs = ref.watch(cabangListProvider).value ?? [];
     return DropdownButtonFormField<String?>(
-      decoration: _inputDecor("Pilih Cabang", Icons.business),
+      decoration: _inputDecor("Pilih Satuan Pendidikan", Icons.business),
       initialValue: _selectedCabangId,
       items: [
-        const DropdownMenuItem(value: null, child: Text("Kantor Pusat")),
+        const DropdownMenuItem(value: null, child: Text("Lembaga Pusat")),
         ...cabangs.map((c) => DropdownMenuItem(value: c.id, child: Text(c.namaCabang)))
       ],
       onChanged: (v) => setState(() => _selectedCabangId = v),

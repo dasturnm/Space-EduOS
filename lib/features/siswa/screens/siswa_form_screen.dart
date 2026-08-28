@@ -173,6 +173,7 @@ class _SiswaFormScreenState extends ConsumerState<SiswaFormScreen> {
     final modulsAsync = ref.watch(modulByLevelProvider(_selectedLevelId));
 
     final selectedKurikulum = (kurikulumAsync.value ?? []).where((k) => k.id == _selectedKurikulumId).firstOrNull;
+    // ignore: unused_local_variable
     bool isLinear = selectedKurikulum?.isLinear ?? false;
 
     return Scaffold(
@@ -280,9 +281,9 @@ class _SiswaFormScreenState extends ConsumerState<SiswaFormScreen> {
                 _buildSectionTitle('Informasi Akademik'),
 
                 _buildDropdown(
-                  label: 'Program Akademik',
+                  label: 'Program Pendidikan',
                   value: _selectedProgramId,
-                  hint: programsAsync.isLoading ? 'Memuat program...' : 'Pilih Program',
+                  hint: programsAsync.isLoading ? 'Memuat program...' : 'Pilih Program Pendidikan',
                   items: [
                     const DropdownMenuItem(value: null, child: Text('Tanpa Program')),
                     ...programsAsync.maybeWhen(
@@ -328,9 +329,9 @@ class _SiswaFormScreenState extends ConsumerState<SiswaFormScreen> {
                   children: [
                     Expanded(
                       child: _buildDropdown(
-                        label: isLinear ? 'Jenjang' : 'Level',
+                        label: 'Jenjang',
                         value: _selectedLevelId,
-                        hint: levelsAsync.isLoading ? 'Memuat...' : 'Pilih ${isLinear ? 'Jenjang' : 'Level'}',
+                        hint: levelsAsync.isLoading ? 'Memuat...' : 'Pilih Jenjang',
                         items: levelsAsync.maybeWhen(
                           data: (list) => list.map((l) => DropdownMenuItem(
                             value: l.id,

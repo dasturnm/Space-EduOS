@@ -148,7 +148,7 @@ class _SiswaTableViewState extends ConsumerState<SiswaTableView> {
                                 ),
                               ),
 
-                              // B. KELAS / LEVEL - Flex 2
+                              // B. KELAS / JENJANG - Flex 2
                               Expanded(
                                 flex: 2,
                                 child: Column(
@@ -282,7 +282,7 @@ class _SiswaTableViewState extends ConsumerState<SiswaTableView> {
       child: Row(
         children: [
           _buildHeaderCell("SISWA", 3),
-          _buildHeaderCell("KELAS / LEVEL", 2),
+          _buildHeaderCell("KELAS / JENJANG", 2),
           _buildHeaderCell("PROGRESS HAFALAN", 2),
           _buildHeaderCell("STATUS & AKSI", 2, textAlign: TextAlign.right),
         ],
@@ -317,16 +317,20 @@ class _SiswaTableViewState extends ConsumerState<SiswaTableView> {
   }
 
   Widget _buildStatusBadge(String status) {
-    bool isAktif = status.toLowerCase() == 'aktif';
+    final lowerStatus = status.toLowerCase();
+    bool isAktif = lowerStatus == 'aktif';
+    bool isLulus = lowerStatus == 'graduated' || lowerStatus == 'lulus';
+    String displayText = isLulus ? 'LULUS' : status.toUpperCase();
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
       decoration: BoxDecoration(
-        color: isAktif ? const Color(0xFFF0FDF4) : const Color(0xFFF8FAFC),
+        color: (isAktif || isLulus) ? const Color(0xFFF0FDF4) : const Color(0xFFF8FAFC),
         borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: isAktif ? const Color(0xFFBBF7D0) : const Color(0xFFE2E8F0)),
+        border: Border.all(color: (isAktif || isLulus) ? const Color(0xFFBBF7D0) : const Color(0xFFE2E8F0)),
       ),
-      child: Text(status.toUpperCase(),
-          style: TextStyle(fontSize: 7, fontWeight: FontWeight.w900, color: isAktif ? const Color(0xFF16A34A) : const Color(0xFF94A3B8))),
+      child: Text(displayText,
+          style: TextStyle(fontSize: 7, fontWeight: FontWeight.w900, color: (isAktif || isLulus) ? const Color(0xFF16A34A) : const Color(0xFF94A3B8))),
     );
   }
 

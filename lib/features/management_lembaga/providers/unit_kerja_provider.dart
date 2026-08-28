@@ -19,10 +19,10 @@ class UnitKerjaList extends _$UnitKerjaList {
     if (lembagaId == null) return [];
 
     final response = await _supabase
-        .from('unit_kerja')
-        .select()
-        .eq('lembaga_id', lembagaId)
-        .order('nama_unit_kerja');
+        .from('work_units')
+        .select('*, department:departments!inner(*)')
+        .eq('department.organization_id', lembagaId)
+        .order('name');
 
     return (response as List).map((e) => UnitKerjaModel.fromJson(e)).toList();
   }
@@ -36,12 +36,12 @@ class UnitKerjaList extends _$UnitKerjaList {
     data['lembaga_id'] = lembagaId;
     if (unitKerja.id.isEmpty) data.remove('id');
 
-    await _supabase.from('unit_kerja').upsert(data);
+    await _supabase.from('work_units').upsert(data);
     ref.invalidateSelf();
   }
 
   Future<void> deleteUnitKerja(String id) async {
-    await _supabase.from('unit_kerja').delete().eq('id', id);
+    await _supabase.from('work_units').delete().eq('id', id);
     ref.invalidateSelf();
   }
 }

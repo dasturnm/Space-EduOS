@@ -1,4 +1,5 @@
-// COPY-SAFE: lib/features/akademik/kurikulum/models/evaluation_kriteria_model.dart
+// Lokasi: lib/features/akademik/kurikulum/models/evaluation_kriteria_model.dart
+
 class EvaluationKriteria {
   final String id;
   final String aspek;
@@ -14,27 +15,32 @@ class EvaluationKriteria {
 
   factory EvaluationKriteria.fromJson(Map<String, dynamic> json) {
     return EvaluationKriteria(
-      id: json['id'] ?? '',
-      aspek: json['aspek'] ?? '',
-      indikator: json['indikator'] ?? '',
-      nilai: (json['nilai'] as num?)?.toDouble() ?? 0.0,
+      id: (json['id'] == null || json['id'].toString() == 'null') ? '' : json['id'].toString(),
+      aspek: (json['aspek'] ?? json['aspect'])?.toString() ?? '',
+      indikator: (json['indikator'] ?? json['indicator'])?.toString() ?? '',
+      nilai: ((json['nilai'] ?? json['score']) as num?)?.toDouble() ?? 0.0,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      if (id.isNotEmpty) 'id': id,
       'aspek': aspek,
       'indikator': indikator,
       'nilai': nilai,
     };
   }
 
-  EvaluationKriteria copyWith({double? nilai}) {
+  EvaluationKriteria copyWith({
+    String? id,
+    String? aspek,
+    String? indikator,
+    double? nilai,
+  }) {
     return EvaluationKriteria(
-      id: id,
-      aspek: aspek,
-      indikator: indikator,
+      id: id ?? this.id,
+      aspek: aspek ?? this.aspek,
+      indikator: indikator ?? this.indikator,
       nilai: nilai ?? this.nilai,
     );
   }

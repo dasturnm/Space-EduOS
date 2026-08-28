@@ -40,10 +40,10 @@ class _EnrollKurikulumDialogState extends ConsumerState<EnrollKurikulumDialog> {
                 style: const TextStyle(color: Colors.grey, fontSize: 13)),
             const SizedBox(height: 20),
 
-            // STEP 1: PILIH PROGRAM
+            // STEP 1: PILIH PROGRAM PENDIDIKAN
             programsAsync.when(
               data: (programs) => DropdownButtonFormField<String>(
-                decoration: _inputDecoration("Pilih Program"),
+                decoration: _inputDecoration("Pilih Program Pendidikan"),
                 items: programs.map((p) => DropdownMenuItem(value: p.id, child: Text(p.namaProgram))).toList(),
                 onChanged: (val) => setState(() {
                   _selectedProgramId = val;
@@ -53,7 +53,7 @@ class _EnrollKurikulumDialogState extends ConsumerState<EnrollKurikulumDialog> {
                 }),
               ),
               loading: () => const LinearProgressIndicator(),
-              error: (_, __) => const Text("Gagal memuat program"),
+              error: (_, __) => const Text("Gagal memuat program pendidikan"),
             ),
 
             const SizedBox(height: 16),
@@ -93,16 +93,16 @@ class _EnrollKurikulumDialogState extends ConsumerState<EnrollKurikulumDialog> {
 
             const SizedBox(height: 16),
 
-            // STEP 4: PILIH LEVEL AWAL (Sekarang watch berdasarkan Jenjang)
+            // STEP 4: PILIH JENJANG AWAL (Sekarang watch berdasarkan Jenjang)
             if (_selectedJenjangId != null)
               ref.watch(levelListProvider(_selectedJenjangId!)).when(
                 data: (level) => DropdownButtonFormField<String>(
-                  decoration: _inputDecoration("Mulai dari Level"),
+                  decoration: _inputDecoration("Mulai dari Jenjang"),
                   items: level.map((l) => DropdownMenuItem(value: l.id, child: Text("${l.urutan}. ${l.namaLevel}"))).toList(),
                   onChanged: (val) => setState(() => _selectedLevelId = val),
                 ),
                 loading: () => const LinearProgressIndicator(),
-                error: (_, __) => const Text("Gagal memuat level"),
+                error: (_, __) => const Text("Gagal memuat jenjang"),
               ),
           ],
         ),

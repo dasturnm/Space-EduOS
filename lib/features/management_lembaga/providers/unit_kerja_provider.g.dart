@@ -33,7 +33,7 @@ final class UnitKerjaListProvider
   UnitKerjaList create() => UnitKerjaList();
 }
 
-String _$unitKerjaListHash() => r'31d632995fb0766939c69c33c1562f27f5f8fae1';
+String _$unitKerjaListHash() => r'a5b5bdddde23f5d597553dc5517b53ac31a911e5';
 
 abstract class _$UnitKerjaList extends $AsyncNotifier<List<UnitKerjaModel>> {
   FutureOr<List<UnitKerjaModel>> build();

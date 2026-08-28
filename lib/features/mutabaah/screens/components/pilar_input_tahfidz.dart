@@ -40,7 +40,7 @@ extension PilarInputTahfidz on _ModulInputScreenState {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text("Ringkasan Capaian Setoran:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.blueGrey)),
+                  const Text("Ringkasan Capaian Mutabaah:", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.blueGrey)),
                   if (!(_loadingMap[mId] ?? false))
                     Text(
                         "Setara ~${(_pagesMap[mId] ?? 0.0).toStringAsFixed(1)} Hal",

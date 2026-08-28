@@ -80,14 +80,14 @@ class SiswaModel {
   factory SiswaModel.fromJson(Map<String, dynamic> json) {
     return SiswaModel(
       id: (json['id'] == null || json['id'].toString() == 'null') ? null : json['id'].toString(),
-      lembagaId: json['lembaga_id']?.toString() ?? '',
+      lembagaId: json['organization_id']?.toString() ?? json['lembaga_id']?.toString() ?? '',
       cabangId: (json['cabang_id'] == null || json['cabang_id'].toString() == 'null') ? null : json['cabang_id'].toString(),
-      namaLengkap: json['nama_lengkap']?.toString() ?? '',
+      namaLengkap: json['full_name']?.toString() ?? json['nama_lengkap']?.toString() ?? '',
       nisn: json['nisn']?.toString(),
       email: json['email']?.toString(),
       noHp: json['no_hp']?.toString(),
       passwordSementara: null, // Tidak disimpan di DB
-      jenisKelamin: json['jenis_kelamin']?.toString() ?? 'L',
+      jenisKelamin: json['gender']?.toString() ?? json['jenis_kelamin']?.toString() ?? 'L',
       tglLahir: json['tgl_lahir'] != null
           ? DateTime.tryParse(json['tgl_lahir'].toString())
           : null,
@@ -118,12 +118,15 @@ class SiswaModel {
   Map<String, dynamic> toJson() {
     return {
       if (id != null) 'id': id,
+      'organization_id': lembagaId,
       'lembaga_id': lembagaId,
       'cabang_id': cabangId,
+      'full_name': namaLengkap,
       'nama_lengkap': namaLengkap, // FIX: Typo namaLengkaap diperbaiki
       'nisn': nisn,
       'email': email,
       'no_hp': noHp,
+      'gender': jenisKelamin,
       'jenis_kelamin': jenisKelamin,
       'tgl_lahir': tglLahir?.toIso8601String().split('T')[0],
       'alamat': alamat,

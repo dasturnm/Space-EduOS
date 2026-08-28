@@ -13,7 +13,7 @@ class ProgramHubScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: const Color(0xFFF8FAFC),
         appBar: AppBar(
-          title: const Text("Manajemen Program"),
+          title: const Text("Program Pendidikan"),
           backgroundColor: const Color(0xFF10B981),
           foregroundColor: Colors.white,
           elevation: 0,

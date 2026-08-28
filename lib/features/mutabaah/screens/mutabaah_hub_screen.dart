@@ -68,7 +68,7 @@ class _MutabaahHubScreenState extends ConsumerState<MutabaahHubScreen> {
         onPressed: () => _showSiswaSelector(context),
         backgroundColor: _slate,
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text("Tambah Setoran", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        label: const Text("Tambah Penilaian", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
       ),
     );
   }
@@ -89,7 +89,7 @@ class _MutabaahHubScreenState extends ConsumerState<MutabaahHubScreen> {
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: _slate, letterSpacing: -0.5),
               ),
               const SizedBox(height: 4),
-              Text("Ringkasan setoran harian seluruh unit", style: TextStyle(color: Colors.grey[600], fontSize: 13)),
+              Text("Ringkasan penilaian harian seluruh unit", style: TextStyle(color: Colors.grey[600], fontSize: 13)),
             ],
           ),
           _iconActionButton(Icons.calendar_month_rounded, () {}),
@@ -109,7 +109,7 @@ class _MutabaahHubScreenState extends ConsumerState<MutabaahHubScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 32),
           child: Row(
             children: [
-              _statCard("Setoran Hari Ini", "${todayRecords.length}", Icons.bolt_rounded, Colors.orange),
+              _statCard("Penilaian Hari Ini", "${todayRecords.length}", Icons.bolt_rounded, Colors.orange),
               const SizedBox(width: 16),
               _statCard("Total Record", "${records.length}", Icons.fact_check_rounded, _emerald),
             ],
@@ -195,6 +195,54 @@ class _MutabaahHubScreenState extends ConsumerState<MutabaahHubScreen> {
             fontWeight: FontWeight.bold,
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildActivityTile(MutabaahRecord record) {
+    final timeStr = DateFormat('HH:mm').format(record.createdAt);
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFF1F5F9)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 45,
+            height: 45,
+            decoration: BoxDecoration(
+              color: (record.tipeModul == 'HAFALAN' ? _emerald : Colors.blue).withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(
+              record.tipeModul == 'HAFALAN' ? Icons.menu_book_rounded : Icons.psychology_rounded,
+              color: record.tipeModul == 'HAFALAN' ? _emerald : Colors.blue,
+              size: 20,
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Siswa ID: ${record.siswaId.substring(0, 8)}...", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                Text(record.tipeModul, style: TextStyle(color: Colors.grey[500], fontSize: 11, fontWeight: FontWeight.bold)),
+              ],
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(timeStr, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+              const Icon(Icons.chevron_right, size: 16, color: Colors.grey),
+            ],
+          )
+        ],
       ),
     );
   }

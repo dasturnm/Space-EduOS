@@ -1,3 +1,5 @@
+// Lokasi: lib/features/lms/models/course_model.dart
+
 class CourseModel {
   final String id;
   final String organizationId;
@@ -32,21 +34,28 @@ class CourseModel {
   });
 
   factory CourseModel.fromJson(Map<String, dynamic> json) {
+    final orgId = json['organization_id'] ?? json['lembaga_id'];
+    final sId = json['subject_id'] ?? json['mata_pelajaran_id'];
+    final cId = json['class_id'] ?? json['kelas_id'];
+    final tId = json['teacher_id'] ?? json['guru_id'];
+    final trmId = json['term_id'] ?? json['semester_id'];
+    final n = json['name'] ?? json['nama_course'] ?? json['nama_kelas'];
+
     return CourseModel(
-      id: json['id'] as String,
-      organizationId: json['organization_id'] as String,
-      subjectId: json['subject_id'] as String,
-      classId: json['class_id'] as String,
-      teacherId: json['teacher_id'] as String,
-      termId: json['term_id'] as String,
-      name: json['name'] as String,
-      code: json['code'] as String?,
-      description: json['description'] as String?,
-      status: json['status'] as String? ?? 'draft',
+      id: (json['id'] == null || json['id'].toString() == 'null') ? '' : json['id'].toString(),
+      organizationId: (orgId == null || orgId.toString() == 'null') ? '' : orgId.toString(),
+      subjectId: (sId == null || sId.toString() == 'null') ? '' : sId.toString(),
+      classId: (cId == null || cId.toString() == 'null') ? '' : cId.toString(),
+      teacherId: (tId == null || tId.toString() == 'null') ? '' : tId.toString(),
+      termId: (trmId == null || trmId.toString() == 'null') ? '' : trmId.toString(),
+      name: (n == null || n.toString() == 'null') ? '' : n.toString(),
+      code: json['code']?.toString(),
+      description: (json['description'] ?? json['deskripsi'])?.toString(),
+      status: json['status']?.toString() ?? 'draft',
       config: json['config'] as Map<String, dynamic>?,
-      createdAt: json['created_at'] != null ? DateTime.parse(json['created_at'] as String) : null,
-      updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at'] as String) : null,
-      deletedAt: json['deleted_at'] != null ? DateTime.parse(json['deleted_at'] as String) : null,
+      createdAt: json['created_at'] != null ? DateTime.tryParse(json['created_at'].toString()) : null,
+      updatedAt: json['updated_at'] != null ? DateTime.tryParse(json['updated_at'].toString()) : null,
+      deletedAt: json['deleted_at'] != null ? DateTime.tryParse(json['deleted_at'].toString()) : null,
     );
   }
 
@@ -93,14 +102,14 @@ class ModuleModel {
 
   factory ModuleModel.fromJson(Map<String, dynamic> json) {
     return ModuleModel(
-      id: json['id'] as String,
-      courseId: json['course_id'] as String,
-      name: json['name'] as String,
-      description: json['description'] as String?,
-      order: json['order'] as int? ?? 0,
-      status: json['status'] as String? ?? 'draft',
-      createdAt: json['created_at'] != null ? DateTime.parse(json['created_at'] as String) : null,
-      updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at'] as String) : null,
+      id: (json['id'] == null || json['id'].toString() == 'null') ? '' : json['id'].toString(),
+      courseId: (json['course_id'] == null || json['course_id'].toString() == 'null') ? '' : json['course_id'].toString(),
+      name: (json['name'] == null || json['name'].toString() == 'null') ? '' : json['name'].toString(),
+      description: json['description']?.toString(),
+      order: (json['order'] as num?)?.toInt() ?? 0,
+      status: json['status']?.toString() ?? 'draft',
+      createdAt: json['created_at'] != null ? DateTime.tryParse(json['created_at'].toString()) : null,
+      updatedAt: json['updated_at'] != null ? DateTime.tryParse(json['updated_at'].toString()) : null,
     );
   }
 
@@ -147,17 +156,17 @@ class LessonModel {
 
   factory LessonModel.fromJson(Map<String, dynamic> json) {
     return LessonModel(
-      id: json['id'] as String,
-      moduleId: json['module_id'] as String,
-      name: json['name'] as String,
-      description: json['description'] as String?,
-      contentType: json['content_type'] as String,
-      contentUrl: json['content_url'] as String?,
-      durationMinutes: json['duration_minutes'] as int? ?? 0,
-      order: json['order'] as int? ?? 0,
-      isFree: json['is_free'] as bool? ?? false,
-      createdAt: json['created_at'] != null ? DateTime.parse(json['created_at'] as String) : null,
-      updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at'] as String) : null,
+      id: (json['id'] == null || json['id'].toString() == 'null') ? '' : json['id'].toString(),
+      moduleId: (json['module_id'] == null || json['module_id'].toString() == 'null') ? '' : json['module_id'].toString(),
+      name: (json['name'] == null || json['name'].toString() == 'null') ? '' : json['name'].toString(),
+      description: json['description']?.toString(),
+      contentType: json['content_type']?.toString() ?? '',
+      contentUrl: json['content_url']?.toString(),
+      durationMinutes: (json['duration_minutes'] as num?)?.toInt() ?? 0,
+      order: (json['order'] as num?)?.toInt() ?? 0,
+      isFree: json['is_free'] == true,
+      createdAt: json['created_at'] != null ? DateTime.tryParse(json['created_at'].toString()) : null,
+      updatedAt: json['updated_at'] != null ? DateTime.tryParse(json['updated_at'].toString()) : null,
     );
   }
 

@@ -402,9 +402,8 @@ class LembagaSeedingService {
     try {
       debugPrint("🧹 Memulai pembersihan (reset) data organisasi lama untuk Lembaga ID: $lembagaId");
 
-      await _supabase.from('jabatan').delete().eq('lembaga_id', lembagaId);
-      await _supabase.from('unit_kerja').delete().eq('lembaga_id', lembagaId);
-      await _supabase.from('divisi').delete().eq('lembaga_id', lembagaId);
+      await _supabase.from('job_positions').delete().eq('organization_id', lembagaId);
+      await _supabase.from('departments').delete().eq('organization_id', lembagaId);
 
       debugPrint("✨ Data lama berhasil dibersihkan. Memulai proses seeding baru...");
 
@@ -425,14 +424,12 @@ class LembagaSeedingService {
       final List<dynamic> divisiList = goldenSeedTemplate["divisi"] ?? [];
 
       for (var divData in divisiList) {
-        // 1. Insert Divisi
+        // 1. Insert Divisi (departments)
         final divisiInsert = await _supabase
-            .from('divisi')
+            .from('departments')
             .insert({
-          'lembaga_id': lembagaId,
-          'nama_divisi': divData['nama_divisi'],
-          'deskripsi': divData['deskripsi'],
-          'status': divData['status'] ?? 'aktif',
+          'organization_id': lembagaId,
+          'name': divData['nama_divisi'],
         })
             .select('id')
             .single();
@@ -441,16 +438,12 @@ class LembagaSeedingService {
 
         final List<dynamic> unitList = divData['unit_kerja'] ?? [];
         for (var unitData in unitList) {
-          // 2. Insert Unit Kerja
+          // 2. Insert Unit Kerja (work_units)
           final unitInsert = await _supabase
-              .from('unit_kerja')
+              .from('work_units')
               .insert({
-            'lembaga_id': lembagaId,
-            'divisi_id': divisiId,
-            'nama_unit_kerja': unitData['nama_unit_kerja'],
-            'kode_unit': unitData['kode_unit'],
-            'deskripsi': unitData['deskripsi'],
-            'status': unitData['status'] ?? 'aktif',
+            'department_id': divisiId,
+            'name': unitData['nama_unit_kerja'],
           })
               .select('id')
               .single();
@@ -459,16 +452,10 @@ class LembagaSeedingService {
 
           final List<dynamic> jabatanList = unitData['jabatan'] ?? [];
           for (var jabData in jabatanList) {
-            // 3. Insert Jabatan + Permissions PBAC
-            await _supabase.from('jabatan').insert({
-              'lembaga_id': lembagaId,
-              'divisi_id': divisiId,
-              'unit_kerja_id': unitKerjaId,
-              'nama_jabatan': jabData['nama_jabatan'],
-              'default_role': jabData['default_role'],
-              'level_jabatan': jabData['level_jabatan'] ?? 4,
-              'catatan_jabatan': jabData['catatan_jabatan'],
-              'status': jabData['status'] ?? 'aktif',
+            // 3. Insert Jabatan + Permissions PBAC (job_positions)
+            await _supabase.from('job_positions').insert({
+              'organization_id': lembagaId,
+              'title': jabData['nama_jabatan'],
               'permissions': jabData['permissions'] ?? [],
             });
           }

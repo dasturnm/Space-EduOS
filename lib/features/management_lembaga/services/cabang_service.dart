@@ -12,14 +12,14 @@ class CabangService extends BaseService {
       final lembagaId = getLembagaId(ref);
 
       // Gunakan query builder dasar
-      var query = supabase.from('cabang').select();
+      var query = supabase.from('organizational_units').select();
 
       // 🔥 SMART: Gunakan filter standar dari BaseService (ditambahkan cast PostgrestList)
       // FIX: Casting ke PostgrestFilterBuilder<PostgrestList> untuk menghindari invalid_assignment
       query = applyLembagaFilter(query: query, lembagaId: lembagaId) as PostgrestFilterBuilder<PostgrestList>;
 
       // Sorting
-      final response = await query.order('nama_cabang', ascending: true);
+      final response = await query.order('name', ascending: true);
 
       return (response as List)
           .map((e) => CabangModel.fromJson(e))
@@ -34,12 +34,13 @@ class CabangService extends BaseService {
     try {
       final data = cleanData(cabang.toJson());
       // FIX: Gunakan lembaga_id agar sinkron dengan database dan BaseService
+      data['organization_id'] = getLembagaId(ref);
       data['lembaga_id'] = getLembagaId(ref);
 
       // Pastikan ID tidak ikut dikirim jika ini data baru agar UUID digenerate Supabase
       if (cabang.id.isEmpty) data.remove('id');
 
-      await supabase.from('cabang').upsert(data);
+      await supabase.from('organizational_units').upsert(data);
     } catch (e) {
       throw Exception(handleError(e));
     }
@@ -48,7 +49,7 @@ class CabangService extends BaseService {
   /// 3. DELETE: Hapus cabang berdasarkan ID
   Future<void> deleteCabang(String id) async {
     try {
-      await supabase.from('cabang').delete().eq('id', id);
+      await supabase.from('organizational_units').delete().eq('id', id);
     } catch (e) {
       throw Exception(handleError(e));
     }

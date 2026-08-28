@@ -10,13 +10,13 @@ class TahunAjaranService extends BaseService {
   Future<List<TahunAjaranModel>> getTahunAjaran(Ref ref, String lembagaId) async {
     try {
       // Gunakan helper BaseService untuk standarisasi query
-      var query = supabase.from('tahun_ajaran').select();
+      var query = supabase.from('academic_years').select();
 
       // Gunakan applyLembagaFilter (id_lembaga)
       // FIX: Casting eksplisit untuk menghindari error invalid_assignment pada Supabase SDK terbaru
       query = applyLembagaFilter(query: query, lembagaId: lembagaId) as PostgrestFilterBuilder<PostgrestList>;
 
-      final data = await query.order('label_tahun', ascending: false);
+      final data = await query.order('label', ascending: false);
       return (data as List).map((e) => TahunAjaranModel.fromJson(e)).toList();
     } catch (e) {
       throw handleError(e);
@@ -28,9 +28,10 @@ class TahunAjaranService extends BaseService {
     try {
       final data = cleanData(ta.toJson());
       // FIX: Gunakan lembaga_id agar sinkron dengan database dan BaseService
+      data['organization_id'] = getLembagaId(ref);
       data['lembaga_id'] = getLembagaId(ref);
 
-      await supabase.from('tahun_ajaran').insert(data);
+      await supabase.from('academic_years').insert(data);
     } catch (e) {
       throw handleError(e);
     }
@@ -40,7 +41,7 @@ class TahunAjaranService extends BaseService {
   Future<void> updateTahunAjaran(Ref ref, TahunAjaranModel ta) async {
     try {
       final data = cleanData(ta.toJson());
-      await supabase.from('tahun_ajaran').update(data).eq('id', ta.id);
+      await supabase.from('academic_years').update(data).eq('id', ta.id);
     } catch (e) {
       throw handleError(e);
     }
@@ -49,7 +50,7 @@ class TahunAjaranService extends BaseService {
   /// 4. DELETE
   Future<void> deleteTahunAjaran(String id) async {
     try {
-      await supabase.from('tahun_ajaran').delete().eq('id', id);
+      await supabase.from('academic_years').delete().eq('id', id);
     } catch (e) {
       throw handleError(e);
     }
@@ -60,7 +61,7 @@ class TahunAjaranService extends BaseService {
     try {
       final lembagaId = getLembagaId(ref);
       await supabase
-          .from('lembaga')
+          .from('organizations')
           .update({'tahun_ajaran_aktif_id': taId})
           .eq('id', lembagaId);
     } catch (e) {

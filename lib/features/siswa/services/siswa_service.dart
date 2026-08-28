@@ -29,20 +29,20 @@ class SiswaService extends BaseService {
 
       // FIX: Menambahkan cabang (*) dan kurikulum_level agar filter & profil lengkap
       PostgrestFilterBuilder query = supabase
-          .from('siswa')
+          .from('students')
           .select('''
             *,
-            cabang (*),
-            kelas (*),
-            program (*),
-            kurikulum_level!level_id (*),
+            cabang:organizational_units (*),
+            kelas:classes (*),
+            program:programs (*),
+            kurikulum_level:levels (*),
             guru:profiles (*)
           ''');
 
       // 🔥 EXPLICIT-SAFE: Gunakan helper dari BaseService tanpa casting berlebihan
       query = applyLembagaFilter(query: query, lembagaId: lembagaId);
 
-      final response = await query.order('nama_lengkap', ascending: true);
+      final response = await query.order('full_name', ascending: true);
 
       return (response as List)
           .map((json) => SiswaModel.fromJson(json))
@@ -60,13 +60,13 @@ class SiswaService extends BaseService {
 
       // FIX: Menambahkan cabang (*) agar data tetap konsisten saat di-fetch per kelas
       PostgrestFilterBuilder query = supabase
-          .from('siswa')
+          .from('students')
           .select('''
             *,
-            cabang (*),
-            kelas (*),
-            program (*),
-            kurikulum_level!level_id (*),
+            cabang:organizational_units (*),
+            kelas:classes (*),
+            program:programs (*),
+            kurikulum_level:levels (*),
             guru:profiles (*)
           ''');
 
@@ -74,7 +74,7 @@ class SiswaService extends BaseService {
 
       final response = await query
           .eq('kelas_id', kelasId)
-          .order('nama_lengkap', ascending: true);
+          .order('full_name', ascending: true);
 
       return (response as List)
           .map((json) => SiswaModel.fromJson(json))
@@ -88,12 +88,12 @@ class SiswaService extends BaseService {
   Future<List<SiswaModel>> fetchSiswaByGuru(Ref ref, String guruId) async {
     try {
       final lembagaId = getLembagaId(ref);
-      PostgrestFilterBuilder query = supabase.from('siswa').select('''
+      PostgrestFilterBuilder query = supabase.from('students').select('''
             *,
-            cabang (*),
-            kelas (*),
-            program (*),
-            kurikulum_level!level_id (*),
+            cabang:organizational_units (*),
+            kelas:classes (*),
+            program:programs (*),
+            kurikulum_level:levels (*),
             guru:profiles (*)
           ''');
 
@@ -101,7 +101,7 @@ class SiswaService extends BaseService {
 
       final response = await query
           .eq('guru_id', guruId)
-          .order('nama_lengkap', ascending: true);
+          .order('full_name', ascending: true);
 
       return (response as List).map((json) => SiswaModel.fromJson(json)).toList();
     } catch (e) {
@@ -114,12 +114,12 @@ class SiswaService extends BaseService {
     try {
       final lembagaId = getLembagaId(ref);
       // Menggunakan !inner untuk melakukan filter berdasarkan kolom di tabel relasi (kelas)
-      PostgrestFilterBuilder query = supabase.from('siswa').select('''
+      PostgrestFilterBuilder query = supabase.from('students').select('''
             *,
-            cabang (*),
-            kelas!inner(*),
-            program (*),
-            kurikulum_level!level_id (*),
+            cabang:organizational_units (*),
+            kelas:classes!inner(*),
+            program:programs (*),
+            kurikulum_level:levels (*),
             guru:profiles (*)
           ''');
 
@@ -127,7 +127,7 @@ class SiswaService extends BaseService {
 
       final response = await query
           .eq('kelas.guru_id', guruId)
-          .order('nama_lengkap', ascending: true);
+          .order('full_name', ascending: true);
 
       return (response as List).map((json) => SiswaModel.fromJson(json)).toList();
     } catch (e) {
@@ -139,18 +139,18 @@ class SiswaService extends BaseService {
   Future<List<SiswaModel>> getSiswaByLembaga(Ref ref) async {
     try {
       final lembagaId = getLembagaId(ref);
-      PostgrestFilterBuilder query = supabase.from('siswa').select('''
+      PostgrestFilterBuilder query = supabase.from('students').select('''
             *,
-            cabang (*),
-            kelas (*),
-            program (*),
-            kurikulum_level!level_id (*),
+            cabang:organizational_units (*),
+            kelas:classes (*),
+            program:programs (*),
+            kurikulum_level:levels (*),
             guru:profiles (*)
           ''');
 
       query = applyLembagaFilter(query: query, lembagaId: lembagaId);
 
-      final response = await query.order('nama_lengkap', ascending: true);
+      final response = await query.order('full_name', ascending: true);
       return (response as List).map((json) => SiswaModel.fromJson(json)).toList();
     } catch (e) {
       throw Exception(handleError(e));
@@ -166,12 +166,12 @@ class SiswaService extends BaseService {
       // 🛡️ SYNC LEMBAGA: Pastikan siswa mengikuti lembaga_id dari Kelas yang dipilih
       if (siswa.kelasId != null) {
         final classData = await supabase
-            .from('kelas')
-            .select('program_id, lembaga_id')
+            .from('classes')
+            .select('program_id, organization_id, lembaga_id')
             .eq('id', siswa.kelasId!)
             .single();
 
-        targetLembagaId = classData['lembaga_id']; // Paksa sinkron ke lembaga kelas
+        targetLembagaId = classData['organization_id'] ?? classData['lembaga_id']; // Paksa sinkron ke lembaga kelas
 
         if (siswa.programId != null && classData['program_id'] != siswa.programId) {
           throw Exception('Peringatan Keamanan: Program siswa tidak cocok dengan Program pada Kelas yang dipilih.');
@@ -181,10 +181,10 @@ class SiswaService extends BaseService {
       // 🎯 AUTO-ASSIGN LEVEL: Hubungkan siswa ke level pertama jika level_id kosong
       if (targetLevelId == null && siswa.programId != null) {
         final firstLevel = await supabase
-            .from('kurikulum_level')
+            .from('levels')
             .select('id')
             .eq('program_id', siswa.programId!)
-            .order('urutan', ascending: true)
+            .order('order_index', ascending: true)
             .limit(1)
             .maybeSingle();
 
@@ -205,7 +205,7 @@ class SiswaService extends BaseService {
         data.remove('id');
       }
 
-      await supabase.from('siswa').insert(data);
+      await supabase.from('students').insert(data);
     } catch (e) {
       throw Exception(handleError(e));
     }
@@ -222,12 +222,12 @@ class SiswaService extends BaseService {
       // 🛡️ SYNC LEMBAGA pada Update
       if (siswa.kelasId != null) {
         final classData = await supabase
-            .from('kelas')
-            .select('program_id, lembaga_id')
+            .from('classes')
+            .select('program_id, organization_id, lembaga_id')
             .eq('id', siswa.kelasId!)
             .single();
 
-        targetLembagaId = classData['lembaga_id'];
+        targetLembagaId = classData['organization_id'] ?? classData['lembaga_id'];
 
         if (siswa.programId != null && classData['program_id'] != siswa.programId) {
           throw Exception('Peringatan Keamanan: Program siswa tidak cocok dengan Program pada Kelas yang dipilih.');
@@ -237,10 +237,10 @@ class SiswaService extends BaseService {
       // 🎯 AUTO-ASSIGN LEVEL: Hubungkan siswa ke level pertama jika program berubah dan level kosong
       if (targetLevelId == null && siswa.programId != null) {
         final firstLevel = await supabase
-            .from('kurikulum_level')
+            .from('levels')
             .select('id')
             .eq('program_id', siswa.programId!)
-            .order('urutan', ascending: true)
+            .order('order_index', ascending: true)
             .limit(1)
             .maybeSingle();
 
@@ -255,7 +255,7 @@ class SiswaService extends BaseService {
 
       final data = cleanData(finalSiswa.toJson());
       await supabase
-          .from('siswa')
+          .from('students')
           .update(data)
           .eq('id', finalSiswa.id!);
     } catch (e) {
@@ -266,7 +266,7 @@ class SiswaService extends BaseService {
   /// 5. DELETE: Menghapus siswa
   Future<void> deleteSiswa(String id) async {
     try {
-      await supabase.from('siswa').delete().eq('id', id);
+      await supabase.from('students').delete().eq('id', id);
     } catch (e) {
       throw Exception(handleError(e));
     }
@@ -277,7 +277,7 @@ class SiswaService extends BaseService {
     try {
       // FIX: Jangan gunakan cleanData agar nilai null (untuk unplotting) tidak terhapus
       await supabase
-          .from('siswa')
+          .from('students')
           .update({'kelas_id': kelasId})
           .eq('id', siswaId);
     } catch (e) {
@@ -289,7 +289,7 @@ class SiswaService extends BaseService {
   Future<void> bulkAddSiswa(List<SiswaModel> siswa) async {
     try {
       final data = siswa.map((s) => cleanData(s.toJson())).toList();
-      await supabase.from('siswa').insert(data);
+      await supabase.from('students').insert(data);
     } catch (e) {
       throw Exception(handleError(e));
     }
@@ -300,7 +300,7 @@ class SiswaService extends BaseService {
     try {
       // FIX: Menggunakan .filter dengan operator 'in' sebagai pengganti .in_ untuk menghindari error undefined_method
       await supabase
-          .from('siswa')
+          .from('students')
           .update({'kelas_id': kelasId})
           .filter('id', 'in', siswaIds);
     } catch (e) {

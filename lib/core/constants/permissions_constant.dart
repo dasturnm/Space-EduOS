@@ -29,8 +29,8 @@ class PermissionsConstant {
     PermissionItem(
       code: 'organization.manage',
       title: 'Kelola Organisasi',
-      feature: 'Profil Lembaga, Cabang, TA',
-      description: 'Mengelola profil lembaga, cabang, dan tahun ajaran.',
+      feature: 'Profil Lembaga, Satuan Pendidikan, TA',
+      description: 'Mengelola profil lembaga, satuan pendidikan, dan tahun ajaran.',
       category: 'Kelembagaan & Akses',
     ),
     PermissionItem(
@@ -43,7 +43,7 @@ class PermissionsConstant {
     PermissionItem(
       code: 'lembaga_manage',
       title: 'Profil & Legalitas',
-      feature: 'Setup Lembaga, Cabang, TA',
+      feature: 'Setup Lembaga, Satuan Pendidikan, TA',
       description: 'Mengelola identitas dasar, profil, visi misi, dan tahun ajaran aktif lembaga.',
       category: 'Kelembagaan & Akses',
     ),
@@ -93,14 +93,14 @@ class PermissionsConstant {
     // --- AKADEMIK & KURIKULUM ---
     PermissionItem(
       code: 'academic.program.manage',
-      title: 'Kelola Program & Kaldik',
+      title: 'Kelola Program Pendidikan & Kaldik',
       feature: 'CRUD Program, Agenda',
       description: 'Mengatur jenis program pendidikan dan kalender akademik.',
       category: 'Akademik & Kurikulum',
     ),
     PermissionItem(
       code: 'akademik_program_manage',
-      title: 'Manajemen Program',
+      title: 'Program Pendidikan',
       feature: 'CRUD Program, Agenda',
       description: 'Mengatur jenis program pendidikan (seperti Tahfidz/TPQ) dan kalender pendidikan.',
       category: 'Akademik & Kurikulum',
@@ -108,7 +108,7 @@ class PermissionsConstant {
     PermissionItem(
       code: 'academic.curriculum.manage',
       title: 'Kelola Blueprint Akademik',
-      feature: 'CRUD Kurikulum, Jenjang, Level, Modul',
+      feature: 'CRUD Kurikulum, Jenjang, Jenjang, Modul',
       description: 'Menyusun struktur kurikulum detail dari tingkat dasar hingga unit modul.',
       category: 'Akademik & Kurikulum',
     ),
@@ -116,13 +116,13 @@ class PermissionsConstant {
       code: 'academic.curriculum.read',
       title: 'Lihat Blueprint Akademik',
       feature: 'View kurikulum',
-      description: 'Melihat struktur kurikulum, jenjang, level, dan modul.',
+      description: 'Melihat struktur kurikulum, jenjang, jenjang, dan modul.',
       category: 'Akademik & Kurikulum',
     ),
     PermissionItem(
       code: 'akademik_kurikulum_manage',
       title: 'Cetak Biru Akademik',
-      feature: 'CRUD Kurikulum, Jenjang, Level, Modul',
+      feature: 'CRUD Kurikulum, Jenjang, Jenjang, Modul',
       description: 'Menyusun struktur kurikulum detail dari tingkat dasar hingga unit modul terkecil.',
       category: 'Akademik & Kurikulum',
     ),
@@ -144,7 +144,7 @@ class PermissionsConstant {
       code: 'kelas_manage',
       title: 'Manajemen Unit Kelas',
       feature: 'CRUD Kelas, Plotting massal',
-      description: 'Mengelola ruang kelas, kapasitas, dan pembagian guru wali kelas.',
+      description: 'Mengelola ruang kelas, kapasitas, and pembagian guru wali kelas.',
       category: 'Akademik & Kurikulum',
     ),
 
@@ -258,7 +258,7 @@ class PermissionsConstant {
     ),
     PermissionItem(
       code: 'tahfidz.write',
-      title: 'Input Setoran Harian',
+      title: 'Penilaian Mutabaah Harian',
       feature: "Form Mutaba'ah, Monitoring",
       description: 'Mencatat setoran hafalan harian dan perkembangan mutabaah.',
       category: 'Ketahfidzan & Evaluasi',
@@ -272,7 +272,7 @@ class PermissionsConstant {
     ),
     PermissionItem(
       code: 'mutabaah_input',
-      title: 'Input Mutabaah',
+      title: 'Penilaian Mutabaah Harian',
       feature: "Form Mutaba'ah, Monitoring",
       description: "Mencatat setoran hafalan harian (Ziyadah/Murojaah) dan progres santri secara berkala.",
       category: 'Ketahfidzan & Evaluasi',
@@ -295,21 +295,21 @@ class PermissionsConstant {
       code: 'evaluasi_input',
       title: 'Input Nilai Ujian',
       feature: "Form Tasmi'/UKL",
-      description: "Mengisi rubrik penilaian ujian formal seperti Tasmi' hafalan atau Ujian Kenaikan Level.",
+      description: "Mengisi rubrik penilaian ujian formal seperti Tasmi' hafalan atau Ujian Kenaikan Jenjang.",
       category: 'Ketahfidzan & Evaluasi',
     ),
     PermissionItem(
       code: 'tahfidz.promote',
-      title: 'Auto Promosi Level Tahfidz',
+      title: 'Kenaikan Kelas Otomatis',
       feature: 'UklEngineService',
-      description: 'Otorisasi promosi kenaikan level hafalan santri.',
+      description: 'Otorisasi promosi kenaikan jenjang hafalan santri.',
       category: 'Ketahfidzan & Evaluasi',
     ),
     PermissionItem(
       code: 'evaluasi_promote',
       title: 'Otorisasi Kenaikan',
       feature: 'UklEngineService',
-      description: 'Memberikan persetujuan resmi untuk santri naik ke jenjang atau level berikutnya setelah lulus ujian.',
+      description: 'Memberikan persetujuan resmi untuk santri naik ke jenjang atau jenjang berikutnya setelah lulus ujian.',
       category: 'Ketahfidzan & Evaluasi',
     ),
     PermissionItem(
@@ -446,31 +446,31 @@ class PermissionsConstant {
     // --- LMS & PEMBELAJARAN DIGITAL ---
     PermissionItem(
       code: 'lms.course.manage',
-      title: 'Kelola Course LMS',
-      feature: 'CRUD Course, Module, Lesson',
+      title: 'Kelola Pembelajaran LMS',
+      feature: 'CRUD Pembelajaran, Module, Lesson',
       description: 'Menyusun dan mengelola materi serta modul kursus digital.',
-      category: 'LMS & Pembelajaran Digital',
+      category: 'Pembelajaran & Pembelajaran Digital',
     ),
     PermissionItem(
       code: 'lms.assignment.manage',
       title: 'Kelola Tugas',
       feature: 'CRUD Assignment, Submission',
       description: 'Membuat tugas, menerima kiriman tugas, dan memberi penilaian.',
-      category: 'LMS & Pembelajaran Digital',
+      category: 'Pembelajaran & Pembelajaran Digital',
     ),
     PermissionItem(
       code: 'lms.quiz.manage',
       title: 'Kelola Ujian CBT',
       feature: 'CRUD Quiz, Bank Soal',
       description: 'Mengelola kuis online, ujian CBT, dan bank soal.',
-      category: 'LMS & Pembelajaran Digital',
+      category: 'Pembelajaran & Pembelajaran Digital',
     ),
     PermissionItem(
       code: 'lms.grade.manage',
-      title: 'Kelola Nilai LMS',
+      title: 'Kelola Nilai Pembelajaran',
       feature: 'Gradebook, Rapor',
       description: 'Mengolah rekap nilai pembelajaran online dan gradebook.',
-      category: 'LMS & Pembelajaran Digital',
+      category: 'Pembelajaran & Pembelajaran Digital',
     ),
 
     // --- KECERDASAN BUATAN (AI) ---

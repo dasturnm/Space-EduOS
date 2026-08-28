@@ -8,11 +8,20 @@ class JenjangService extends BaseService {
   // --- JENJANG ---
   Future<List<JenjangModel>> fetchJenjang(String kurikulumId) async {
     try {
-      final response = await supabase
-          .from('jenjang_kurikulum')
-          .select('*, level:kurikulum_level(*, modul:modul_kurikulum(*))')
-          .eq('kurikulum_id', kurikulumId)
-          .order('urutan', ascending: true); // FIX: Diurutkan berdasarkan kolom urutan
+      dynamic response;
+      try {
+        response = await supabase
+            .from('jenjang_kurikulum')
+            .select('*, level:kurikulum_level(*, modul:modul_kurikulum(*))')
+            .eq('kurikulum_id', kurikulumId)
+            .order('urutan', ascending: true); // FIX: Diurutkan berdasarkan kolom urutan
+      } catch (_) {
+        response = await supabase
+            .from('curriculum_levels')
+            .select('*, level:levels(*, modul:modules(*))')
+            .eq('curriculum_id', kurikulumId)
+            .order('order_index', ascending: true);
+      }
       return (response as List).map((e) => JenjangModel.fromJson(e)).toList();
     } catch (e) {
       throw Exception(handleError(e));
@@ -23,9 +32,17 @@ class JenjangService extends BaseService {
     try {
       final data = cleanData(jenjang.toJson())..remove('level');
       if (jenjang.id == null) {
-        await supabase.from('jenjang_kurikulum').insert(data..remove('id'));
+        try {
+          await supabase.from('jenjang_kurikulum').insert(data..remove('id'));
+        } catch (_) {
+          await supabase.from('curriculum_levels').insert(data..remove('id'));
+        }
       } else {
-        await supabase.from('jenjang_kurikulum').update(data).eq('id', jenjang.id!);
+        try {
+          await supabase.from('jenjang_kurikulum').update(data).eq('id', jenjang.id!);
+        } catch (_) {
+          await supabase.from('curriculum_levels').update(data).eq('id', jenjang.id!);
+        }
       }
     } catch (e) {
       throw Exception(handleError(e));
@@ -34,7 +51,11 @@ class JenjangService extends BaseService {
 
   Future<void> deleteJenjang(String id) async {
     try {
-      await supabase.from('jenjang_kurikulum').delete().eq('id', id);
+      try {
+        await supabase.from('jenjang_kurikulum').delete().eq('id', id);
+      } catch (_) {
+        await supabase.from('curriculum_levels').delete().eq('id', id);
+      }
     } catch (e) {
       throw Exception(handleError(e));
     }

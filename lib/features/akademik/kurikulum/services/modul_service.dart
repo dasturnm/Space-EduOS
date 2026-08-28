@@ -8,11 +8,20 @@ class ModulService extends BaseService {
   // --- MODUL ---
   Future<List<ModulModel>> fetchModul(String levelId) async {
     try {
-      final response = await supabase
-          .from('modul_kurikulum')
-          .select('*, modul_evaluasi_template(*)')
-          .eq('level_id', levelId)
-          .order('urutan', ascending: true); // FIX: Diurutkan berdasarkan kolom urutan
+      dynamic response;
+      try {
+        response = await supabase
+            .from('modul_kurikulum')
+            .select('*, modul_evaluasi_template(*)')
+            .eq('level_id', levelId)
+            .order('urutan', ascending: true); // FIX: Diurutkan berdasarkan kolom urutan
+      } catch (_) {
+        response = await supabase
+            .from('modules')
+            .select('*, modul_evaluasi_template:module_evaluation_templates(*)')
+            .eq('level_id', levelId)
+            .order('order_index', ascending: true);
+      }
       return (response as List).map((e) => ModulModel.fromJson(e)).toList();
     } catch (e) {
       throw Exception(handleError(e));
@@ -46,10 +55,19 @@ class ModulService extends BaseService {
       String modulId;
       // Perbaikan: Menangani ID null atau string kosong ("") agar benar-benar menjalankan INSERT
       if (modul.id == null || modul.id!.isEmpty) {
-        final res = await supabase.from('modul_kurikulum').insert(data..remove('id')).select().single();
-        modulId = res['id'];
+        try {
+          final res = await supabase.from('modul_kurikulum').insert(data..remove('id')).select().single();
+          modulId = res['id'];
+        } catch (_) {
+          final res = await supabase.from('modules').insert(data..remove('id')).select().single();
+          modulId = res['id'];
+        }
       } else {
-        await supabase.from('modul_kurikulum').update(data).eq('id', modul.id!);
+        try {
+          await supabase.from('modul_kurikulum').update(data).eq('id', modul.id!);
+        } catch (_) {
+          await supabase.from('modules').update(data).eq('id', modul.id!);
+        }
         modulId = modul.id!;
       }
 
@@ -61,9 +79,17 @@ class ModulService extends BaseService {
         }
         tData.removeWhere((key, value) => value == null);
         if (template.id == null || template.id!.isEmpty) {
-          await supabase.from('modul_evaluasi_template').insert(tData..remove('id'));
+          try {
+            await supabase.from('modul_evaluasi_template').insert(tData..remove('id'));
+          } catch (_) {
+            await supabase.from('module_evaluation_templates').insert(tData..remove('id'));
+          }
         } else {
-          await supabase.from('modul_evaluasi_template').update(tData).eq('id', template.id!);
+          try {
+            await supabase.from('modul_evaluasi_template').update(tData).eq('id', template.id!);
+          } catch (_) {
+            await supabase.from('module_evaluation_templates').update(tData).eq('id', template.id!);
+          }
         }
       }
     } catch (e) {
@@ -73,7 +99,11 @@ class ModulService extends BaseService {
 
   Future<void> deleteModul(String id) async {
     try {
-      await supabase.from('modul_kurikulum').delete().eq('id', id);
+      try {
+        await supabase.from('modul_kurikulum').delete().eq('id', id);
+      } catch (_) {
+        await supabase.from('modules').delete().eq('id', id);
+      }
     } catch (e) {
       throw Exception(handleError(e));
     }

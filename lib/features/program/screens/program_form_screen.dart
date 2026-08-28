@@ -93,7 +93,7 @@ class _ProgramFormScreenState extends ConsumerState<ProgramFormScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
-          widget.program == null ? "Tambah Program Baru" : "Edit Program",
+          widget.program == null ? "Tambah Program Pendidikan Baru" : "Edit Program Pendidikan",
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.white,
@@ -109,7 +109,7 @@ class _ProgramFormScreenState extends ConsumerState<ProgramFormScreen> {
             children: [
               _buildSectionHeader("INFORMASI DASAR"),
               const SizedBox(height: 16),
-              _buildLabel("Nama Program"),
+              _buildLabel("Nama Program Pendidikan"),
               TextFormField(
                 controller: _nameController,
                 decoration: _inputDecor("Misal: Tahfidz Intensif"),
@@ -120,7 +120,7 @@ class _ProgramFormScreenState extends ConsumerState<ProgramFormScreen> {
               // DIUBAH: Mengganti label menjadi pertanyaan informatif
               _buildLabel("Di mana program ini akan berjalan?"),
               const Text(
-                "Pilih 'Lembaga Pusat' jika program ini berlaku untuk seluruh cabang, atau pilih cabang spesifik.",
+                "Pilih 'Lembaga Pusat' jika program ini berlaku untuk seluruh satuan pendidikan, atau pilih satuan pendidikan spesifik.",
                 style: TextStyle(fontSize: 12, color: Colors.grey),
               ),
               const SizedBox(height: 8),
@@ -141,7 +141,7 @@ class _ProgramFormScreenState extends ConsumerState<ProgramFormScreen> {
                   onChanged: (val) => setState(() => _selectedCabangId = val),
                 ),
                 loading: () => const LinearProgressIndicator(),
-                error: (_, __) => const Text("Gagal memuat daftar cabang"),
+                error: (_, __) => const Text("Gagal memuat daftar satuan pendidikan"),
               ),
 
               const SizedBox(height: 20),
@@ -153,7 +153,7 @@ class _ProgramFormScreenState extends ConsumerState<ProgramFormScreen> {
               ),
               const SizedBox(height: 40),
 
-              _buildSectionHeader("BIAYA PROGRAM"),
+              _buildSectionHeader("BIAYA PROGRAM PENDIDIKAN"),
               const SizedBox(height: 16),
               Row(
                 children: [
@@ -228,7 +228,7 @@ class _ProgramFormScreenState extends ConsumerState<ProgramFormScreen> {
                   child: _isSaving
                       ? const CircularProgressIndicator(color: Colors.white)
                       : Text(
-                    widget.program == null ? "Simpan Program" : "Simpan Perubahan",
+                    widget.program == null ? "Simpan Program Pendidikan" : "Simpan Perubahan",
                     style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),

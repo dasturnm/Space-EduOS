@@ -140,7 +140,7 @@ class MutabaahStatsDashboard extends ConsumerWidget {
             Text(siswa.namaLengkap, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
             Row(
               children: [
-                Text("Level: ${currentLevel.namaLevel}", style: const TextStyle(color: Colors.grey, fontSize: 13)),
+                Text("Jenjang: ${currentLevel.namaLevel}", style: const TextStyle(color: Colors.grey, fontSize: 13)),
                 const SizedBox(width: 8),
                 _buildStatusBadge(isDelayed),
               ],
@@ -184,7 +184,7 @@ class MutabaahStatsDashboard extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                isDelayed ? "Target Pelunasan Hutang" : "Target Level Bulan Ini",
+                isDelayed ? "Target Pelunasan Hutang" : "Target Jenjang Bulan Ini",
                 style: TextStyle(color: isDelayed ? Colors.orange[7] : Colors.white70, fontSize: 13, fontWeight: isDelayed ? FontWeight.bold : FontWeight.normal),
               ),
               Container(
@@ -210,7 +210,7 @@ class MutabaahStatsDashboard extends ConsumerWidget {
           Text(
             isDelayed
                 ? "Fokus menyelesaikan sisa materi yang tertunda secepat mungkin."
-                : "Tetap istiqomah untuk mencapai target level tepat waktu.",
+                : "Tetap istiqomah untuk mencapai target jenjang tepat waktu.",
             style: const TextStyle(color: Colors.white54, fontSize: 11, fontStyle: FontStyle.italic),
           ),
         ],
@@ -261,7 +261,7 @@ class MutabaahStatsDashboard extends ConsumerWidget {
             child: Text(
               isDelayed
                   ? "Siswa memiliki hutang materi dari periode sebelumnya. Disarankan menambah durasi bimbingan."
-                  : "$message Santri menunjukkan konsistensi yang baik dalam setoran harian.",
+                  : "$message Santri menunjukkan konsistensi yang baik dalam penilaian mutabaah harian.",
               style: const TextStyle(fontSize: 13, color: Color(0xFF475569)),
             ),
           ),

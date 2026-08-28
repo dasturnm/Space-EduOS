@@ -65,7 +65,7 @@ class SiswaListScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     // REAKTIF: Watch data siswa (v2026.03.22)
     final state = ref.watch(siswaListProvider);
     final filteredData = ref.watch(filteredSiswaProvider); // FIX: Gunakan filteredSiswaProvider agar fitur pencarian berfungsi
@@ -186,7 +186,7 @@ class SiswaListScreen extends ConsumerWidget {
                               fontWeight: FontWeight.bold,
                               color: Color(0xFF10B981)),
                         ),
-                        // FIX: Menampilkan Jenjang Kurikulum secara dinamis (v2026.03.22)
+                        // FIX: Menampilkan Jenjang secara dinamis
                         Text(
                           "Jenjang: ${siswa.currentLevel?.namaLevel ?? '-'}",
                           maxLines: 1,

@@ -49,7 +49,7 @@ class AddKurikulumSheet {
 
                   // FIX: Label diletakkan di luar agar SELALU MUNCUL
                   const Text(
-                    "PILIH PROGRAM",
+                    "PILIH PROGRAM PENDIDIKAN",
                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey),
                   ),
                   const SizedBox(height: 8),
@@ -66,7 +66,7 @@ class AddKurikulumSheet {
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: const Text(
-                            "⚠️ Belum ada Program aktif. Buat Program terlebih dahulu.",
+                            "⚠️ Belum ada Program Pendidikan aktif. Buat Program Pendidikan terlebih dahulu.",
                             style: TextStyle(fontSize: 12, color: Colors.orange, fontWeight: FontWeight.bold),
                           ),
                         );
@@ -104,7 +104,7 @@ class AddKurikulumSheet {
                       ),
                     ),
                     error: (err, __) => Text(
-                      "Gagal memuat program: $err",
+                      "Gagal memuat program pendidikan: $err",
                       style: const TextStyle(color: Colors.red, fontSize: 12),
                     ),
                   ),
@@ -127,7 +127,7 @@ class AddKurikulumSheet {
                     contentPadding: EdgeInsets.zero,
                     title: const Text("Mode Linear",
                         style: TextStyle(fontWeight: FontWeight.bold)),
-                    subtitle: const Text("Tanpa jenjang bertingkat/level."),
+                    subtitle: const Text("Tanpa jenjang bertingkat."),
                     value: isLinear,
                     onChanged: (val) => setState(() => isLinear = val),
                   ),
@@ -200,7 +200,7 @@ class AddKurikulumSheet {
         title: const Text("Hapus Kurikulum?",
             style: TextStyle(fontWeight: FontWeight.bold)),
         content: Text(
-            "Apakah Anda yakin ingin menghapus '${kurikulum.namaKurikulum}'? Semua data jenjang, level, dan modul di dalamnya akan ikut terhapus."),
+            "Apakah Anda yakin ingin menghapus '${kurikulum.namaKurikulum}'? Semua data jenjang dan modul di dalamnya akan ikut terhapus."),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),

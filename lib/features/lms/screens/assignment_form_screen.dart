@@ -134,7 +134,7 @@ class _AssignmentFormScreenState extends ConsumerState<AssignmentFormScreen> {
                   borderRadius: BorderRadius.circular(4),
                   side: const BorderSide(color: Colors.grey),
                 ),
-                title: const Text('Batas Waktu Pengumpulan (Due Date)'),
+                title: const Text('Batas Waktu Pengumpulan'),
                 subtitle: Text(_dueDate.toLocal().toString().substring(0, 16)),
                 trailing: const Icon(Icons.calendar_today),
                 onTap: _pickDueDate,

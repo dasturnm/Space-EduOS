@@ -26,7 +26,7 @@ class SantriBelumSetoranWidget extends ConsumerWidget {
             children: [
               ListTile(
                 leading: const Icon(Icons.warning_amber_rounded, color: Colors.orange),
-                title: Text("${listSiswa.length} Santri Belum Setoran",
+                title: Text("${listSiswa.length} Santri Belum Melakukan Mutabaah",
                     style: const TextStyle(fontWeight: FontWeight.bold)),
               ),
               ...listSiswa.map((s) => ListTile(

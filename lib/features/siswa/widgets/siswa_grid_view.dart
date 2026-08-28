@@ -37,7 +37,7 @@ class SiswaGridView extends ConsumerWidget {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Siswa ini belum memiliki modul aktif di levelnya.")),
+              const SnackBar(content: Text("Siswa ini belum memiliki modul aktif di jenjangnya.")),
             );
           }
         });
@@ -212,19 +212,23 @@ class SiswaGridView extends ConsumerWidget {
   }
 
   Widget _buildStatusBadge(String status) {
-    bool isAktif = status.toLowerCase() == 'aktif';
+    final lowerStatus = status.toLowerCase();
+    bool isAktif = lowerStatus == 'aktif';
+    bool isLulus = lowerStatus == 'graduated' || lowerStatus == 'lulus';
+    String displayText = isLulus ? 'LULUS' : status.toUpperCase();
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: isAktif ? const Color(0xFFF0FDF4) : const Color(0xFFF8FAFC),
+        color: (isAktif || isLulus) ? const Color(0xFFF0FDF4) : const Color(0xFFF8FAFC),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
-        status.toUpperCase(),
+        displayText,
         style: TextStyle(
           fontSize: 8,
           fontWeight: FontWeight.w900,
-          color: isAktif ? const Color(0xFF16A34A) : Colors.grey,
+          color: (isAktif || isLulus) ? const Color(0xFF16A34A) : Colors.grey,
         ),
       ),
     );

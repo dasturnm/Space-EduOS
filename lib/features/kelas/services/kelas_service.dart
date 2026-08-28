@@ -21,18 +21,18 @@ class KelasService extends BaseService {
       final lembagaId = getLembagaId(ref);
 
       PostgrestFilterBuilder query = supabase
-          .from('kelas')
+          .from('classes')
           .select('''
             *,
             guru:profiles (*),
-            program (*)
+            program:programs (*)
           ''');
 
       // 🛡️ KEAMANAN: Menggunakan helper filter dari BaseService
       query = applyLembagaFilter(query: query, lembagaId: lembagaId);
 
       // FIX: Menggunakan nama kolom yang benar (nama_kelas) sesuai standar table lain
-      final response = await query.order('nama_kelas', ascending: true);
+      final response = await query.order('name', ascending: true);
 
       return (response as List)
           .map((json) => KelasModel.fromJson(json))
@@ -49,11 +49,11 @@ class KelasService extends BaseService {
       final lembagaId = getLembagaId(ref);
 
       PostgrestFilterBuilder query = supabase
-          .from('kelas')
+          .from('classes')
           .select('''
             *,
             guru:profiles (*),
-            program (*)
+            program:programs (*)
           ''');
 
       // 🛡️ KEAMANAN: Filter lembaga diwajibkan untuk mencegah data leak
@@ -72,7 +72,7 @@ class KelasService extends BaseService {
     try {
       // Membersihkan data sebelum dikirim ke database
       final data = cleanData(newKelas.toJson());
-      await supabase.from('kelas').insert(data);
+      await supabase.from('classes').insert(data);
     } catch (e) {
       throw Exception(handleError(e));
     }
@@ -87,7 +87,7 @@ class KelasService extends BaseService {
     try {
       final data = cleanData(updatedKelas.toJson());
       await supabase
-          .from('kelas')
+          .from('classes')
           .update(data)
           .eq('id', updatedKelas.id!);
     } catch (e) {
@@ -100,7 +100,7 @@ class KelasService extends BaseService {
     try {
       // 🛡️ SAFE DELETE: Cek apakah masih ada siswa di kelas ini (Aturan 12 - Predictable)
       final checkSiswa = await supabase
-          .from('siswa')
+          .from('students')
           .select('id')
           .eq('kelas_id', id)
           .limit(1);
@@ -109,7 +109,7 @@ class KelasService extends BaseService {
         throw 'Gagal menghapus: Kelas masih memiliki siswa aktif. Pindahkan siswa ke kelas lain atau kosongkan kelas terlebih dahulu.';
       }
 
-      await supabase.from('kelas').delete().eq('id', id);
+      await supabase.from('classes').delete().eq('id', id);
     } catch (e) {
       throw Exception(handleError(e));
     }

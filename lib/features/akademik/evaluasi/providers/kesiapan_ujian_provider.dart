@@ -20,12 +20,22 @@ Future<List<SiswaModel>> kesiapanUjianList(Ref ref) async {
 
   // 2. Query data siswa yang berada di bawah lembaga ini
   // FIX: Ditambahkan filter '.eq('is_ready_for_exam', true)' agar hanya siswa yang tuntas modul harian yang muncul
-  final response = await supabase
-      .from('siswa')
-      .select('*, kelas:kelas_id(nama_kelas), level:level_id(nama_level)')
-      .eq('lembaga_id', lembagaId)
-      .eq('status', 'aktif')
-      .eq('is_ready_for_exam', true); // Hanya menarik santri yang siap ujian formal
+  dynamic response;
+  try {
+    response = await supabase
+        .from('siswa')
+        .select('*, kelas:kelas_id(nama_kelas), level:level_id(nama_level)')
+        .eq('lembaga_id', lembagaId)
+        .eq('status', 'aktif')
+        .eq('is_ready_for_exam', true);
+  } catch (_) {
+    response = await supabase
+        .from('students')
+        .select('*, kelas:class_id(name), level:level_id(name)')
+        .eq('organization_id', lembagaId)
+        .eq('status', 'aktif')
+        .eq('is_ready_for_exam', true);
+  }
 
   // 3. Konversi hasil query menjadi List Model Siswa secara aman
   return (response as List).map((json) => SiswaModel.fromJson(json)).toList();

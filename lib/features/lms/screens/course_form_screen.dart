@@ -67,13 +67,13 @@ class _CourseFormScreenState extends ConsumerState<CourseFormScreen> {
       if (mounted) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Kelas berhasil disimpan')),
+          const SnackBar(content: Text('Pembelajaran berhasil disimpan')),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Gagal menyimpan kelas: $e')),
+          SnackBar(content: Text('Gagal menyimpan pembelajaran: $e')),
         );
       }
     } finally {
@@ -85,7 +85,7 @@ class _CourseFormScreenState extends ConsumerState<CourseFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tambah Kelas Baru'),
+        title: const Text('Tambah Pembelajaran Baru'),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -96,7 +96,7 @@ class _CourseFormScreenState extends ConsumerState<CourseFormScreen> {
               TextFormField(
                 controller: _nameController,
                 decoration: const InputDecoration(
-                  labelText: 'Nama Kelas/Kursus *',
+                  labelText: 'Nama Pembelajaran *',
                   border: OutlineInputBorder(),
                 ),
                 validator: (val) => val == null || val.isEmpty ? 'Wajib diisi' : null,
@@ -105,7 +105,7 @@ class _CourseFormScreenState extends ConsumerState<CourseFormScreen> {
               TextFormField(
                 controller: _codeController,
                 decoration: const InputDecoration(
-                  labelText: 'Kode Kelas',
+                  labelText: 'Kode Pembelajaran',
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -150,7 +150,7 @@ class _CourseFormScreenState extends ConsumerState<CourseFormScreen> {
                 controller: _descController,
                 maxLines: 3,
                 decoration: const InputDecoration(
-                  labelText: 'Deskripsi Kelas',
+                  labelText: 'Deskripsi Pembelajaran',
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -176,7 +176,7 @@ class _CourseFormScreenState extends ConsumerState<CourseFormScreen> {
                 ),
                 child: _isLoading
                     ? const CircularProgressIndicator()
-                    : const Text('Simpan Kelas'),
+                    : const Text('Simpan Pembelajaran'),
               ),
             ],
           ),

@@ -421,7 +421,7 @@ class _ModulFormScreenState extends ConsumerState<ModulFormScreen> {
                 if (m.tipe != 'TASMI\'') ...[
                   SwitchListTile(
                     title: const Text("Gunakan Skala Penilaian 1-4", style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
-                    subtitle: const Text("Mengganti parameter input angka nilai setoran harian menjadi standar kompetensi deskriptif pada rekam mutabaah harian santri.", style: TextStyle(fontSize: 11, color: Colors.grey)),
+                    subtitle: const Text("Mengganti parameter input angka nilai penilaian mutabaah harian menjadi standar kompetensi deskriptif pada rekam mutabaah harian santri.", style: TextStyle(fontSize: 11, color: Colors.grey)),
                     value: m.useRatingScale,
                     activeThumbColor: const Color(0xFF10B981),
                     contentPadding: EdgeInsets.zero,
@@ -536,7 +536,7 @@ class _ModulFormScreenState extends ConsumerState<ModulFormScreen> {
           const SizedBox(height: 12),
           SwitchListTile(
             title: const Text("Aktifkan Ujian Tasmi' Formal", style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
-            subtitle: const Text("Mewajibkan ujian tasmi' formal (volume & kumulatif) setelah setoran selesai.", style: TextStyle(fontSize: 11, color: Colors.grey)),
+            subtitle: const Text("Mewajibkan ujian tasmi' formal (volume & kumulatif) setelah penilaian mutabaah harian selesai.", style: TextStyle(fontSize: 11, color: Colors.grey)),
             value: m.isTasmiRequired,
             activeThumbColor: const Color(0xFF10B981),
             contentPadding: EdgeInsets.zero,
@@ -734,7 +734,7 @@ class _ModulFormScreenState extends ConsumerState<ModulFormScreen> {
                 _summaryItem("Juz", state.totalJuz.toStringAsFixed(2).replaceAll(RegExp(r"([.]*0+)(?!.*\d)"), "")),
                 _summaryItem("Hal", state.totalHalaman.toStringAsFixed(2).replaceAll(RegExp(r"([.]*0+)(?!.*\d)"), "")),
                 _summaryItem("Surah", state.totalSurah.toString(), tooltip: "Setiap bagian surah yang ada di dalam Juz/Halaman yang dipilih dihitung sebagai 1 surah."),
-                _summaryItem("Baris", state.totalBaris.toString(), tooltip: "Nama Surah dan Basmalah tidak dihitung sebagai total baris"),
+                _summaryItem("Baris", state.totalBaris.toString(), tooltip: "Nama Surah and Basmalah tidak dihitung sebagai total baris"),
               ],
             ),
         ],

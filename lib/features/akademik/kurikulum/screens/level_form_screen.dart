@@ -49,7 +49,7 @@ class _LevelFormScreenState extends ConsumerState<LevelFormScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text(isEdit ? "Edit Level" : "Tambah Level"),
+        title: Text(isEdit ? "Edit Jenjang" : "Tambah Jenjang"),
         backgroundColor: blueTheme, // PERBAIKAN: Tema Biru
         foregroundColor: Colors.white,
         actions: [
@@ -75,7 +75,7 @@ class _LevelFormScreenState extends ConsumerState<LevelFormScreen> {
               // Input Urutan (Penting untuk alur kurikulum)
               TextFormField(
                 controller: _urutanController,
-                decoration: _inputDecoration("Urutan Level", Icons.format_list_numbered),
+                decoration: _inputDecoration("Urutan Jenjang", Icons.format_list_numbered),
                 keyboardType: TextInputType.number,
                 validator: (v) => v!.isEmpty ? "Wajib diisi" : null,
               ),
@@ -84,7 +84,7 @@ class _LevelFormScreenState extends ConsumerState<LevelFormScreen> {
               // Input Nama Level
               TextFormField(
                 controller: _namaController,
-                decoration: _inputDecoration("Nama Level (Misal: Level 1 / Dasar)", Icons.stairs),
+                decoration: _inputDecoration("Nama Jenjang (Misal: Jenjang 1 / Dasar)", Icons.stairs),
                 validator: (v) => v!.isEmpty ? "Wajib diisi" : null,
               ),
               const SizedBox(height: 20),
@@ -112,7 +112,7 @@ class _LevelFormScreenState extends ConsumerState<LevelFormScreen> {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
                   child: const Text(
-                    "SIMPAN KONFIGURASI LEVEL",
+                    "SIMPAN KONFIGURASI JENJANG",
                     style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                 ),
@@ -175,8 +175,8 @@ class _LevelFormScreenState extends ConsumerState<LevelFormScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text("Hapus Level?"),
-        content: const Text("Tindakan ini akan menghapus seluruh modul yang ada di bawah level ini."),
+        title: const Text("Hapus Jenjang?"),
+        content: const Text("Tindakan ini akan menghapus seluruh modul yang ada di bawah jenjang ini."),
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("Batal")),
           TextButton(

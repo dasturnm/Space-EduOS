@@ -20,15 +20,19 @@ class SubjectModel {
   });
 
   factory SubjectModel.fromJson(Map<String, dynamic> json) {
+    final orgId = json['organization_id'] ?? json['lembaga_id'];
+    final n = json['name'] ?? json['nama_pelajaran'];
+    final c = json['code'] ?? json['kode'];
+
     return SubjectModel(
-      id: json['id'] as String,
-      organizationId: json['organization_id'] as String,
-      name: json['name'] as String,
-      code: json['code'] as String,
-      description: json['description'] as String?,
-      createdAt: json['created_at'] != null ? DateTime.parse(json['created_at'] as String) : null,
-      updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at'] as String) : null,
-      deletedAt: json['deleted_at'] != null ? DateTime.parse(json['deleted_at'] as String) : null,
+      id: (json['id'] == null || json['id'].toString() == 'null') ? '' : json['id'].toString(),
+      organizationId: (orgId == null || orgId.toString() == 'null') ? '' : orgId.toString(),
+      name: (n == null || n.toString() == 'null') ? '' : n.toString(),
+      code: (c == null || c.toString() == 'null') ? '' : c.toString(),
+      description: (json['description'] ?? json['deskripsi'])?.toString(),
+      createdAt: json['created_at'] != null ? DateTime.tryParse(json['created_at'].toString()) : null,
+      updatedAt: json['updated_at'] != null ? DateTime.tryParse(json['updated_at'].toString()) : null,
+      deletedAt: json['deleted_at'] != null ? DateTime.tryParse(json['deleted_at'].toString()) : null,
     );
   }
 

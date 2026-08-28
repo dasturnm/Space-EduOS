@@ -47,13 +47,13 @@ class _AddKelasDialogState extends ConsumerState<AddKelasDialog> {
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                decoration: const InputDecoration(labelText: "Tingkat"),
+                decoration: const InputDecoration(labelText: "Jenjang"),
                 // PERBAIKAN: Mengembalikan ke 'value' & tipe eksplisit <String>
                 items: _level.map((l) => DropdownMenuItem<String>(value: l, child: Text(l))).toList(),
                 onChanged: (v) {
                   // Assignment dihapus karena variabel penampung dihilangkan
                 },
-                validator: (v) => v == null ? "Pilih tingkat" : null,
+                validator: (v) => v == null ? "Pilih jenjang" : null,
               ),
               const SizedBox(height: 16),
               // Dropdown Ambil Data dari Provider Guru

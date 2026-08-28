@@ -173,8 +173,8 @@ class ProgramCard extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text("Hapus Program?", style: TextStyle(fontWeight: FontWeight.bold)),
-        content: Text("Anda yakin ingin menghapus program '${program.namaProgram}'? Data yang sudah dihapus tidak dapat dikembalikan."),
+        title: const Text("Hapus Program Pendidikan?", style: TextStyle(fontWeight: FontWeight.bold)),
+        content: Text("Anda yakin ingin menghapus program pendidikan '${program.namaProgram}'? Data yang sudah dihapus tidak dapat dikembalikan."),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("Batal", style: TextStyle(color: Colors.grey))),
@@ -190,8 +190,8 @@ class ProgramCard extends ConsumerWidget {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(success
-                        ? 'Program berhasil dihapus'
-                        : 'Gagal menghapus program. Pastikan tidak ada data siswa atau kelas yang terhubung.'),
+                        ? 'Program pendidikan berhasil dihapus'
+                        : 'Gagal menghapus program pendidikan. Pastikan tidak ada data siswa atau kelas yang terhubung.'),
                     backgroundColor: success ? Colors.green : Colors.red,
                   ),
                 );
@@ -209,7 +209,7 @@ class ProgramCard extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("BIAYA PROGRAM", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 0.5)),
+        const Text("BIAYA PROGRAM PENDIDIKAN", style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 0.5)),
         const SizedBox(height: 12),
         _buildPriceRow("Pendaftaran", program.biayaPendaftaran),
         _buildPriceRow("SPP / Bulan", program.biayaSpp),
@@ -386,7 +386,7 @@ class ProgramCard extends ConsumerWidget {
       child: const Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Text("Detail Program", style: TextStyle(color: Color(0xFF10B981), fontWeight: FontWeight.bold, fontSize: 13)),
+          Text("Detail Program Pendidikan", style: TextStyle(color: Color(0xFF10B981), fontWeight: FontWeight.bold, fontSize: 13)),
           SizedBox(width: 4),
           Icon(Icons.arrow_forward, color: Color(0xFF10B981), size: 16),
         ],

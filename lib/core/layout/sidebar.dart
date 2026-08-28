@@ -39,9 +39,9 @@ class Sidebar extends ConsumerWidget {
           if (canManageAkademik) ...[
             const Divider(),
             if (appContext.hasPermission('academic.program.manage') || appContext.hasPermission('akademik_program_manage'))
-              _buildItem(context, 'Program Belajar', AppRouteNames.program, Icons.menu_book_outlined),
+              _buildItem(context, 'Program Pendidikan', AppRouteNames.program, Icons.menu_book_outlined),
             if (appContext.hasPermission('academic.curriculum.manage') || appContext.hasPermission('academic.curriculum.read') || appContext.hasPermission('akademik_kurikulum_manage'))
-              _buildItem(context, 'Kurikulum & Level', AppRouteNames.kurikulum, Icons.assignment_outlined),
+              _buildItem(context, 'Kurikulum & Jenjang', AppRouteNames.kurikulum, Icons.assignment_outlined),
             const Divider(),
             if (appContext.hasPermission('student.manage') || appContext.hasPermission('student.read') || appContext.hasPermission('siswa_manage'))
               _buildItem(context, 'Data Siswa', AppRouteNames.siswa, Icons.people_outline),

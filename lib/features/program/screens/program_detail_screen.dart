@@ -27,12 +27,14 @@ class ProgramDetailScreen extends StatelessWidget {
               );
             },
             icon: const Icon(Icons.edit_outlined, color: Color(0xFF10B981)),
+            tooltip: "Edit Program Pendidikan",
           ),
           IconButton(
             onPressed: () {
               // TODO: Hubungkan fungsi hapus ke provider
             },
             icon: const Icon(Icons.delete_outline, color: Colors.red),
+            tooltip: "Hapus Program Pendidikan",
           ),
           const SizedBox(width: 8),
         ],
@@ -112,7 +114,7 @@ class ProgramDetailScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("BIAYA PROGRAM", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontSize: 12, letterSpacing: 1)),
+          const Text("BIAYA PROGRAM PENDIDIKAN", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontSize: 12, letterSpacing: 1)),
           const Divider(height: 32),
           _buildInfoRow(Icons.account_balance_wallet_outlined, "Biaya Pendaftaran", "Rp ${program.biayaPendaftaran.toInt()}"),
           const SizedBox(height: 20),

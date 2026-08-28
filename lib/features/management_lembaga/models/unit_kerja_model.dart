@@ -41,20 +41,24 @@ class UnitKerjaModel {
 
   factory UnitKerjaModel.fromJson(Map<String, dynamic> json) => UnitKerjaModel(
     id: json['id'],
-    lembagaId: json['lembaga_id'] ?? '',
-    divisiId: json['divisi_id'] ?? '',
-    namaUnitKerja: json['nama_unit_kerja'] ?? '',
-    kodeUnit: json['kode_unit'],
-    deskripsi: json['deskripsi'],
-    status: json['status'] ?? 'aktif',
+    lembagaId: json['organization_id']?.toString() ?? json['lembaga_id']?.toString() ?? (json['department'] != null && json['department']['organization_id'] != null ? json['department']['organization_id'].toString() : ''),
+    divisiId: json['department_id']?.toString() ?? json['divisi_id']?.toString() ?? '',
+    namaUnitKerja: json['name']?.toString() ?? json['nama_unit_kerja']?.toString() ?? '',
+    kodeUnit: json['kode_unit']?.toString(),
+    deskripsi: json['description']?.toString() ?? json['deskripsi']?.toString(),
+    status: json['status']?.toString() ?? 'aktif',
   );
 
   Map<String, dynamic> toJson() => {
     'id': id,
+    'organization_id': lembagaId,
     'lembaga_id': lembagaId,
+    'department_id': divisiId,
     'divisi_id': divisiId,
+    'name': namaUnitKerja,
     'nama_unit_kerja': namaUnitKerja,
     'kode_unit': kodeUnit,
+    'description': deskripsi,
     'deskripsi': deskripsi,
     'status': status,
   };

@@ -8,11 +8,20 @@ class LevelService extends BaseService {
   // --- LEVEL ---
   Future<List<LevelModel>> fetchLevel(String jenjangId) async {
     try {
-      final response = await supabase
-          .from('kurikulum_level')
-          .select('*, modul:modul_kurikulum(*)')
-          .eq('jenjang_id', jenjangId)
-          .order('urutan', ascending: true); // FIX: Diurutkan berdasarkan kolom urutan
+      dynamic response;
+      try {
+        response = await supabase
+            .from('kurikulum_level')
+            .select('*, modul:modul_kurikulum(*)')
+            .eq('jenjang_id', jenjangId)
+            .order('urutan', ascending: true); // FIX: Diurutkan berdasarkan kolom urutan
+      } catch (_) {
+        response = await supabase
+            .from('levels')
+            .select('*, modul:modules(*)')
+            .eq('jenjang_id', jenjangId)
+            .order('order_index', ascending: true);
+      }
       return (response as List).map((e) => LevelModel.fromJson(e)).toList();
     } catch (e) {
       throw Exception(handleError(e));
@@ -24,9 +33,17 @@ class LevelService extends BaseService {
       final data = cleanData(level.toJson())..remove('modul');
       // Perbaikan: Menangani ID null atau string kosong ("") agar benar-benar menjalankan INSERT
       if (level.id == null || level.id!.isEmpty) {
-        await supabase.from('kurikulum_level').insert(data..remove('id'));
+        try {
+          await supabase.from('kurikulum_level').insert(data..remove('id'));
+        } catch (_) {
+          await supabase.from('levels').insert(data..remove('id'));
+        }
       } else {
-        await supabase.from('kurikulum_level').update(data).eq('id', level.id!);
+        try {
+          await supabase.from('kurikulum_level').update(data).eq('id', level.id!);
+        } catch (_) {
+          await supabase.from('levels').update(data).eq('id', level.id!);
+        }
       }
     } catch (e) {
       throw Exception(handleError(e));
@@ -35,7 +52,11 @@ class LevelService extends BaseService {
 
   Future<void> deleteLevel(String id) async {
     try {
-      await supabase.from('kurikulum_level').delete().eq('id', id);
+      try {
+        await supabase.from('kurikulum_level').delete().eq('id', id);
+      } catch (_) {
+        await supabase.from('levels').delete().eq('id', id);
+      }
     } catch (e) {
       throw Exception(handleError(e));
     }

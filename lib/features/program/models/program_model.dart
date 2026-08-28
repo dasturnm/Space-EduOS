@@ -30,19 +30,19 @@ class ProgramModel {
 
   factory ProgramModel.fromJson(Map<String, dynamic> json) => ProgramModel(
     id: json['id']?.toString() ?? '',
-    lembagaId: json['lembaga_id']?.toString() ?? '',
-    cabangId: json['cabang_id']?.toString(),
-    kurikulumId: json['kurikulum_id']?.toString(), // Map dari database
-    namaProgram: json['nama_program']?.toString() ?? '',
-    deskripsi: json['deskripsi']?.toString(),
-    biayaPendaftaran: (json['biaya_pendaftaran'] as num?)?.toDouble() ?? 0,
-    biayaSpp: (json['biaya_spp'] as num?)?.toDouble() ?? 0,
-    hariAktif: json['hari_aktif'] is List
-        ? List<String>.from(json['hari_aktif'])
+    lembagaId: (json['lembaga_id'] ?? json['organization_id'])?.toString() ?? '',
+    cabangId: (json['cabang_id'] ?? json['organizational_unit_id'])?.toString(),
+    kurikulumId: (json['kurikulum_id'] ?? json['curriculum_id'])?.toString(), // Map dari database
+    namaProgram: (json['nama_program'] ?? json['name'])?.toString() ?? '',
+    deskripsi: (json['deskripsi'] ?? json['description'])?.toString(),
+    biayaPendaftaran: ((json['biaya_pendaftaran'] ?? json['registration_fee']) as num?)?.toDouble() ?? 0,
+    biayaSpp: ((json['biaya_spp'] ?? json['tuition_fee']) as num?)?.toDouble() ?? 0,
+    hariAktif: (json['hari_aktif'] ?? json['active_days']) is List
+        ? List<String>.from(json['hari_aktif'] ?? json['active_days'])
         : [],
     status: json['status']?.toString() ?? 'aktif',
     // 🔥 FIX: Deteksi keberadaan kurikulum dari hasil join Supabase
-    hasKurikulum: json['kurikulum'] != null && (json['kurikulum'] as List).isNotEmpty,
+    hasKurikulum: (json['kurikulum'] ?? json['curricula']) != null && ((json['kurikulum'] ?? json['curricula']) as List).isNotEmpty,
   );
 
   Map<String, dynamic> toJson() => {

@@ -35,20 +35,20 @@ class KelasModel {
   factory KelasModel.fromJson(Map<String, dynamic> json) {
     return KelasModel(
       id: (json['id'] == null || json['id'].toString() == 'null') ? null : json['id'].toString(),
-      lembagaId: (json['lembaga_id'] == null || json['lembaga_id'].toString() == 'null') ? null : json['lembaga_id'].toString(),
-      namaKelas: json['nama_kelas']?.toString() ?? '', // FIX: Sinkron dengan kolom nama_kelas
-      guruId: (json['guru_id'] == null || json['guru_id'].toString() == 'null') ? null : json['guru_id'].toString(),
+      lembagaId: (json['lembaga_id'] ?? json['organization_id'])?.toString(),
+      namaKelas: (json['nama_kelas'] ?? json['name'])?.toString() ?? '', // FIX: Sinkron dengan kolom nama_kelas / name
+      guruId: (json['guru_id'] ?? json['teacher_id'])?.toString(),
       programId: (json['program_id'] == null || json['program_id'].toString() == 'null') ? null : json['program_id'].toString(),
-      waktuBelajar: (json['waktu_belajar'] == null || json['waktu_belajar'].toString() == 'null') ? null : json['waktu_belajar'].toString(),
-      ruangan: (json['ruangan'] == null || json['ruangan'].toString() == 'null') ? null : json['ruangan'].toString(),
-      kapasitas: json['kapasitas'] != null ? (json['kapasitas'] as num).toInt() : null,
+      waktuBelajar: (json['waktu_belajar'] ?? json['study_time'])?.toString(),
+      ruangan: (json['ruangan'] ?? json['room'])?.toString(),
+      kapasitas: (json['kapasitas'] ?? json['capacity']) != null ? ((json['kapasitas'] ?? json['capacity']) as num).toInt() : null,
       createdAt: json['created_at'] != null
           ? DateTime.tryParse(json['created_at'].toString())
           : null,
 
       // Relasi (Null check wajib sesuai protokol v2026.03.22)
-      waliKelas: json['guru'] != null
-          ? ProfileModel.fromJson(json['guru'] as Map<String, dynamic>)
+      waliKelas: (json['guru'] ?? json['teacher']) != null
+          ? ProfileModel.fromJson((json['guru'] ?? json['teacher']) as Map<String, dynamic>)
           : null,
 
       program: json['program'] != null

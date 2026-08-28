@@ -73,8 +73,8 @@ class SiswaDetailScreen extends ConsumerWidget { // FIX: Menjadi ConsumerWidget
               items: [
                 // FIX: Menampilkan detail lengkap sesuai permintaan: Lembaga, Cabang, Program, Kelas, Jenjang
                 _buildInfoTile(Icons.account_balance_rounded, "Lembaga", lembagaNama),
-                _buildInfoTile(Icons.location_on_rounded, "Cabang", siswa.cabang?.namaCabang ?? '-'),
-                _buildInfoTile(Icons.auto_awesome_rounded, "Program", siswa.program?.namaProgram ?? '-'),
+                _buildInfoTile(Icons.location_on_rounded, "Satuan Pendidikan", siswa.cabang?.namaCabang ?? '-'),
+                _buildInfoTile(Icons.auto_awesome_rounded, "Program Pendidikan", siswa.program?.namaProgram ?? '-'),
                 _buildInfoTile(Icons.home_work_rounded, "Unit Kelas", siswa.kelas?.namaKelas ?? '-'),
                 _buildInfoTile(Icons.layers_rounded, "Jenjang Kurikulum", siswa.currentLevel?.namaLevel ?? '-'),
                 _buildInfoTile(Icons.trending_up_rounded, "Total Hafalan", "${siswa.totalJuzHafalan.toStringAsFixed(1)} Juz"),
@@ -90,8 +90,8 @@ class SiswaDetailScreen extends ConsumerWidget { // FIX: Menjadi ConsumerWidget
                 _buildInfoTile(
                   Icons.verified_user_rounded,
                   "Status",
-                  siswa.status.toUpperCase(),
-                  valueColor: siswa.status == 'aktif' ? const Color(0xFF16A34A) : Colors.red,
+                  (siswa.status.toLowerCase() == 'graduated' || siswa.status.toLowerCase() == 'lulus') ? 'LULUS' : siswa.status.toUpperCase(),
+                  valueColor: (siswa.status == 'aktif' || siswa.status.toLowerCase() == 'graduated' || siswa.status.toLowerCase() == 'lulus') ? const Color(0xFF16A34A) : Colors.red,
                 ),
                 _buildInfoTile(Icons.face_retouching_natural_rounded, "Jenis Kelamin", isLaki ? "Ikhwan (Laki-laki)" : "Akhwat (Perempuan)"),
               ],

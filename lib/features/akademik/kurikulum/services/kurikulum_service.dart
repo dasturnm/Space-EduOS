@@ -26,15 +26,15 @@ class KurikulumService extends BaseService {
       // Menggunakan instance 'supabase' dari BaseService
       // PENYEMPURNAAN: Sertakan target_metrik_kurikulum dalam select
       PostgrestFilterBuilder query = supabase
-          .from('kurikulum')
-          .select('*, jenjang:jenjang_kurikulum(*, level:kurikulum_level(*, modul:modul_kurikulum(*, target_metrik_kurikulum(*), modul_evaluasi_template(*)))))');
+          .from('curricula')
+          .select('*, jenjang:jenjang_kurikulum(*, level:levels(*, modul:tahfidz_modules(*, target_metrik_kurikulum(*), modul_evaluasi_template(*)))))');
 
       // Filter Lembaga via Helper BaseService
       // FIX: Casting eksplisit ke PostgrestList untuk menghindari error invalid_assignment
       query = applyLembagaFilter(query: query, lembagaId: lembagaId) as PostgrestFilterBuilder<PostgrestList>;
 
       if (search.isNotEmpty) {
-        query = query.ilike('nama_kurikulum', '%$search%');
+        query = query.ilike('name', '%$search%');
       }
 
       if (status != 'Semua') {
@@ -49,7 +49,7 @@ class KurikulumService extends BaseService {
         query = query.eq('tahun_ajaran_id', tahunAjaranId);
       }
 
-      final response = await query.order('nama_kurikulum');
+      final response = await query.order('name');
       return (response as List).map((e) => KurikulumModel.fromJson(e)).toList();
     } catch (e) {
       throw Exception(handleError(e));
@@ -61,10 +61,10 @@ class KurikulumService extends BaseService {
   Future<List<KurikulumModel>> getKurikulumByProgram(String programId) async {
     try {
       final response = await supabase
-          .from('kurikulum')
+          .from('curricula')
           .select('*')
           .eq('program_id', programId)
-          .order('nama_kurikulum', ascending: true);
+          .order('name', ascending: true);
 
       return (response as List).map((e) => KurikulumModel.fromJson(e)).toList();
     } catch (e) {
@@ -77,10 +77,10 @@ class KurikulumService extends BaseService {
   Future<List<LevelModel>> getLevelsByKurikulum(String kurikulumId) async {
     try {
       final response = await supabase
-          .from('kurikulum_level')
+          .from('levels')
           .select('*, jenjang:jenjang_kurikulum(*)')
-          .eq('kurikulum_id', kurikulumId)
-          .order('urutan', ascending: true);
+          .eq('curriculum_id', kurikulumId)
+          .order('order_index', ascending: true);
 
       return (response as List).map((e) => LevelModel.fromJson(e)).toList();
     } catch (e) {
@@ -93,10 +93,10 @@ class KurikulumService extends BaseService {
   Future<List<LevelModel>> getLevelsByProgram(String programId) async {
     try {
       final response = await supabase
-          .from('kurikulum_level')
+          .from('levels')
           .select('*, jenjang:jenjang_kurikulum(*)')
           .eq('program_id', programId)
-          .order('urutan', ascending: true);
+          .order('order_index', ascending: true);
 
       return (response as List).map((e) => LevelModel.fromJson(e)).toList();
     } catch (e) {
@@ -109,7 +109,7 @@ class KurikulumService extends BaseService {
   Future<List<ModulModel>> getModulsByLevel(String levelId) async {
     try {
       final response = await supabase
-          .from('modul_kurikulum')
+          .from('tahfidz_modules')
           .select('*')
           .eq('level_id', levelId)
           .order('urutan', ascending: true);
@@ -133,10 +133,10 @@ class KurikulumService extends BaseService {
       String kurikulumId;
 
       if (kurikulum.id == null) {
-        final res = await supabase.from('kurikulum').insert(kurikulumData..remove('id')).select().single();
+        final res = await supabase.from('curricula').insert(kurikulumData..remove('id')).select().single();
         kurikulumId = res['id'];
       } else {
-        await supabase.from('kurikulum').update(kurikulumData).eq('id', kurikulum.id!);
+        await supabase.from('curricula').update(kurikulumData).eq('id', kurikulum.id!);
         kurikulumId = kurikulum.id!;
       }
 
@@ -178,10 +178,10 @@ class KurikulumService extends BaseService {
 
           String levelId;
           if (level.id == null) {
-            final res = await supabase.from('kurikulum_level').insert(levelData..remove('id')).select().single();
+            final res = await supabase.from('levels').insert(levelData..remove('id')).select().single();
             levelId = res['id'];
           } else {
-            await supabase.from('kurikulum_level').update(levelData).eq('id', level.id!);
+            await supabase.from('levels').update(levelData).eq('id', level.id!);
             levelId = level.id!;
           }
 
@@ -247,10 +247,10 @@ class KurikulumService extends BaseService {
 
             String modulId;
             if (modul.id == null) {
-              final res = await supabase.from('modul_kurikulum').insert(modulData..remove('id')).select().single();
+              final res = await supabase.from('tahfidz_modules').insert(modulData..remove('id')).select().single();
               modulId = res['id'];
             } else {
-              await supabase.from('modul_kurikulum').update(modulData).eq('id', modul.id!);
+              await supabase.from('tahfidz_modules').update(modulData).eq('id', modul.id!);
               modulId = modul.id!;
             }
 
@@ -288,7 +288,7 @@ class KurikulumService extends BaseService {
   /// 🗑️ DELETE KURIKULUM
   Future<void> deleteKurikulum(String id) async {
     try {
-      await supabase.from('kurikulum').delete().eq('id', id);
+      await supabase.from('curricula').delete().eq('id', id);
     } catch (e) {
       throw Exception(handleError(e));
     }

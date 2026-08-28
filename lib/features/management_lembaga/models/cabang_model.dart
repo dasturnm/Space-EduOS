@@ -1,3 +1,5 @@
+// Lokasi: lib/features/management_lembaga/models/cabang_model.dart
+
 class CabangModel {
   final String id;
   final String lembagaId;
@@ -63,10 +65,10 @@ class CabangModel {
 
   factory CabangModel.fromJson(Map<String, dynamic> json) => CabangModel(
     id: json['id'],
-    lembagaId: json['lembaga_id'],
-    namaCabang: json['nama_cabang'] ?? '',
-    kodeCabang: json['kode_cabang'] ?? '',
-    alamat: json['alamat'],
+    lembagaId: json['organization_id'] ?? json['lembaga_id'] ?? '',
+    namaCabang: json['name'] ?? json['nama_cabang'] ?? '',
+    kodeCabang: json['code'] ?? json['kode_cabang'] ?? '',
+    alamat: json['address'] ?? json['alamat'],
     waCabang: json['wa_cabang'],
     emailCabang: json['email_cabang'],
     kepalaCabangId: json['kepala_cabang_id'],
@@ -79,9 +81,13 @@ class CabangModel {
 
   Map<String, dynamic> toJson() => {
     if (id.isNotEmpty) 'id': id,
+    'organization_id': lembagaId,
     'lembaga_id': lembagaId,
+    'name': namaCabang,
     'nama_cabang': namaCabang,
+    'code': kodeCabang,
     'kode_cabang': kodeCabang,
+    'address': alamat,
     'alamat': alamat,
     'wa_cabang': waCabang,
     'email_cabang': emailCabang,
