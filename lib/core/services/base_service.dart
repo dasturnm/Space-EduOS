@@ -52,24 +52,26 @@ class BaseService {
   PostgrestFilterBuilder applyLembagaFilter({
     required PostgrestFilterBuilder query,
     required String lembagaId,
+    String columnName = 'organization_id',
   }) {
     // FIX: Gunakan toSafeId to mencegah hang jika ID bernilai 'null' atau kosong
     final safeId = toSafeId(lembagaId);
     if (safeId == null) return query;
 
-    return query.eq('lembaga_id', safeId);
+    return query.eq(columnName, safeId);
   }
 
   /// 🔒 FILTER TAHUN AJARAN
   PostgrestFilterBuilder applyTahunAjaranFilter({
     required PostgrestFilterBuilder query,
     String? tahunAjaranId,
+    String columnName = 'academic_year_id',
   }) {
     // FIX: Gunakan toSafeId untuk validasi UUID tahun ajaran
     final safeId = toSafeId(tahunAjaranId);
     if (safeId == null) return query;
 
-    return query.eq('tahun_ajaran_id', safeId);
+    return query.eq(columnName, safeId);
   }
 
   /// 🔍 SEARCH

@@ -250,26 +250,27 @@ class _SidebarTile extends StatelessWidget {
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-      decoration: BoxDecoration(
+      child: Material(
         color: isSelected ? emerald.withValues(alpha: 0.1) : Colors.transparent,
         borderRadius: BorderRadius.circular(10),
-      ),
-      child: ListTile(
-        dense: true,
-        leading: Icon(
-          isSelected ? activeIcon : icon,
-          color: isSelected ? emerald : Colors.grey[600],
-          size: 20,
-        ),
-        title: Text(
-          title,
-          style: TextStyle(
-            fontSize: 13,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-            color: isSelected ? emerald : const Color(0xFF1E293B),
+        child: ListTile(
+          dense: true,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          leading: Icon(
+            isSelected ? activeIcon : icon,
+            color: isSelected ? emerald : Colors.grey[600],
+            size: 20,
           ),
+          title: Text(
+            title,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              color: isSelected ? emerald : const Color(0xFF1E293B),
+            ),
+          ),
+          onTap: () => context.go(route),
         ),
-        onTap: () => context.go(route),
       ),
     );
   }

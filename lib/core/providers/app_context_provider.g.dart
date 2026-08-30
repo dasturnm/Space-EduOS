@@ -41,7 +41,7 @@ final class AppContextProvider
   }
 }
 
-String _$appContextHash() => r'c01f7a5b3bb56348fab0ee3cf95dd4df8f341411';
+String _$appContextHash() => r'051b1b05f0e6730e4c5a6032ed2c3664c7ddbab9';
 
 abstract class _$AppContext extends $Notifier<AppContextState> {
   AppContextState build();

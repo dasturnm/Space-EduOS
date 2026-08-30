@@ -312,7 +312,7 @@ class AppContext extends _$AppContext {
 
         currentRole = 'OWNER';
       }
-      debugPrint("✅ AppContext: Cabang Terdeteksi -> ${branches.length} cabang");
+      debugPrint("✅ AppContext: organizational units Terdeteksi -> ${branches.length} organizational units");
 
       // 3. Ambil Tahun Ajaran Aktif
       TahunAjaranModel? tahunAktif;

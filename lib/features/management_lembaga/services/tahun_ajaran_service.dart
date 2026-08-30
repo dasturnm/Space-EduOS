@@ -10,11 +10,10 @@ class TahunAjaranService extends BaseService {
   Future<List<TahunAjaranModel>> getTahunAjaran(Ref ref, String lembagaId) async {
     try {
       // Gunakan helper BaseService untuk standarisasi query
-      var query = supabase.from('academic_years').select();
+      PostgrestFilterBuilder query = supabase.from('academic_years').select();
 
-      // Gunakan applyLembagaFilter (id_lembaga)
-      // FIX: Casting eksplisit untuk menghindari error invalid_assignment pada Supabase SDK terbaru
-      query = applyLembagaFilter(query: query, lembagaId: lembagaId) as PostgrestFilterBuilder<PostgrestList>;
+      // Gunakan applyLembagaFilter (default: organization_id)
+      query = applyLembagaFilter(query: query, lembagaId: lembagaId);
 
       final data = await query.order('label', ascending: false);
       return (data as List).map((e) => TahunAjaranModel.fromJson(e)).toList();
@@ -27,9 +26,8 @@ class TahunAjaranService extends BaseService {
   Future<void> addTahunAjaran(Ref ref, TahunAjaranModel ta) async {
     try {
       final data = cleanData(ta.toJson());
-      // FIX: Gunakan lembaga_id agar sinkron dengan database dan BaseService
       data['organization_id'] = getLembagaId(ref);
-      data['lembaga_id'] = getLembagaId(ref);
+      data.remove('lembaga_id'); // Pastikan kolom non-eksisten di academic_years dibuang
 
       await supabase.from('academic_years').insert(data);
     } catch (e) {

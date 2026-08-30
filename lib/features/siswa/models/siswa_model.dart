@@ -88,8 +88,8 @@ class SiswaModel {
       noHp: json['no_hp']?.toString(),
       passwordSementara: null, // Tidak disimpan di DB
       jenisKelamin: json['gender']?.toString() ?? json['jenis_kelamin']?.toString() ?? 'L',
-      tglLahir: json['tgl_lahir'] != null
-          ? DateTime.tryParse(json['tgl_lahir'].toString())
+      tglLahir: (json['birth_date'] ?? json['tgl_lahir']) != null
+          ? DateTime.tryParse((json['birth_date'] ?? json['tgl_lahir']).toString())
           : null,
       alamat: json['alamat']?.toString(),
       status: json['status']?.toString() ?? 'aktif',
@@ -128,6 +128,7 @@ class SiswaModel {
       'no_hp': noHp,
       'gender': jenisKelamin,
       'jenis_kelamin': jenisKelamin,
+      'birth_date': tglLahir?.toIso8601String().split('T')[0],
       'tgl_lahir': tglLahir?.toIso8601String().split('T')[0],
       'alamat': alamat,
       'status': status,

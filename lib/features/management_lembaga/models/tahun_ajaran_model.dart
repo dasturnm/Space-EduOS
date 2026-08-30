@@ -21,25 +21,20 @@ class TahunAjaranModel {
 
   factory TahunAjaranModel.fromJson(Map<String, dynamic> json) => TahunAjaranModel(
     id: json['id'],
-    lembagaId: json['organization_id'] ?? json['lembaga_id'] ?? '',
+    lembagaId: json['organization_id'] ?? json['organization_id'] ?? '',
     labelTahun: json['label'] ?? json['label_tahun'] ?? '',
     semester: json['semester'] ?? 'Ganjil',
     isAktif: json['is_active'] ?? json['is_aktif'] ?? false,
-    tanggalMulai: DateTime.parse(json['start_date'] ?? json['tanggal_mulai']),
-    tanggalSelesai: DateTime.parse(json['end_date'] ?? json['tanggal_selesai']),
+    tanggalMulai: DateTime.tryParse(json['start_date']?.toString() ?? json['tanggal_mulai']?.toString() ?? '') ?? DateTime.now(),
+    tanggalSelesai: DateTime.tryParse(json['end_date']?.toString() ?? json['tanggal_selesai']?.toString() ?? '') ?? DateTime.now(),
   );
 
   Map<String, dynamic> toJson() => {
     'organization_id': lembagaId,
-    'lembaga_id': lembagaId,
     'label': labelTahun,
-    'label_tahun': labelTahun,
     'semester': semester,
     'is_active': isAktif,
-    'is_aktif': isAktif,
     'start_date': tanggalMulai.toIso8601String(),
-    'tanggal_mulai': tanggalMulai.toIso8601String(),
     'end_date': tanggalSelesai.toIso8601String(),
-    'tanggal_selesai': tanggalSelesai.toIso8601String(),
   };
 }
